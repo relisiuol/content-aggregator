@@ -1,0 +1,74 @@
+{
+	"eslint.enable": true,
+	"eslint.options": {
+		"extensions": [".js", ".json"]
+	},
+	"eslint.validate": ["javascript", "json"],
+	"files.eol": "\n",
+	"git.confirmSync": false,
+	"git.enableSmartCommit": true,
+	"json.schemaDownload.enable": true,
+	"phpSniffer.autoDetect": true,
+	"phpSniffer.run": "onSave",
+	"stylelint.enable": true,
+	"stylelint.packageManager": "pnpm",
+	"stylelint.reportInvalidScopeDisables": true,
+	"stylelint.reportNeedlessDisables": true,
+	"stylelint.validate": ["css", "less", "postcss", "scss"],
+	"[javascript]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.prettier": "explicit",
+			"source.fixAll.eslint": "explicit"
+		},
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"[json]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.prettier": "explicit",
+			"source.fixAll.eslint": "explicit"
+		},
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"[markdown]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.prettier": "explicit",
+			"source.fixAll.markdownlint": "explicit"
+		},
+		"editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+		"editor.formatOnSave": true
+	},
+	"[php]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.prettier": "explicit",
+			"source.fixAll.phpcs": "explicit"
+		},
+		"editor.defaultFormatter": "wongjn.php-sniffer",
+		"editor.formatOnSave": true
+	},
+	"[scss]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.prettier": "explicit",
+			"source.fixAll.stylelint": "explicit"
+		},
+		"editor.defaultFormatter": "stylelint.vscode-stylelint",
+		"editor.formatOnSave": true
+	},
+	"[javascript][json]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.prettier": "explicit",
+			"source.fixAll.eslint": "explicit"
+		}
+	},
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": true,
+		"composer.lock": true,
+		"pnpm-lock.lock": true
+	}
+}

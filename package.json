@@ -1,0 +1,477 @@
+{
+	"$schema": "https://json.schemastore.org/package",
+	"name": "content-aggregator",
+	"version": "1.0.1",
+	"description": "Content Aggregator plugin",
+	"author": "relisiuol",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"aggregator",
+		"json",
+		"xml"
+	],
+	"homepage": "https://github.com/relisiuol/content-aggregator#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/relisiuol/content-aggregator.git"
+	},
+	"bugs": {
+		"url": "https://github.com/relisiuol/content-aggregator/issues"
+	},
+	"engines": {
+		"node": ">=18.0.0 <21.0.0",
+		"pnpm": ">=8.0.0 <11.0.0"
+	},
+	"type": "module",
+	"main": "assets/js/content-aggregator.js",
+	"dependencies": {
+		"@wordpress/i18n": "^5.18.0",
+		"jquery": "^3.7.1",
+		"jquery-autocomplete": "^1.2.8",
+		"select2": "^4.0.13"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.26.9",
+		"@playwright/test": "^1.50.1",
+		"@types/jquery": "^3.5.32",
+		"@types/node": "^22.13.4",
+		"@wordpress/babel-preset-default": "^8.18.0",
+		"@wordpress/browserslist-config": "^6.18.0",
+		"@wordpress/e2e-test-utils-playwright": "^1.18.0",
+		"@wordpress/eslint-plugin": "^22.4.0",
+		"@wordpress/npm-package-json-lint-config": "^5.18.0",
+		"@wordpress/postcss-plugins-preset": "^5.18.0",
+		"@wordpress/prettier-config": "^4.18.0",
+		"@wordpress/stylelint-config": "^23.10.0",
+		"autoprefixer": "^10.4.20",
+		"babel-loader": "^9.2.1",
+		"browserslist": "^4.24.4",
+		"clean-webpack-plugin": "^4.0.0",
+		"copy-webpack-plugin": "^12.0.2",
+		"css-loader": "^7.1.2",
+		"css-minimizer-webpack-plugin": "^7.0.0",
+		"eslint": "^8.57.1",
+		"eslint-plugin-json": "^4.0.1",
+		"fast-glob": "^3.3.3",
+		"husky": "^9.1.7",
+		"image-minimizer-webpack-plugin": "^4.1.3",
+		"lint-staged": "^15.4.3",
+		"markdownlint-cli": "^0.44.0",
+		"mini-css-extract-plugin": "^2.9.2",
+		"npm-package-json-lint": "^8.0.0",
+		"postcss": "^8.5.2",
+		"postcss-loader": "^8.1.1",
+		"prettier": "^3.5.1",
+		"purgecss-webpack-plugin": "^7.0.2",
+		"sass": "^1.85.0",
+		"sass-loader": "^16.0.5",
+		"sharp": "^0.33.5",
+		"stylelint": "^16.14.1",
+		"stylelint-order": "^6.0.4",
+		"svglint": "^3.1.0",
+		"terser-webpack-plugin": "^5.3.11",
+		"time-analytics-webpack-plugin": "^0.1.20",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.7.3",
+		"webpack": "^5.98.0",
+		"webpack-cli": "^6.0.1",
+		"webpack-remove-empty-scripts": "^1.0.4",
+		"webpackbar": "^7.0.0"
+	},
+	"scripts": {
+		"dev": "webpack serve --mode development",
+		"lint": "pnpm run /^lint:.*/",
+		"lint:css": "stylelint --fix \"assets/scss/**/*.{css,scss}\"",
+		"lint:js": "eslint --ext .js,.ts,.jsx,.tsx --fix \"assets/js/\"",
+		"lint:json": "eslint --ext .json --fix .",
+		"lint:md": "markdownlint --fix **/*.md ",
+		"lint:package": "npmPkgJsonLint .",
+		"lint:php": "composer run cb",
+		"lint:svg": "svglint assets/svg/**/*.svg",
+		"localize:start": "wp i18n make-pot --exclude=\"dist\" . languages/content-aggregator.pot",
+		"localize:update": "wp i18n update-po languages/content-aggregator.pot",
+		"localize:mo": "wp i18n make-mo languages/",
+		"localize:json": "wp i18n make-json --no-purge languages/",
+		"localize:php": "wp i18n make-php languages/",
+		"package:prepare": "rm -rf .git/ && rm -rf .github/ && rm -rf .husky/ && rm -rf .vscode/ && rm -rf assets/ && rm -rf vendor/ && rm -f .editorconfig && rm -f .gitattributes && rm -f .gitignore && rm -f .markdownlint.json && rm -f .markdownlintignore && rm -f .prettierignore && rm -f .svglintrc.js && rm -f composer.json && rm -f composer.lock && rm -f phpcs.xml && rm -f playwright.config.js && rm -rf tests && rm -f webpack.config.js",
+		"package": "rm -rf node_modules/ && rm -f package.json && rm -f pnpm-lock.yaml && zip -r content-aggregator ./",
+		"playwright": "playwright test",
+		"prepare": "husky && composer install",
+		"prod": "webpack --mode production",
+		"test": "echo \"Error: no test specified yet\" && exit 1"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.json": [
+			"prettier --write -u",
+			"eslint --ext .json --fix ."
+		],
+		"assets/js/**/*.{js,ts,jsx,tsx}": [
+			"prettier --write -u",
+			"eslint --ext .js --fix \"assets/js\""
+		],
+		"assets/scss/**/*.{css,scss}": [
+			"prettier --write -u",
+			"stylelint --fix \"assets/scss/**/*.{css,scss}\""
+		],
+		"assets/svg/**/*.svg": [
+			"svglint assets/svg/**/*.svg"
+		],
+		"package.json": [
+			"npmPkgJsonLint ."
+		],
+		"*.md": [
+			"prettier --write -u",
+			"markdownlint --fix"
+		],
+		"*.php": [
+			"prettier --write -u",
+			"composer run cs",
+			"composer run cb"
+		]
+	},
+	"browserslist": [
+		"extends @wordpress/browserslist-config"
+	],
+	"eslintConfig": {
+		"root": true,
+		"env": {
+			"browser": true,
+			"es6": true,
+			"jquery": true,
+			"node": true
+		},
+		"globals": {
+			"contentAggregator": "readonly",
+			"wp": "readonly"
+		},
+		"parserOptions": {
+			"sourceType": "module"
+		},
+		"extends": [
+			"prettier",
+			"eslint:recommended",
+			"plugin:json/recommended-legacy",
+			"plugin:@wordpress/eslint-plugin/recommended"
+		],
+		"ignorePatterns": [
+			".husky",
+			"!.vscode",
+			"!.markdownlint.json",
+			"composer.lock",
+			"/dist/**",
+			"/languages/**",
+			"pnpm-lock.yaml",
+			"/vendor/**"
+		],
+		"plugins": [
+			"import",
+			"json"
+		],
+		"rules": {
+			"@wordpress/i18n-text-domain": [
+				"error",
+				{
+					"allowedTextDomain": "content-aggregator"
+				}
+			],
+			"prettier/prettier": [
+				"error",
+				{
+					"endOfLine": "auto"
+				}
+			]
+		},
+		"settings": {
+			"json/sort-package-json": false
+		}
+	},
+	"npmpackagejsonlint": {
+		"extends": "@wordpress/npm-package-json-lint-config"
+	},
+	"prettier": "@wordpress/prettier-config",
+	"stylelint": {
+		"extends": [
+			"@wordpress/stylelint-config/scss"
+		],
+		"ignoreFiles": [
+			"/dist",
+			"/node_modules",
+			"/vendor"
+		],
+		"plugins": [
+			"stylelint-order"
+		],
+		"rules": {
+			"selector-class-pattern": null,
+			"order/order": [
+				{
+					"type": "at-rule"
+				},
+				"declarations",
+				"custom-properties",
+				"dollar-variables",
+				{
+					"type": "at-rule",
+					"hasBlock": true
+				},
+				"less-mixins",
+				"rules"
+			],
+			"order/properties-order": [
+				[
+					{
+						"groupName": "Position",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"position",
+							"top",
+							"right",
+							"bottom",
+							"left",
+							"z-index",
+							"border-box",
+							"float",
+							"clear"
+						]
+					},
+					{
+						"groupName": "Display",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"display",
+							"flex",
+							"flex-grow",
+							"flex-shrink",
+							"flex-basis",
+							"flex-direction",
+							"flex-flow",
+							"flex-wrap",
+							"grid",
+							"grid-area",
+							"grid-template",
+							"grid-template-areas",
+							"grid-template-rows",
+							"grid-template-columns",
+							"grid-row",
+							"grid-row-start",
+							"grid-row-end",
+							"grid-column",
+							"grid-column-start",
+							"grid-column-end",
+							"grid-auto-rows",
+							"grid-auto-columns",
+							"grid-auto-flow",
+							"grid-gap",
+							"grid-row-gap",
+							"grid-column-gap",
+							"gap",
+							"align-content",
+							"align-items",
+							"align-self",
+							"justify-content",
+							"order"
+						]
+					},
+					{
+						"groupName": "Spacing",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"width",
+							"min-width",
+							"max-width",
+							"height",
+							"min-height",
+							"max-height",
+							"box-sizing",
+							"margin",
+							"margin-top",
+							"margin-right",
+							"margin-bottom",
+							"margin-left",
+							"padding",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"object-fit"
+						]
+					},
+					{
+						"groupName": "Colors",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"color",
+							"background",
+							"background-color",
+							"background-image",
+							"background-attachment",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-clip",
+							"background-origin",
+							"background-size",
+							"background-repeat"
+						]
+					},
+					{
+						"groupName": "Text",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"font",
+							"font-family",
+							"font-size",
+							"line-height",
+							"font-weight",
+							"font-style",
+							"font-variant",
+							"font-size-adjust",
+							"font-stretch",
+							"text-align",
+							"text-align-last",
+							"text-decoration",
+							"text-emphasis",
+							"text-emphasis-position",
+							"text-emphasis-style",
+							"text-emphasis-color",
+							"text-indent",
+							"text-justify",
+							"text-rendering",
+							"text-outline",
+							"text-transform",
+							"text-wrap",
+							"text-overflow",
+							"text-overflow-ellipsis",
+							"text-overflow-mode",
+							"text-shadow",
+							"letter-spacing",
+							"word-spacing",
+							"word-wrap",
+							"word-break"
+						]
+					},
+					{
+						"groupName": "Decors",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"border",
+							"border-spacing",
+							"border-collapse",
+							"border-width",
+							"border-style",
+							"border-color",
+							"border-top",
+							"border-top-width",
+							"border-top-style",
+							"border-top-color",
+							"border-right",
+							"border-right-width",
+							"border-right-style",
+							"border-right-color",
+							"border-bottom",
+							"border-bottom-width",
+							"border-bottom-style",
+							"border-bottom-color",
+							"border-left",
+							"border-left-width",
+							"border-left-style",
+							"border-left-color",
+							"border-radius",
+							"border-top-left-radius",
+							"border-top-right-radius",
+							"border-bottom-right-radius",
+							"border-bottom-left-radius",
+							"border-image",
+							"border-image-source",
+							"border-image-slice",
+							"border-image-width",
+							"border-image-outset",
+							"border-image-repeat",
+							"border-top-image",
+							"border-right-image",
+							"border-bottom-image",
+							"border-left-image",
+							"border-corner-image",
+							"border-top-left-image",
+							"border-top-right-image",
+							"border-bottom-right-image",
+							"border-bottom-left-image",
+							"box-shadow",
+							"outline",
+							"outline-width",
+							"outline-style",
+							"outline-color",
+							"outline-offset",
+							"list-style",
+							"list-style-position",
+							"list-style-type",
+							"list-style-image"
+						]
+					},
+					{
+						"groupName": "Tweaks",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"transform",
+							"transform-origin",
+							"opacity",
+							"visibility",
+							"cursor",
+							"overflow",
+							"overflow-x",
+							"overflow-y",
+							"overflow-scrolling"
+						]
+					},
+					{
+						"groupName": "Animations",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"animation",
+							"animation-name",
+							"animation-duration",
+							"animation-play-state",
+							"animation-timing-function",
+							"animation-delay",
+							"animation-iteration-count",
+							"animation-direction",
+							"animation-fill-mode",
+							"transition",
+							"transition-delay",
+							"transition-timing-function",
+							"transition-duration",
+							"transition-property"
+						]
+					},
+					{
+						"groupName": "Misc",
+						"emptyLineBefore": "never",
+						"noEmptyLineBetween": true,
+						"properties": [
+							"pointer-event",
+							"content",
+							"appearance"
+						]
+					}
+				],
+				{
+					"unspecified": "bottom",
+					"emptyLineBeforeUnspecified": "never"
+				}
+			]
+		}
+	}
+}

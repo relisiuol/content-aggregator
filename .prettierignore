@@ -1,0 +1,6 @@
+/.husky
+/dist
+/languages
+/node_modules
+/vendor
+composer.lock
