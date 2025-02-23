@@ -176,7 +176,6 @@ add_action(
 			content_aggregator_install();
 		}
 		spl_autoload_register( 'content_aggregator_spl_autoload_register' );
-		load_plugin_textdomain( 'content-aggregator', false, basename( CONTENT_AGGREGATOR_DIR ) . '/languages/' );
 	}
 );
 
