@@ -42,8 +42,12 @@ class Sources_Table extends \WP_List_Table {
 			}
 			$this->process_bulk_action( $ids, $sendback );
 		} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
-			wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' ) ) ) );
-			exit;
+			$referer = wp_unslash( $_GET['_wp_http_referer'] );
+			if ( wp_validate_redirect( $referer ) ) {
+				$redirect_url = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), $referer );
+				wp_safe_redirect( $redirect_url );
+				exit;
+			}
 		}
 	}
 
@@ -138,8 +142,8 @@ class Sources_Table extends \WP_List_Table {
 		$columns = $this->get_columns();
 		$sortable = $this->get_sortable_columns();
 		$hidden = $this->get_hidden_columns();
-		$orderby = ( ! empty( $_GET['orderby'] ) && array_key_exists( $_GET['orderby'], $sortable ) ) ? esc_sql( $_GET['orderby'] ) : 'name'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$order = ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ) ? esc_sql( $_GET['order'] ) : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$orderby = ( ! empty( $_GET['orderby'] ) && array_key_exists( sanitize_text_field( wp_unslash( $_GET['orderby'] ) ), $sortable ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'name'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$order = ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ) ? 'desc' : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$this->items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -178,7 +182,6 @@ class Sources_Table extends \WP_List_Table {
 		if ( array_key_exists( 'deleted', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_settings_error( 'content_aggregator_sources', 'success', __( 'Source(s) deleted successfully.', 'content-aggregator' ), 'success' );
 		}
-		$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'enabled', 'disabled', 'deleted' ), ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' ) );
 	}
 
 	public function has_items() {

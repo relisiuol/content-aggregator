@@ -48,7 +48,8 @@ class Cron {
 		global $wpdb;
 		$original_certif_path = \WpOrg\Requests\Requests::get_certificate_path();
 		if ( ! empty( $this->settings['certificate_path'] ) ) {
-			\WpOrg\Requests\Requests::set_certificate_path( $this->settings['certificate_path'] );
+			$upload_dir = wp_upload_dir();
+			\WpOrg\Requests\Requests::set_certificate_path( $upload_dir['basedir'] . '/certificates/' . $this->settings['certificate_path'] );
 		}
 		$table_name = $wpdb->prefix . 'content_aggregator_sources';
 		$sources = $wpdb->get_results( // WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

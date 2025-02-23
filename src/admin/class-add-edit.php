@@ -111,17 +111,17 @@ class Add_Edit {
 			),
 			array()
 		);
-		$input['name'] = isset( $input['name'] ) ? wp_unslash( sanitize_text_field( $input['name'] ) ) : '';
+		$input['name'] = isset( $input['name'] ) ? sanitize_text_field( wp_unslash( $input['name'] ) ) : '';
 		if ( empty( $input['name'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-name', __( 'Name is required.', 'content-aggregator' ) );
 		}
-		$input['url'] = isset( $input['url'] ) ? wp_unslash( esc_url_raw( $input['url'] ) ) : '';
+		$input['url'] = isset( $input['url'] ) ? sanitize_url( wp_unslash( $input['url'] ), array( 'http', 'https' ) ) : '';
 		if ( empty( $input['url'] ) || ! filter_var( $input['url'], FILTER_VALIDATE_URL ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-url', __( 'URL is missing or invalid.', 'content-aggregator' ) );
 		}
-		$input['scrap_url'] = isset( $input['scrap_url'] ) ? wp_unslash( esc_url_raw( $input['scrap_url'] ) ) : '';
+		$input['scrap_url'] = isset( $input['scrap_url'] ) ? sanitize_url( wp_unslash( $input['scrap_url'] ), array( 'http', 'https' ) ) : '';
 		if ( empty( $input['scrap_url'] ) || ! filter_var( $input['scrap_url'], FILTER_VALIDATE_URL ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-scrap_url', __( 'Source URL is missing or invalid.', 'content-aggregator' ) );
@@ -132,7 +132,7 @@ class Add_Edit {
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-type', __( 'Source type is missing or invalid.', 'content-aggregator' ) );
 		}
 		$input['unique_title'] = isset( $input['unique_title'] ) && $input['unique_title'] ? '1' : '0';
-		$input['user_agent'] = isset( $input['user_agent'] ) ? sanitize_text_field( $input['user_agent'] ) : '';
+		$input['user_agent'] = isset( $input['user_agent'] ) ? sanitize_text_field( wp_unslash( $input['user_agent'] ) ) : '';
 		if ( empty( $input['user_agent'] ) || ! $this->source || $this->source['user_agent'] !== $input['user_agent'] ) {
 			if ( empty( $input['user_agent'] ) ) {
 				add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'missing-user_agent', __( 'User-Agent is missing.', 'content-aggregator' ) );
@@ -155,22 +155,22 @@ class Add_Edit {
 			}
 			$input['categories'] = (string) implode( ', ', $input['categories'] );
 		}
-		$input['post_status'] = isset( $input['post_status'] ) ? wp_unslash( sanitize_key( $input['post_status'] ) ) : '';
+		$input['post_status'] = isset( $input['post_status'] ) ? sanitize_key( wp_unslash( $input['post_status'] ) ) : '';
 		if ( ! get_post_status_object( $input['post_status'] ) || ! get_post_status_object( $input['post_status'] )->show_in_admin_status_list ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-post_status', __( 'Post status is invalid or missing.', 'content-aggregator' ) );
 		}
-		$input['post_title_template'] = isset( $input['post_title_template'] ) ? wp_unslash( esc_html( $input['post_title_template'] ) ) : '';
+		$input['post_title_template'] = isset( $input['post_title_template'] ) ? sanitize_text_field( wp_unslash( $input['post_title_template'] ) ) : '';
 		if ( ! preg_match( '/' . implode( '|', array_merge( self::TITLE_TAGS, self::DATE_TAGS ) ) . '/', $input['post_title_template'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-post_title_template', __( 'Post title template is invalid or missing.', 'content-aggregator' ) );
 		}
-		$input['post_date_template'] = isset( $input['post_date_template'] ) ? wp_unslash( esc_html( $input['post_date_template'] ) ) : '';
+		$input['post_date_template'] = isset( $input['post_date_template'] ) ? sanitize_text_field( wp_unslash( $input['post_date_template'] ) ) : '';
 		if ( ! preg_match( '/' . implode( '|', self::DATE_TAGS ) . '/', $input['post_date_template'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-post_date_template', __( 'Post date template is invalid or missing.', 'content-aggregator' ) );
 		}
-		$input['content_template'] = isset( $input['content_template'] ) ? wp_unslash( wp_kses_post( $input['content_template'] ) ) : '';
+		$input['content_template'] = isset( $input['content_template'] ) ? wp_kses_post( wp_unslash( $input['content_template'] ) ) : '';
 		if ( ! preg_match( '/' . implode( '|', array_merge( self::TITLE_TAGS, self::DATE_TAGS, self::CONTENT_TAGS ) ) . '/', $input['content_template'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-content_template', __( 'Post content template is invalid or missing.', 'content-aggregator' ) );
@@ -432,7 +432,7 @@ class Add_Edit {
 
 	public function page() {
 		if ( isset( $_POST['content_aggregator_source'] ) && is_array( $_POST['content_aggregator_source'] ) ) {
-			if ( ! isset( $_POST['content_aggregator_source_nonce'] ) || ! wp_verify_nonce( $_POST['content_aggregator_source_nonce'], 'content_aggregator_update_source' . ( $this->source ? '_' . $this->source['id'] : '' ) ) ) {
+			if ( ! isset( $_POST['content_aggregator_source_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_source_nonce'] ) ), 'content_aggregator_update_source' . ( $this->source ? '_' . $this->source['id'] : '' ) ) ) {
 				wp_die( 'Security check failed.' );
 			}
 			$this->update_source( $_POST['content_aggregator_source'] );

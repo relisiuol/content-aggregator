@@ -31,22 +31,30 @@ class Settings {
 		add_settings_field( 'content_aggregator_certificate_path', __( 'Certificate path', 'content-aggregator' ), array( $this, 'add_settings_field_certificate_path' ), 'content_aggregator_page', 'content_aggregator_section' );
 	}
 
+	private static function default_settings() {
+		return array(
+			'update_interval' => '1h',
+			'max_update'      => 10,
+			'expiration_date' => '1w',
+			'certificate_path' => \WpOrg\Requests\Requests::get_certificate_path(),
+		);
+	}
+
 	public function get_settings( $options = false ) {
 		if ( empty( $options ) || ! is_array( $options ) ) {
 			$options = get_option( 'content_aggregator_settings' );
 		}
 		return wp_parse_args(
 			$options,
-			array(
-				'update_interval' => '1h',
-				'max_update'      => 10,
-				'expiration_date' => '1w',
-				'certificate_path' => \WpOrg\Requests\Requests::get_certificate_path(),
-			)
+			$this->default_settings()
 		);
 	}
 
 	private function update_settings( $input ) {
+		$input = wp_parse_args(
+			$input,
+			$this->default_settings()
+		);
 		$input = $this->get_settings( $input );
 		$success = false;
 		$output = $this->get_settings();
@@ -73,12 +81,12 @@ class Settings {
 		} elseif ( $input['expiration_date'] !== $output['expiration_date'] ) {
 			add_settings_error( 'content_aggregator_settings', 'invalid-expiration-date', __( 'Invalid expiration date selected.', 'content-aggregator' ) );
 		}
-		$input['certificate_path'] = sanitize_text_field( $input['certificate_path'] );
+		$input['certificate_path'] = sanitize_text_field( wp_unslash( $input['certificate_path'] ) );
 		if ( $input['certificate_path'] !== $output['certificate_path'] ) {
+			$upload_dir = wp_upload_dir();
 			if ( \WpOrg\Requests\Requests::get_certificate_path() === $input['certificate_path'] ) {
 				$output['certificate_path'] = '';
-			} elseif ( file_exists( $input['certificate_path'] ) ) {
-				$upload_dir = wp_upload_dir();
+			} elseif ( file_exists( $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'] ) ) {
 				$args = array(
 					'sslcertificates' => $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'],
 				);
@@ -143,7 +151,7 @@ class Settings {
 	public function add_settings_field_certificate_path() {
 		$options = $this->get_settings();
 		echo '<div class="form-field form-required">';
-		echo '<input type="text" id="certificate_path" name="content_aggregator_settings[certificate_path]" class="regular-text" value="' . esc_attr( $options['certificate_path'] ? $options['certificate_path'] : '' ) . '">';
+		echo '<input type="text" id="certificate_path" name="content_aggregator_settings[certificate_path]" class="regular-text" value="' . esc_attr( $options['certificate_path'] ? $options['certificate_path'] : \WpOrg\Requests\Requests::get_certificate_path() ) . '">';
 		echo '<p class="description">' . esc_html__( 'Specify the file path to the SSL certificate(s) used for secure HTTPS connections.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This is essential for verifying the authenticity of remote resources during fetching.', 'content-aggregator' ) . '</p>';
 		$upload_dir = wp_upload_dir();
@@ -156,13 +164,13 @@ class Settings {
 
 	public function page() {
 		if ( isset( $_POST['content_aggregator_reset'] ) ) {
-			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( $_POST['content_aggregator_settings_nonce'], 'content_aggregator_update_settings' ) ) {
+			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_settings_nonce'] ) ), 'content_aggregator_update_settings' ) ) {
 				wp_die( 'Security check failed.' );
 			}
 			delete_option( 'content_aggregator_settings' );
 			add_settings_error( 'content_aggregator_settings', 'settings_reset', __( 'Settings successfully reset.', 'content-aggregator' ), 'success' );
 		} elseif ( isset( $_POST['content_aggregator_settings'] ) ) {
-			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( $_POST['content_aggregator_settings_nonce'], 'content_aggregator_update_settings' ) ) {
+			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_settings_nonce'] ) ), 'content_aggregator_update_settings' ) ) {
 				wp_die( 'Security check failed.' );
 			}
 			$output = $this->update_settings( $_POST['content_aggregator_settings'] );
