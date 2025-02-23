@@ -201,18 +201,20 @@ class Add_Edit {
 					add_settings_error( 'content_aggregator_source', 'invalid-scrap_url', __( 'Source URL is already used.', 'content-aggregator' ) );
 				} else {
 					$input['last_news'] = '';
-					$wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-					$this->source['id'] = $wpdb->insert_id;
-					wp_redirect(
-						add_query_arg(
-							array(
-								'page' => 'content-aggregator-add-edit',
-								'id' => $this->source['id'],
-							),
-							admin_url( 'admin.php' )
-						)
-					);
-					exit;
+					$id = $wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+					if ( $id ) {
+						$this->source['id'] = $id;
+						wp_redirect(
+							add_query_arg(
+								array(
+									'page' => 'content-aggregator-add-edit',
+									'id' => $this->source['id'],
+								),
+								admin_url( 'admin.php' )
+							)
+						);
+						exit;
+					}
 				}
 			}
 		}

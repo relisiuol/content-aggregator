@@ -137,7 +137,7 @@ if ( ! function_exists( 'content_aggregator_template_redirect' ) ) {
 			$source = get_post_meta( $post->ID, 'content_aggregator_source', true );
 			if ( ! empty( $url ) && ! empty( $source ) ) {
 				$table_name = $wpdb->prefix . 'content_aggregator_sources';
-				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', array( $table_name, $source ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $redirect ) {
 					wp_redirect( $url, 302 );
 					exit;
@@ -156,7 +156,7 @@ if ( ! function_exists( 'content_aggregator_post_link' ) ) {
 			$source = get_post_meta( $post->ID, 'content_aggregator_source', true );
 			if ( ! empty( $real_url ) && ! empty( $source ) ) {
 				$table_name = $wpdb->prefix . 'content_aggregator_sources';
-				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', array( $table_name, $source ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $redirect ) {
 					return $real_url;
 				}
