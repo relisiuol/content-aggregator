@@ -137,7 +137,7 @@ class Add_Edit {
 			if ( empty( $input['user_agent'] ) ) {
 				add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'missing-user_agent', __( 'User-Agent is missing.', 'content-aggregator' ) );
 			} else {
-				$response = wp_remote_get( 'https://www.google.com/', array( 'user-agent' => $input['user_agent'] ) );
+				$response = wp_remote_get( home_url(), array( 'user-agent' => $input['user_agent'] ) );
 				if ( is_wp_error( $response ) ) {
 					$success = false;
 					add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-user_agent', __( 'User-Agent is invalid.', 'content-aggregator' ) );

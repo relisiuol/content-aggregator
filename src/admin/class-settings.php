@@ -81,7 +81,7 @@ class Settings {
 				$args = array(
 					'sslcertificates' => ABSPATH . $input['certificate_path'],
 				);
-				$response = wp_remote_get( 'https://www.google.com/', $args );
+				$response = wp_remote_get( home_url(), $args );
 				if ( is_wp_error( $response ) ) {
 					add_settings_error( 'content_aggregator_settings', 'invalid-certificate-path', __( 'Invalid certificate path or file. SSL certificate problem encountered.', 'content-aggregator' ) );
 				} else {
