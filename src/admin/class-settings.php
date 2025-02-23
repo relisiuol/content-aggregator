@@ -78,8 +78,9 @@ class Settings {
 			if ( \WpOrg\Requests\Requests::get_certificate_path() === $input['certificate_path'] ) {
 				$output['certificate_path'] = '';
 			} elseif ( file_exists( $input['certificate_path'] ) ) {
+				$upload_dir = wp_upload_dir();
 				$args = array(
-					'sslcertificates' => ABSPATH . $input['certificate_path'],
+					'sslcertificates' => $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'],
 				);
 				$response = wp_remote_get( home_url(), $args );
 				if ( is_wp_error( $response ) ) {
@@ -142,10 +143,12 @@ class Settings {
 	public function add_settings_field_certificate_path() {
 		$options = $this->get_settings();
 		echo '<div class="form-field form-required">';
-		echo '<input type="text" id="certificate_path" name="content_aggregator_settings[certificate_path]" class="regular-text" value="' . esc_attr( $options['certificate_path'] ? $options['certificate_path'] : \WpOrg\Requests\Requests::get_certificate_path() ) . '">';
+		echo '<input type="text" id="certificate_path" name="content_aggregator_settings[certificate_path]" class="regular-text" value="' . esc_attr( $options['certificate_path'] ? $options['certificate_path'] : '' ) . '">';
 		echo '<p class="description">' . esc_html__( 'Specify the file path to the SSL certificate(s) used for secure HTTPS connections.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This is essential for verifying the authenticity of remote resources during fetching.', 'content-aggregator' ) . '</p>';
-		echo '<p class="description">' . esc_html__( 'You can provide a relative path, which will be considered relative to the WordPress root directory.', 'content-aggregator' ) . '</p>';
+		$upload_dir = wp_upload_dir();
+		// translators: SSL certificates folder path
+		echo '<p class="description">' . esc_html( sprintf( __( 'You can provide a relative path, which will be considered relative to the %s directory.', 'content-aggregator' ), $upload_dir['basedir'] . '/certificates/' ) ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Ensure the specified path is accurate to avoid connection issues.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description"><strong>' . esc_html__( 'Default value:', 'content-aggregator' ) . '</strong> ' . esc_html( \WpOrg\Requests\Requests::get_certificate_path() ) . '</p>';
 		echo '</div>';
