@@ -96,7 +96,9 @@ jQuery(document).ready(function ($) {
 					const response = await fetch(
 						contentAggregator.ajax_url +
 							'?action=content_aggregator&url=' +
-							encodeURIComponent(e.target.value)
+							encodeURIComponent(e.target.value) +
+							'&nonce=' +
+							encodeURI(contentAggregator.ajax_nonce)
 					);
 					if (!response.ok) {
 						return false;
