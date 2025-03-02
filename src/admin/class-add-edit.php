@@ -10,16 +10,16 @@ if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( '
 class Add_Edit {
 	const DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36';
 	const TITLE_TAGS = array(
-		'%title%',
-		'%source_name%',
+		'__TITLE__',
+		'__SOURCE_NAME__',
 	);
 	const DATE_TAGS = array(
-		'%date%',
-		'%now%',
+		'__NOW__',
+		'__DATE__',
 	);
 	const CONTENT_TAGS = array(
-		'%content%',
-		'%url%',
+		'__CONTENT__',
+		'__URL__',
 	);
 	private static $instance;
 	private $source;
@@ -86,9 +86,9 @@ class Add_Edit {
 			'user_agent'          => self::DEFAULT_USER_AGENT,
 			'categories'          => '',
 			'post_status'         => 'publish',
-			'post_title_template' => '%title%',
-			'post_date_template'  => '%now%',
-			'content_template'    => '%content%',
+			'post_title_template' => self::TITLE_TAGS[0],
+			'post_date_template'  => self::DATE_TAGS[0],
+			'content_template'    => self::CONTENT_TAGS[0],
 			'featured_image'      => '',
 			'redirect'            => false,
 			'enabled'             => false,
@@ -233,8 +233,8 @@ class Add_Edit {
 	public function add_source_name() {
 		echo '<div class="form-field form-required">';
 		echo '<input type="text" name="content_aggregator_source[name]" value="' . ( $this->source ? esc_attr( $this->source['name'] ) : '' ) . '" />';
-		// translators: %source_name%: Placeholder for the source name used in templates.
-		echo '<p class="description">' . esc_html( sprintf( __( 'Specify the source name to be used in title templates as %s.', 'content-aggregator' ), '%source_name%' ) ) . '</p>';
+		// translators: __SOURCE_NAME__: Placeholder for the source name used in templates.
+		echo '<p class="description">' . esc_html( sprintf( __( 'Specify the source name to be used in title templates as %s.', 'content-aggregator' ), self::TITLE_TAGS[1] ) ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This dynamic approach allows for more personalized content creation.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
 	}
@@ -325,7 +325,7 @@ class Add_Edit {
 
 	public function add_source_post_title_template() {
 		echo '<div class="form-field form-required">';
-		echo '<input type="text" id="post_title_template" name="content_aggregator_source[post_title_template]" value="' . ( $this->source && ! empty( $this->source['post_title_template'] ) ? esc_attr( $this->source['post_title_template'] ) : '%title%' ) . '" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS ) ) ) . '" />';
+		echo '<input type="text" id="post_title_template" name="content_aggregator_source[post_title_template]" value="' . esc_attr( $this->source && ! empty( $this->source['post_title_template'] ) ? $this->source['post_title_template'] : self::TITLE_TAGS[0] ) . '" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS ) ) ) . '" />';
 		echo '<p class="description">';
 		echo esc_html(
 			sprintf(
@@ -354,7 +354,7 @@ class Add_Edit {
 			echo '<option value="' . esc_attr( $date_tag ) . '" ' . selected( ( $this->source && ! empty( $this->source['post_date_template'] ) ? $this->source['post_date_template'] : '' ), $date_tag, false ) . '>' . esc_html( $date_tag ) . '</option>';
 		}
 		echo '</select>';
-		// translators: %date%, %now%: Placeholders for dynamic tags used in date templates.
+		// translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
 		echo '<p class="description">' . esc_html( sprintf( __( 'Design your date display using %s.', 'content-aggregator' ), implode( __( ' and ', 'content-aggregator' ), self::DATE_TAGS ) ) ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This template ensures dates are consistently formatted across your content.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
@@ -362,25 +362,25 @@ class Add_Edit {
 
 	public function add_source_content_template() {
 		$tags = array(
-			'%title%' => 'The title of the original content.',
-			'%source_name%' => 'The name of the content source.',
-			'%date%' => 'The publication date of the original content.',
-			'%now%' => 'The current date when the content is fetched.',
-			'%content%' => 'The main body of the content.',
-			'%url%' => 'The URL of the original content.',
+			self::TITLE_TAGS[0]   => 'The title of the original content.',
+			self::TITLE_TAGS[1]   => 'The name of the content source.',
+			self::DATE_TAGS[0]    => 'The current date when the content is fetched.',
+			self::DATE_TAGS[1]    => 'The publication date of the original content.',
+			self::CONTENT_TAGS[0] => 'The main body of the content.',
+			self::CONTENT_TAGS[1] => 'The URL of the original content.',
 		);
 		echo '<div class="form-field form-required">';
-		echo '<textarea name="content_aggregator_source[content_template]" rows="4" cols="50" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS, self::CONTENT_TAGS ) ) ) . '">' . ( $this->source && ! empty( $this->source['content_template'] ) ? esc_attr( $this->source['content_template'] ) : '%content%' ) . '</textarea>';
+		echo '<textarea name="content_aggregator_source[content_template]" rows="4" cols="50" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS, self::CONTENT_TAGS ) ) ) . '">' . esc_html( $this->source && ! empty( $this->source['content_template'] ) ? $this->source['content_template'] : self::CONTENT_TAGS[0] ) . '</textarea>';
 		echo '<p class="description">' . esc_html__( 'Define the content structure with placeholders for a rich, dynamic presentation.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Utilize tags for dates, titles, and URLs to weave together engaging posts.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Available tags:', 'content-aggregator' ) . '</p>';
-		echo '<ul class="description">';
-		echo '<li>%title% • ' . esc_html__( 'The original item\'s title.', 'content-aggregator' ) . '</li>';
-		echo '<li>%source_name% • ' . esc_html__( 'The source\'s name providing the content.', 'content-aggregator' ) . '</li>';
-		echo '<li>%date% • ' . esc_html__( 'The publication date.', 'content-aggregator' ) . '</li>';
-		echo '<li>%now% • ' . esc_html__( 'The current date when retrieving items.', 'content-aggregator' ) . '</li>';
-		echo '<li>%content% • ' . esc_html__( 'The main source\'s content, if available.', 'content-aggregator' ) . '</li>';
-		echo '<li>%url% • ' . esc_html__( 'URL to the original content.', 'content-aggregator' ) . '</li>';
+		echo '<ul>';
+		echo '<li><p class="description">' . esc_html( self::TITLE_TAGS[0] . ' • ' . __( 'The original item\'s title.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::TITLE_TAGS[1] . ' • ' . __( 'The source\'s name providing the content.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::DATE_TAGS[0] . ' • ' . __( 'The current date when retrieving items.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::DATE_TAGS[1] . ' • ' . __( 'The publication date.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::CONTENT_TAGS[0] . ' • ' . __( 'The main source\'s content, if available.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::CONTENT_TAGS[1] . ' • ' . __( 'URL to the original content.', 'content-aggregator' ) ) . '</p></li>';
 		echo '</ul>';
 		echo '</div>';
 	}

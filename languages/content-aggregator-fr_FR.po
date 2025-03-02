@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Domain: content-aggregator\n"
 
-#. translators: %date%, %now%: Placeholders for dynamic tags used in date templates.
+#. translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
 #: src/admin/class-add-edit.php:332
 #: src/admin/class-add-edit.php:341
 #: src/admin/class-add-edit.php:356
@@ -135,7 +135,7 @@ msgstr "Définissez la structure du contenu avec des espaces réservés pour une
 msgid "Delete permanently"
 msgstr "Supprimer définitivement"
 
-#. translators: %date%, %now%: Placeholders for dynamic tags used in date templates.
+#. translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
 #: src/admin/class-add-edit.php:356
 #, php-format
 msgid "Design your date display using %s."
@@ -395,7 +395,7 @@ msgstr "Sources"
 msgid "Specify the file path to the SSL certificate(s) used for secure HTTPS connections."
 msgstr "Spécifiez le chemin d'accès au(x) certificat(s) SSL utilisé(s) pour les connexions HTTPS sécurisées."
 
-#. translators: %source_name%: Placeholder for the source name used in templates.
+#. translators: __SOURCE_NAME__: Placeholder for the source name used in templates.
 #: src/admin/class-add-edit.php:235
 #, php-format
 msgid "Specify the source name to be used in title templates as %s."

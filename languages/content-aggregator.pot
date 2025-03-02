@@ -165,7 +165,7 @@ msgstr ""
 msgid "Source URL is already used."
 msgstr ""
 
-#. translators: %source_name%: Placeholder for the source name used in templates.
+#. translators: __SOURCE_NAME__: Placeholder for the source name used in templates.
 #: src/admin/class-add-edit.php:235
 msgid "Specify the source name to be used in title templates as %s."
 msgstr ""
@@ -237,7 +237,7 @@ msgstr ""
 msgid "Create a title template using dynamic tags such as %s."
 msgstr ""
 
-#. translators: %date%, %now%: Placeholders for dynamic tags used in date templates.
+#. translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
 #: src/admin/class-add-edit.php:332
 #: src/admin/class-add-edit.php:341
 #: src/admin/class-add-edit.php:356
@@ -249,7 +249,7 @@ msgstr ""
 msgid "Incorporate date information with %s to keep titles timely and relevant."
 msgstr ""
 
-#. translators: %date%, %now%: Placeholders for dynamic tags used in date templates.
+#. translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
 #: src/admin/class-add-edit.php:356
 msgid "Design your date display using %s."
 msgstr ""
