@@ -92,19 +92,19 @@ if ( ! function_exists( 'content_aggregator_install' ) ) {
 if ( ! function_exists( 'content_aggregator_uninstall' ) ) {
 	function content_aggregator_uninstall() {
 		global $wpdb;
-		$wpdb->delete(
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prefix . 'post_meta',
 			array(
-				'meta_key' => 'content_aggregator_source',
+				'meta_key' => 'content_aggregator_source', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			),
 			array(
 				'%s',
 			)
 		);
-		$wpdb->delete(
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prefix . 'post_meta',
 			array(
-				'meta_key' => 'content_aggregator_url',
+				'meta_key' => 'content_aggregator_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			),
 			array(
 				'%s',

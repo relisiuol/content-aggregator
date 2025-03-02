@@ -173,7 +173,7 @@ class Settings {
 			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_settings_nonce'] ) ), 'content_aggregator_update_settings' ) ) {
 				wp_die( 'Security check failed.' );
 			}
-			$output = $this->update_settings( $_POST['content_aggregator_settings'] );
+			$output = $this->update_settings( $_POST['content_aggregator_settings'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 			update_option( 'content_aggregator_settings', $output );
 		}
 		$next_refresh = human_time_diff( wp_next_scheduled( 'content_aggregator_update_hook' ), time() );

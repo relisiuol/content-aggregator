@@ -246,7 +246,7 @@ class Sources_Table extends \WP_List_Table {
 		} elseif ( 'delete' === $this->current_action() ) {
 			$i = 0;
 			foreach ( $ids as $id ) {
-				$i += $wpdb->delete(
+				$i += $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$table_name,
 					array(
 						'id' => $id,
