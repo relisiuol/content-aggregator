@@ -93,7 +93,7 @@
 		"localize:mo": "wp i18n make-mo languages/",
 		"localize:json": "wp i18n make-json --no-purge languages/",
 		"localize:php": "wp i18n make-php languages/",
-		"package:prepare": "rm -rf .git/ && rm -rf .github/ && rm -rf .husky/ && rm -rf .vscode/ && rm -rf assets/ && rm -rf vendor/ && rm -f .editorconfig && rm -f .gitattributes && rm -f .gitignore && rm -f .markdownlint.json && rm -f .markdownlintignore && rm -f .prettierignore && rm -f .svglintrc.js && rm -f composer.json && rm -f composer.lock && rm -f phpcs.xml && rm -f playwright.config.js && rm -rf tests && rm -f webpack.config.js",
+		"package:prepare": "cp assets/js/content-aggregator.js dist/js/content-aggregator.js && cp assets/scss/content-aggregator.scss dist/css/content-aggregator.scss && rm -rf .git/ && rm -rf .github/ && rm -rf .husky/ && rm -rf .vscode/ && rm -rf assets/ && rm -rf vendor/ && rm -f .editorconfig && rm -f .gitattributes && rm -f .gitignore && rm -f .markdownlint.json && rm -f .markdownlintignore && rm -f .prettierignore && rm -f .svglintrc.js && rm -f composer.json && rm -f composer.lock && rm -f phpcs.xml && rm -f playwright.config.js && rm -rf tests && rm -f webpack.config.js",
 		"package": "rm -rf node_modules/ && rm -f package.json && rm -f pnpm-lock.yaml && zip -r content-aggregator ./",
 		"playwright": "playwright test",
 		"prepare": "husky && composer install",

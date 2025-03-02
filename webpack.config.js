@@ -136,11 +136,6 @@ const webpackConfig = TimeAnalyticsPlugin.wrap({
 		}),
 		new CopyPlugin({
 			patterns: [
-				// js source file
-				{
-					from: 'assets/js/content-aggregator.js',
-					to: 'js/content-aggregator.js',
-				},
 				// select2 css
 				{
 					from: 'node_modules/select2/dist/css/select2.min.css',
