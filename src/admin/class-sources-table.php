@@ -56,17 +56,17 @@ class Sources_Table extends \WP_List_Table {
 
 	public function get_columns() {
 		return array(
-			'cb'                   => '<input type="checkbox" />',
-			'name'                 => __( 'Name', 'content-aggregator' ),
-			'last_check'           => __( 'Last check', 'content-aggregator' ),
-			'categories'             => __( 'Categories', 'content-aggregator' ),
-			'post_status'          => __( 'Post status', 'content-aggregator' ),
+			'cb'          => '<input type="checkbox" />',
+			'title'       => __( 'Name', 'content-aggregator' ),
+			'last_check'  => __( 'Last check', 'content-aggregator' ),
+			'categories'  => __( 'Categories', 'content-aggregator' ),
+			'post_status' => __( 'Post status', 'content-aggregator' ),
 		);
 	}
 
 	public function get_sortable_columns() {
 		return array(
-			'name'       => array( 'name', true, __( 'Name', 'content-aggregator' ), __( 'Table ordered by name', 'content-aggregator' ), 'asc' ),
+			'title'      => array( 'title', true, __( 'Name', 'content-aggregator' ), __( 'Table ordered by name', 'content-aggregator' ), 'asc' ),
 			'last_check' => array( 'last_check', false, __( 'Last check', 'content-aggregator' ), __( 'Table ordered by last check date', 'content-aggregator' ) ),
 		);
 	}
@@ -84,15 +84,15 @@ class Sources_Table extends \WP_List_Table {
 		return '<input type="checkbox" name="id[]" value="' . esc_attr( $item['id'] ) . '" />';
 	}
 
-	protected function column_name( $item ) {
-		return '<a href="' . add_query_arg(
+	protected function column_title( $item ) {
+		return '<strong><a href="' . add_query_arg(
 			array(
 				'page' => 'content-aggregator-add-edit',
 				'id' => $item['id'],
 			),
 			admin_url( 'admin.php' )
 		) . '">' . esc_html( $item['name'] ) . '</a>' .
-		'&emsp;<span class="post-state">' . ( $item['enabled'] ? esc_html__( 'Enabled', 'content-aggregator' ) : esc_html__( 'Disabled', 'content-aggregator' ) ) . '</span>';
+		'&emsp;—&emsp;<span class="post-state">' . ( $item['enabled'] ? esc_html__( 'Enabled', 'content-aggregator' ) : esc_html__( 'Disabled', 'content-aggregator' ) ) . '</span></strong>';
 	}
 
 	protected function column_last_check( $item ) {

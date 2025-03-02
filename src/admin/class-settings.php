@@ -178,7 +178,7 @@ class Settings {
 		}
 		$next_refresh = human_time_diff( wp_next_scheduled( 'content_aggregator_update_hook' ), time() );
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html( get_admin_page_title() ) . '</h1>&emsp;<span>' . esc_html__( 'Next refresh:', 'content-aggregator' ) . ' ' . esc_html( $next_refresh ) . '</span>';
+		echo '<h1 class="wp-heading-inline">' . esc_html( get_admin_page_title() ) . '</h1>&emsp;<span class="title-count">' . esc_html__( 'Next refresh:', 'content-aggregator' ) . ' ' . esc_html( $next_refresh ) . '</span>';
 		echo '<hr class="wp-header-end">';
 		settings_errors( 'content_aggregator_settings' );
 		echo '<form method="post" action="' . esc_url( add_query_arg( 'page', 'content-aggregator-settings', admin_url( 'admin.php' ) ) ) . '">';

@@ -451,7 +451,7 @@ class Add_Edit {
 			$page_args['id'] = $this->source['id'];
 		}
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html( $this->admin_title( get_admin_page_title() ) ) . '</h1>';
+		echo '<h1 class="wp-heading-inline">' . esc_html( $this->admin_title( get_admin_page_title() ) ) . '</h1>';
 		echo '<hr class="wp-header-end">';
 		settings_errors( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ) );
 		echo '<form method="post" action="' . esc_url( add_query_arg( $page_args, admin_url( 'admin.php' ) ) ) . '">';
