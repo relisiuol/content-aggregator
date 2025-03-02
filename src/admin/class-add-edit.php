@@ -193,7 +193,7 @@ class Add_Edit {
 			$table_name = $wpdb->prefix . 'content_aggregator_sources';
 			$format = array( '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s' );
 			if ( ! empty( $this->source['id'] ) ) {
-				$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$table_name,
 					$input,
 					array(
@@ -204,7 +204,7 @@ class Add_Edit {
 				);
 				add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'success', __( 'Source saved successfully.', 'content-aggregator' ), 'success' );
 			} else {
-				$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(id) FROM %i WHERE scrap_url = %s', $table_name, $input['scrap_url'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(id) FROM %i WHERE scrap_url = %s', $table_name, $input['scrap_url'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $count > 0 ) {
 					add_settings_error( 'content_aggregator_source', 'invalid-scrap_url', __( 'Source URL is already used.', 'content-aggregator' ) );
 				} else {
@@ -433,7 +433,7 @@ class Add_Edit {
 	public function get_source( $id ) {
 		global $wpdb;
 		$table = $wpdb->prefix . 'content_aggregator_sources';
-		$source = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$source = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( $source ) {
 			$source = wp_parse_args(
 				$source,

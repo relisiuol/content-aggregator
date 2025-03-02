@@ -148,9 +148,9 @@ class Sources_Table extends \WP_List_Table {
 		$orderby = ( ! empty( $_GET['orderby'] ) && array_key_exists( sanitize_text_field( wp_unslash( $_GET['orderby'] ) ), $sortable ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'name'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
-		$this->items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$this->items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT * FROM %i WHERE `name` LIKE %s ORDER BY %i ' . ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ? 'desc' : 'asc' ) . ' LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'SELECT * FROM %i WHERE `name` LIKE %s ORDER BY %i ' . ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ? 'desc' : 'asc' ) . ' LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.Security.NonceVerification.Recommended
 				$table_name,
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				$orderby,
@@ -159,7 +159,7 @@ class Sources_Table extends \WP_List_Table {
 			),
 			ARRAY_A
 		);
-		$total_items = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$total_items = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				'SELECT COUNT(*) FROM %i WHERE `name` LIKE %s',
 				$table_name,
@@ -202,7 +202,7 @@ class Sources_Table extends \WP_List_Table {
 		if ( 'enable' === $this->current_action() ) {
 			$i = 0;
 			foreach ( $ids as $id ) {
-				$i += $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$i += $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$table_name,
 					array(
 						'enabled' => 1,
@@ -224,7 +224,7 @@ class Sources_Table extends \WP_List_Table {
 		} elseif ( 'disable' === $this->current_action() ) {
 			$i = 0;
 			foreach ( $ids as $id ) {
-				$i += $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$i += $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$table_name,
 					array(
 						'enabled' => 0,
@@ -246,7 +246,7 @@ class Sources_Table extends \WP_List_Table {
 		} elseif ( 'delete' === $this->current_action() ) {
 			$i = 0;
 			foreach ( $ids as $id ) {
-				$i += $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$i += $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$table_name,
 					array(
 						'id' => $id,

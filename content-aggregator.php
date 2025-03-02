@@ -92,7 +92,7 @@ if ( ! function_exists( 'content_aggregator_install' ) ) {
 if ( ! function_exists( 'content_aggregator_uninstall' ) ) {
 	function content_aggregator_uninstall() {
 		global $wpdb;
-		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prefix . 'post_meta',
 			array(
 				'meta_key' => 'content_aggregator_source', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -101,7 +101,7 @@ if ( ! function_exists( 'content_aggregator_uninstall' ) ) {
 				'%s',
 			)
 		);
-		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prefix . 'post_meta',
 			array(
 				'meta_key' => 'content_aggregator_url', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -110,7 +110,7 @@ if ( ! function_exists( 'content_aggregator_uninstall' ) ) {
 				'%s',
 			)
 		);
-		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'content_aggregator_sources' ) );
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'content_aggregator_sources' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		delete_option( 'content_aggregator_db_version' );
 		delete_option( 'content_aggregator_settings' );
 	}
@@ -153,7 +153,7 @@ if ( ! function_exists( 'content_aggregator_template_redirect' ) ) {
 			$source = get_post_meta( $post->ID, 'content_aggregator_source', true );
 			if ( ! empty( $url ) && ! empty( $source ) ) {
 				$table_name = $wpdb->prefix . 'content_aggregator_sources';
-				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) );
+				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $redirect ) {
 					wp_redirect( $url, 302 );
 					exit;
@@ -172,7 +172,7 @@ if ( ! function_exists( 'content_aggregator_post_link' ) ) {
 			$source = get_post_meta( $post->ID, 'content_aggregator_source', true );
 			if ( ! empty( $real_url ) && ! empty( $source ) ) {
 				$table_name = $wpdb->prefix . 'content_aggregator_sources';
-				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) );
+				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $redirect ) {
 					return $real_url;
 				}

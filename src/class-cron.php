@@ -52,7 +52,7 @@ class Cron {
 			\WpOrg\Requests\Requests::set_certificate_path( $upload_dir['basedir'] . '/certificates/' . $this->settings['certificate_path'] );
 		}
 		$table_name = $wpdb->prefix . 'content_aggregator_sources';
-		$sources = $wpdb->get_results( // WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$sources = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				'SELECT id, name, scrap_url, unique_title, type, user_agent, categories, post_status, post_title_template, post_date_template, content_template, featured_image, last_check, last_news FROM %i WHERE enabled = 1 ORDER BY last_check ASC LIMIT %d',
 				$table_name,
