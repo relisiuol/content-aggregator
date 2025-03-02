@@ -226,7 +226,14 @@ class Add_Edit {
 		wp_enqueue_style( 'content-aggregator', CONTENT_AGGREGATOR_URL . 'dist/css/content-aggregator.min.css', array( 'select2' ), CONTENT_AGGREGATOR_VERSION );
 		wp_enqueue_script( 'select2', CONTENT_AGGREGATOR_URL . 'dist/js/select2.min.js', array( 'jquery' ), '4.0.13', array( 'in_footer' => true ) );
 		wp_enqueue_script( 'content-aggregator', CONTENT_AGGREGATOR_URL . 'dist/js/content-aggregator.min.js', array( 'jquery-ui-autocomplete', 'select2', 'wp-i18n' ), CONTENT_AGGREGATOR_VERSION, array( 'in_footer' => true ) );
-		wp_localize_script( 'content-aggregator', 'contentAggregator', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+		wp_localize_script(
+			'content-aggregator',
+			'contentAggregator',
+			array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'ajax_nonce' => wp_create_nonce( 'content-aggregator-ajax' ),
+			)
+		);
 		wp_set_script_translations( 'content-aggregator', 'content-aggregator', CONTENT_AGGREGATOR_DIR . 'languages/' );
 	}
 

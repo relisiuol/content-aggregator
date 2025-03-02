@@ -86,7 +86,7 @@ jQuery(document).ready(function ($) {
 	);
 	let timerAutoDetect = false;
 	$('input[name="content_aggregator_source[url]"]').on(
-		'change',
+		'change keyup blur input",',
 		async (e) => {
 			if (timerAutoDetect) {
 				clearTimeout(timerAutoDetect);

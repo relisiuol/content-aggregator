@@ -16,13 +16,15 @@ class Sources_Table extends \WP_List_Table {
 		global $screen;
 		parent::__construct(
 			array(
-				'singular' => 'source',
-				'plural'   => 'sources',
+				'singular' => 'content-aggregator-source',
+				'plural'   => 'content-aggregator-sources',
 			)
 		);
 		$doaction = $this->current_action();
 		if ( $doaction ) {
-			check_admin_referer( 'bulk-sources' );
+			if ( ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
+				wp_die( 'Security check failed.' );
+			}
 			$sendback = remove_query_arg( array( 'enabled', 'disabled', 'deleted' ), wp_get_referer() );
 			if ( ! $sendback ) {
 				$sendback = add_query_arg(
@@ -42,12 +44,13 @@ class Sources_Table extends \WP_List_Table {
 			}
 			$this->process_bulk_action( $ids, $sendback );
 		} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
-			$referer = wp_unslash( $_GET['_wp_http_referer'] );
-			if ( wp_validate_redirect( $referer ) ) {
-				$redirect_url = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), $referer );
-				wp_safe_redirect( $redirect_url );
-				exit;
+			if ( ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
+				wp_die( 'Security check failed.' );
 			}
+			$sendback = add_query_arg( 'paged', $this->get_pagenum, wp_get_referer() );
+			$sendback = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), $sendback );
+			wp_safe_redirect( $sendback );
+			exit;
 		}
 	}
 
