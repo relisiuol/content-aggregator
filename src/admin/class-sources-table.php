@@ -159,7 +159,7 @@ class Sources_Table extends \WP_List_Table {
 			),
 			ARRAY_A
 		);
-		$total_items = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$total_items = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prepare(
 				'SELECT COUNT(*) FROM %i WHERE `name` LIKE %s',
 				$table_name,
@@ -174,13 +174,13 @@ class Sources_Table extends \WP_List_Table {
 			)
 		);
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		if ( array_key_exists( 'enabled', $_GET ) ) {
+		if ( array_key_exists( 'enabled', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_settings_error( 'content_aggregator_sources', 'success', __( 'Source(s) enabled successfully.', 'content-aggregator' ), 'success' );
 		}
-		if ( array_key_exists( 'disabled', $_GET ) ) {
+		if ( array_key_exists( 'disabled', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_settings_error( 'content_aggregator_sources', 'success', __( 'Source(s) disabled successfully.', 'content-aggregator' ), 'success' );
 		}
-		if ( array_key_exists( 'deleted', $_GET ) ) {
+		if ( array_key_exists( 'deleted', $_GET ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			add_settings_error( 'content_aggregator_sources', 'success', __( 'Source(s) deleted successfully.', 'content-aggregator' ), 'success' );
 		}
 	}
@@ -202,7 +202,7 @@ class Sources_Table extends \WP_List_Table {
 		if ( 'enable' === $this->current_action() ) {
 			$i = 0;
 			foreach ( $ids as $id ) {
-				$i += $wpdb->update(
+				$i += $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$table_name,
 					array(
 						'enabled' => 1,
@@ -224,7 +224,7 @@ class Sources_Table extends \WP_List_Table {
 		} elseif ( 'disable' === $this->current_action() ) {
 			$i = 0;
 			foreach ( $ids as $id ) {
-				$i += $wpdb->update(
+				$i += $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$table_name,
 					array(
 						'enabled' => 0,
