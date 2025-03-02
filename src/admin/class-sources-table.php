@@ -146,12 +146,11 @@ class Sources_Table extends \WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 		$hidden = $this->get_hidden_columns();
 		$orderby = ( ! empty( $_GET['orderby'] ) && array_key_exists( sanitize_text_field( wp_unslash( $_GET['orderby'] ) ), $sortable ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'name'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$order = ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ) ? 'desc' : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$this->items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prepare(
-				'SELECT * FROM %i WHERE `name` LIKE %s ORDER BY %i ' . $order . ' LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				'SELECT * FROM %i WHERE `name` LIKE %s ORDER BY %i ' . ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ? 'desc' : 'asc' ) . ' LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$table_name,
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				$orderby,
