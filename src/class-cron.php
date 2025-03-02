@@ -3,7 +3,7 @@
 namespace Content_Aggregator;
 
 if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
-	echo 'Hi there!  I&apos;m just a plugin, not much I can do when called directly.';
+	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
 	exit;
 }
 
@@ -54,7 +54,7 @@ class Cron {
 		$table_name = $wpdb->prefix . 'content_aggregator_sources';
 		$sources = $wpdb->get_results( // WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT id, name, scrap_url, unique_title, type, user_agent, categories, post_status, post_title_template, post_date_template, content_template, featured_image, last_check, last_news FROM %i WHERE enabled  = 1 ORDER BY last_check ASC LIMIT %d',
+				'SELECT id, name, scrap_url, unique_title, type, user_agent, categories, post_status, post_title_template, post_date_template, content_template, featured_image, last_check, last_news FROM %i WHERE enabled = 1 ORDER BY last_check ASC LIMIT %d',
 				$table_name,
 				intval( $this->settings['max_update'] )
 			),
@@ -189,7 +189,7 @@ class Cron {
 										);
 										if ( ! empty( $source['categories'] ) ) {
 											$postdata['post_category'] = explode( ',', $source['categories'] );
-										}   
+										}
 										if ( strtotime( $item['date'] ) > current_time( 'timestamp' ) ) {
 											$postdata['post_status'] = ( 'publish' === $source['post_status'] ) ? 'future' : $source['post_status'];
 										} else {

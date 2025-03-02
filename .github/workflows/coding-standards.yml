@@ -57,7 +57,7 @@ jobs:
 
       - name: Check composer
         run: composer validate
-      
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
