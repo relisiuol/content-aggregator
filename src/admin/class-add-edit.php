@@ -32,7 +32,7 @@ class Add_Edit {
 	}
 
 	public function load() {
-		$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
 		if ( $id > 0 ) {
 			$this->source = $this->get_source( $id );
 		} else {
@@ -193,15 +193,23 @@ class Add_Edit {
 			$table_name = $wpdb->prefix . 'content_aggregator_sources';
 			$format = array( '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s' );
 			if ( ! empty( $this->source['id'] ) ) {
-				$wpdb->update( $table_name, $input, array( 'id' => $this->source['id'] ), $format, array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$wpdb->update(
+					$table_name,
+					$input,
+					array(
+						'id' => $this->source['id'],
+					),
+					$format,
+					array( '%d' )
+				);
 				add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'success', __( 'Source saved successfully.', 'content-aggregator' ), 'success' );
 			} else {
-				$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(id) FROM %i WHERE scrap_url = %s', $table_name, $input['scrap_url'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(id) FROM %i WHERE scrap_url = %s', $table_name, $input['scrap_url'] ) );
 				if ( $count > 0 ) {
 					add_settings_error( 'content_aggregator_source', 'invalid-scrap_url', __( 'Source URL is already used.', 'content-aggregator' ) );
 				} else {
 					$input['last_news'] = '';
-					$id = $wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+					$id = $wpdb->insert( $table_name, $input, $format );
 					if ( $id ) {
 						$this->source['id'] = $id;
 						wp_redirect(
@@ -426,7 +434,7 @@ class Add_Edit {
 	public function get_source( $id ) {
 		global $wpdb;
 		$table = $wpdb->prefix . 'content_aggregator_sources';
-		$source = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$source = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A );
 		if ( $source ) {
 			$source = wp_parse_args(
 				$source,
