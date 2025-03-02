@@ -449,7 +449,7 @@ class Add_Edit {
 			if ( ! isset( $_POST['content_aggregator_source_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_source_nonce'] ) ), 'content_aggregator_update_source' . ( $this->source ? '_' . $this->source['id'] : '' ) ) ) {
 				wp_die( 'Security check failed.' );
 			}
-			$this->update_source( $_POST['content_aggregator_source'] );
+			$this->update_source( $_POST['content_aggregator_source'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		}
 		$page_args = array(
 			'page' => 'content-aggregator-add-edit',
