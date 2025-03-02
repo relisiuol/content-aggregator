@@ -160,7 +160,6 @@ class Sources_Table extends \WP_List_Table {
 			),
 			ARRAY_A
 		);
-		$total_query = "SELECT COUNT(*) FROM {$table_name}";
 		$total_items = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prepare(
 				'SELECT COUNT(*) FROM %i WHERE `name` LIKE %s',
