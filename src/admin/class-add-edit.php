@@ -32,7 +32,7 @@ class Add_Edit {
 	}
 
 	public function load() {
-		$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+		$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( $id > 0 ) {
 			$this->source = $this->get_source( $id );
 		} else {
@@ -193,7 +193,7 @@ class Add_Edit {
 			$table_name = $wpdb->prefix . 'content_aggregator_sources';
 			$format = array( '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s' );
 			if ( ! empty( $this->source['id'] ) ) {
-				$wpdb->update(
+				$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$table_name,
 					$input,
 					array(
@@ -204,12 +204,12 @@ class Add_Edit {
 				);
 				add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'success', __( 'Source saved successfully.', 'content-aggregator' ), 'success' );
 			} else {
-				$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(id) FROM %i WHERE scrap_url = %s', $table_name, $input['scrap_url'] ) );
+				$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(id) FROM %i WHERE scrap_url = %s', $table_name, $input['scrap_url'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				if ( $count > 0 ) {
 					add_settings_error( 'content_aggregator_source', 'invalid-scrap_url', __( 'Source URL is already used.', 'content-aggregator' ) );
 				} else {
 					$input['last_news'] = '';
-					$id = $wpdb->insert( $table_name, $input, $format );
+					$id = $wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 					if ( $id ) {
 						$this->source['id'] = $id;
 						wp_redirect(
@@ -402,13 +402,12 @@ class Add_Edit {
 
 	public function add_source_featured_image() {
 		$image_id = $this->source ? esc_attr( $this->source['featured_image'] ) : '';
-		$image_url = $image_id ? wp_get_attachment_url( $image_id ) : '';
 		echo '<div class="form-field form-required content-aggregator-image-selector">';
 		echo '<button type="button" class="button select-image">' . esc_html__( 'Select Image', 'content-aggregator' ) . '</button>';
 		echo '<input type="hidden" name="content_aggregator_source[featured_image]" value="' . esc_attr( $image_id ) . '" />';
 		echo '<div id="image-preview" style="margin-top: 10px; max-width: 250px;">';
-		if ( $image_url ) {
-			echo '<img src="' . esc_url( $image_url ) . '" style="max-width:150px;" />';
+		if ( $image_id ) {
+			echo wp_get_attachment_image( $image_id, 'thumbnail' );
 		}
 		echo '</div>';
 		echo '<p class="description">' . esc_html__( 'Provide a default featured image.', 'content-aggregator' ) . '</p>';
@@ -434,7 +433,7 @@ class Add_Edit {
 	public function get_source( $id ) {
 		global $wpdb;
 		$table = $wpdb->prefix . 'content_aggregator_sources';
-		$source = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A );
+		$source = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table, $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		if ( $source ) {
 			$source = wp_parse_args(
 				$source,
