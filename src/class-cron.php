@@ -158,7 +158,7 @@ class Cron {
 										break;
 									}
 									if ( 0 === $i ) {
-										$wpdb->update( // WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+										$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 											$table_name,
 											array(
 												'last_news' => $item['url'],
@@ -170,7 +170,7 @@ class Cron {
 									}
 									$insert = true;
 									if ( '1' === $source['unique_title'] ) {
-										$insert = $wpdb->get_var( // WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+										$insert = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 											$wpdb->prepare(
 												'SELECT COUNT(*) FROM %i WHERE post_title = %s',
 												$wpdb->posts,
@@ -229,7 +229,7 @@ class Cron {
 					}
 				}
 				if ( ! $empty ) {
-					$wpdb->update( // WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$table_name,
 						array(
 							'last_check' => current_time( 'mysql', 1 ),
@@ -239,7 +239,7 @@ class Cron {
 						)
 					);
 				} elseif ( strtotime( $source['last_check'] ) + $this->map_time_interval( $this->settings['expiration_date'] ) < time() ) {
-					$wpdb->update(
+					$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$table_name,
 						array(
 							'enabled' => 0,
