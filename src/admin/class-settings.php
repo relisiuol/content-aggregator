@@ -8,8 +8,8 @@ if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( '
 }
 
 class Settings {
-	const INTERVALS = array( '15m', '30m', '1h', '12h', '1d' );
-	const EXPIRATION_DATES = array( '1h', '12h', '1d', '1w', '1m', 'never' );
+	private const INTERVALS = array( '15m', '30m', '1h', '12h', '1d' );
+	private const EXPIRATION_DATES = array( '1h', '12h', '1d', '1w', '1m', 'never' );
 	private static $instance;
 
 	public static function get_instance() {
@@ -59,7 +59,7 @@ class Settings {
 		$success = false;
 		$output = $this->get_settings();
 		$input['update_interval'] = sanitize_text_field( wp_unslash( $input['update_interval'] ) );
-		if ( $input['update_interval'] !== $output['update_interval'] && in_array( $input['update_interval'], self::INTERVALS, true ) ) {
+		if ( is_string( $input['update_interval'] ) && $input['update_interval'] !== $output['update_interval'] && in_array( $input['update_interval'], self::INTERVALS, true ) ) {
 			$output['update_interval'] = $input['update_interval'];
 			$success = true;
 			$timestamp = wp_next_scheduled( 'content_aggregator_update_hook' );
