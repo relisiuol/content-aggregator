@@ -58,6 +58,7 @@ class Settings {
 		$input = $this->get_settings( $input );
 		$success = false;
 		$output = $this->get_settings();
+		$input['update_interval'] = sanitize_text_field( wp_unslash( $input['update_interval'] ) );
 		if ( $input['update_interval'] !== $output['update_interval'] && in_array( $input['update_interval'], self::INTERVALS, true ) ) {
 			$output['update_interval'] = $input['update_interval'];
 			$success = true;
@@ -81,20 +82,22 @@ class Settings {
 		} elseif ( $input['expiration_date'] !== $output['expiration_date'] ) {
 			add_settings_error( 'content_aggregator_settings', 'invalid-expiration-date', __( 'Invalid expiration date selected.', 'content-aggregator' ) );
 		}
-		$input['certificate_path'] = sanitize_text_field( wp_unslash( $input['certificate_path'] ) );
+		$input['certificate_path'] = basename( sanitize_text_field( wp_unslash( $input['certificate_path'] ) ) );
 		if ( $input['certificate_path'] !== $output['certificate_path'] ) {
 			$upload_dir = wp_upload_dir();
+			$certificate_dir = $upload_dir['basedir'] . '/certificates/';
+			$certificate_path = realpath( $certificate_dir . $input['certificate_path'] );
 			if ( \WpOrg\Requests\Requests::get_certificate_path() === $input['certificate_path'] ) {
 				$output['certificate_path'] = '';
-			} elseif ( file_exists( $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'] ) ) {
+			} elseif ( $certificate_path && str_starts_with( $certificate_path, realpath( $certificate_dir ) ) && file_exists( $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'] ) ) {
 				$args = array(
-					'sslcertificates' => $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'],
+					'sslcertificates' => $certificate_path,
 				);
 				$response = wp_remote_get( home_url(), $args );
 				if ( is_wp_error( $response ) ) {
 					add_settings_error( 'content_aggregator_settings', 'invalid-certificate-path', __( 'Invalid certificate path or file. SSL certificate problem encountered.', 'content-aggregator' ) );
 				} else {
-					$output['certificate_path'] = $input['certificate_path'];
+					$output['certificate_path'] = $certificate_path;
 					$success = true;
 				}
 			} else {
