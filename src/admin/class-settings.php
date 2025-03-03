@@ -82,11 +82,11 @@ class Settings {
 		} elseif ( $input['expiration_date'] !== $output['expiration_date'] ) {
 			add_settings_error( 'content_aggregator_settings', 'invalid-expiration-date', __( 'Invalid expiration date selected.', 'content-aggregator' ) );
 		}
-		$input['certificate_path'] = basename( sanitize_text_field( wp_unslash( $input['certificate_path'] ) ) );
+		$input['certificate_path'] = sanitize_text_field( wp_unslash( $input['certificate_path'] ) );
 		if ( $input['certificate_path'] !== $output['certificate_path'] ) {
 			$upload_dir = wp_upload_dir();
 			$certificate_dir = $upload_dir['basedir'] . '/certificates/';
-			$certificate_path = realpath( $certificate_dir . $input['certificate_path'] );
+			$certificate_path = realpath( $certificate_dir . basename( $input['certificate_path'] ) );
 			if ( \WpOrg\Requests\Requests::get_certificate_path() === $input['certificate_path'] ) {
 				$output['certificate_path'] = '';
 			} elseif ( $certificate_path && str_starts_with( $certificate_path, realpath( $certificate_dir ) ) && file_exists( $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'] ) ) {
