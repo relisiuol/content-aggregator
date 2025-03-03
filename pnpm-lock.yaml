@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@wordpress/i18n':
-        specifier: ^5.18.0
-        version: 5.18.0
+        specifier: ^5.19.0
+        version: 5.19.0
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -1459,12 +1459,12 @@ packages:
       typescript:
         optional: true
 
-  '@wordpress/hooks@4.18.0':
-    resolution: {integrity: sha512-hJulGAT2ELS+UBCTPnTe2A2ep+sOF4PO/x41UmeSgiaIJV1G4xNCJnlcyuCsV3xI2CTnf+YqjyS3qbqhLq3YOA==}
+  '@wordpress/hooks@4.19.0':
+    resolution: {integrity: sha512-fIISVBC8XtZEtltYYm1yCgJiBw3TkDI5hXuIyTaJAlOWwcjj7geyjghd0lsIbr5CerTrh9/rPG121M+uvHK5NQ==}
     engines: {node: '>=18.12.0', npm: '>=8.19.2'}
 
-  '@wordpress/i18n@5.18.0':
-    resolution: {integrity: sha512-XaA3qSyOnmx7FEQFwOXxqWLVjKw0TWR/S/sEmp6Rs88ttUDS0Y6z6xGwCwEK8acmUUWccaxk6aPirX8gV4Bdrw==}
+  '@wordpress/i18n@5.19.0':
+    resolution: {integrity: sha512-xDH8cA2rJb4yFB939nPS9605VxSEaVj07R89HxZrjdolDPxVpESBtpn2nV4Ll7pQtDIlaE9PPPtcnuu1JN6hAw==}
     engines: {node: '>=18.12.0', npm: '>=8.19.2'}
     hasBin: true
 
@@ -6727,14 +6727,14 @@ snapshots:
       - jest
       - supports-color
 
-  '@wordpress/hooks@4.18.0':
+  '@wordpress/hooks@4.19.0':
     dependencies:
       '@babel/runtime': 7.25.7
 
-  '@wordpress/i18n@5.18.0':
+  '@wordpress/i18n@5.19.0':
     dependencies:
       '@babel/runtime': 7.25.7
-      '@wordpress/hooks': 4.18.0
+      '@wordpress/hooks': 4.19.0
       gettext-parser: 1.4.0
       memize: 2.1.0
       sprintf-js: 1.1.3
