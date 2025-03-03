@@ -89,7 +89,7 @@ class Settings {
 			$certificate_path = realpath( $certificate_dir . basename( $input['certificate_path'] ) );
 			if ( \WpOrg\Requests\Requests::get_certificate_path() === $input['certificate_path'] ) {
 				$output['certificate_path'] = '';
-			} elseif ( $certificate_path && str_starts_with( $certificate_path, realpath( $certificate_dir ) ) && file_exists( $upload_dir['basedir'] . '/certificates/' . $input['certificate_path'] ) ) {
+			} elseif ( $certificate_path && str_starts_with( $certificate_path, realpath( $certificate_dir ) ) && file_exists( $certificate_path ) ) {
 				$args = array(
 					'sslcertificates' => $certificate_path,
 				);
