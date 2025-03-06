@@ -147,7 +147,7 @@ class Cron {
 									),
 									$source['post_title_template']
 								);
-								$item['date'] = ( \Content_Aggregator\Admin\AddEdit::DATE_TAGS[0] === $source['post_date_template'] ? gmdate( 'Y-m-d H:i:s' ) : $item['date'] );
+								$item['date'] = ( \Content_Aggregator\Admin\Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? gmdate( 'Y-m-d H:i:s' ) : $item['date'] );
 								if (
 									! empty( $item['date'] ) &&
 									! empty( $item['title'] ) &&
