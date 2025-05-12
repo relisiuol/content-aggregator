@@ -25,7 +25,7 @@
 	"type": "module",
 	"main": "assets/js/content-aggregator.js",
 	"dependencies": {
-		"@wordpress/i18n": "^5.18.0",
+		"@wordpress/i18n": "^5.23.0",
 		"jquery": "^3.7.1",
 		"jquery-autocomplete": "^1.2.8",
 		"select2": "^4.0.13"
