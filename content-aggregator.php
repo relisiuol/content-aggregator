@@ -19,7 +19,7 @@
  * Text Domain:       content-aggregator
  * Domain Path:       /languages/
  * Requires PHP:      7.4
- * Requires at least: 6.3
+ * Requires at least: 6.2
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
