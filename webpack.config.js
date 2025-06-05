@@ -136,12 +136,10 @@ const webpackConfig = TimeAnalyticsPlugin.wrap({
 		}),
 		new CopyPlugin({
 			patterns: [
-				// select2 css
 				{
 					from: 'node_modules/select2/dist/css/select2.min.css',
 					to: 'css/select2.min.css',
 				},
-				// select2 js
 				{
 					from: 'node_modules/select2/dist/js/select2.min.js',
 					to: 'js/select2.min.js',

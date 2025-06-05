@@ -24,7 +24,7 @@ const config = defineConfig({
 		'{testDir}/{testFileDir}/__snapshots__/{arg}-{projectName}{ext}', // TODO: may be better named
 	globalSetup: path.join('./tests/global-setup.js'),
 	use: {
-		baseURL: 'http://localhost',
+		baseURL: 'http://content-aggregator.js',
 		port: 3000,
 		headless: true,
 		viewport: {
