@@ -85,9 +85,15 @@ jQuery(document).ready(function ($) {
 		}
 	);
 	let timerAutoDetect = false;
+	let lastValue = '';
 	$('input[name="content_aggregator_source[url]"]').on(
-		'change keyup blur input",',
+		'change keyup blur input',
 		async (e) => {
+			const url = e.target.value;
+			if (!/^(https?:\/\/)?\S+\.\S+/.test(url) || url === lastValue) {
+				return;
+			}
+			lastValue = url;
 			if (timerAutoDetect) {
 				clearTimeout(timerAutoDetect);
 			}
@@ -96,7 +102,7 @@ jQuery(document).ready(function ($) {
 					const response = await fetch(
 						contentAggregator.ajax_url +
 							'?action=content_aggregator&url=' +
-							encodeURIComponent(e.target.value) +
+							encodeURIComponent(url) +
 							'&nonce=' +
 							encodeURI(contentAggregator.ajax_nonce)
 					);
