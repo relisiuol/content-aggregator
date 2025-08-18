@@ -40,20 +40,20 @@ class Add_Edit {
 		}
 		add_action( 'in_admin_footer', array( $this, 'in_admin_footer' ) );
 		add_settings_section( 'content_aggregator_section_source', false, false, 'content_aggregator_page_source' );
-		add_settings_field( 'content_aggregator_source_name', __( 'Name', 'content-aggregator' ), array( $this, 'add_source_name' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_url', __( 'URL', 'content-aggregator' ), array( $this, 'add_source_url' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_scrap_url', __( 'Source URL', 'content-aggregator' ), array( $this, 'add_source_scrap_url' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_type', __( 'Type', 'content-aggregator' ), array( $this, 'add_source_type' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_unique_title', __( 'Unique title', 'content-aggregator' ), array( $this, 'add_source_unique_title' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_user_agent', __( 'User-Agent', 'content-aggregator' ), array( $this, 'add_source_user_agent' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_categories', __( 'Categories', 'content-aggregator' ), array( $this, 'add_source_categories' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_post_status', __( 'Post status', 'content-aggregator' ), array( $this, 'add_source_post_status' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_post_title_template', __( 'Post title template', 'content-aggregator' ), array( $this, 'add_source_post_title_template' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_post_date_template', __( 'Post date template', 'content-aggregator' ), array( $this, 'add_source_post_date_template' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_content_template', __( 'Post content template', 'content-aggregator' ), array( $this, 'add_source_content_template' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_featured_image', __( 'Default featured image', 'content-aggregator' ), array( $this, 'add_source_featured_image' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_redirect', __( 'Redirect', 'content-aggregator' ), array( $this, 'add_source_redirect' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
-		add_settings_field( 'content_aggregator_source_enabled', __( 'Enabled', 'content-aggregator' ), array( $this, 'add_source_enabled' ), 'content_aggregator_page_source', 'content_aggregator_section_source' );
+		add_settings_field( 'content_aggregator_source_name', __( 'Name', 'content-aggregator' ), array( $this, 'add_source_name' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-name' ) );
+		add_settings_field( 'content_aggregator_source_url', __( 'URL', 'content-aggregator' ), array( $this, 'add_source_url' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-url' ) );
+		add_settings_field( 'content_aggregator_source_scrap_url', __( 'Source URL', 'content-aggregator' ), array( $this, 'add_source_scrap_url' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-scrap_url' ) );
+		add_settings_field( 'content_aggregator_source_type', __( 'Type', 'content-aggregator' ), array( $this, 'add_source_type' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-type' ) );
+		add_settings_field( 'content_aggregator_source_unique_title', __( 'Unique title', 'content-aggregator' ), array( $this, 'add_source_unique_title' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-unique_title' ) );
+		add_settings_field( 'content_aggregator_source_user_agent', __( 'User-Agent', 'content-aggregator' ), array( $this, 'add_source_user_agent' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-user_agent' ) );
+		add_settings_field( 'content_aggregator_source_categories', __( 'Categories', 'content-aggregator' ), array( $this, 'add_source_categories' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-categories' ) );
+		add_settings_field( 'content_aggregator_source_post_status', __( 'Post status', 'content-aggregator' ), array( $this, 'add_source_post_status' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-post_status' ) );
+		add_settings_field( 'content_aggregator_source_post_title_template', __( 'Post title template', 'content-aggregator' ), array( $this, 'add_source_post_title_template' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-post_title_template' ) );
+		add_settings_field( 'content_aggregator_source_post_date_template', __( 'Post date template', 'content-aggregator' ), array( $this, 'add_source_post_date_template' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-post_date_template' ) );
+		add_settings_field( 'content_aggregator_source_content_template', __( 'Post content template', 'content-aggregator' ), array( $this, 'add_source_content_template' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-content_template' ) );
+		add_settings_field( 'content_aggregator_source_featured_image', __( 'Default featured image', 'content-aggregator' ), array( $this, 'add_source_featured_image' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-featured_image' ) );
+		add_settings_field( 'content_aggregator_source_redirect', __( 'Redirect', 'content-aggregator' ), array( $this, 'add_source_redirect' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-redirect' ) );
+		add_settings_field( 'content_aggregator_source_enabled', __( 'Enabled', 'content-aggregator' ), array( $this, 'add_source_enabled' ), 'content_aggregator_page_source', 'content_aggregator_section_source', array( 'label_for' => 'content_aggregator_source-enabled' ) );
 		add_filter( 'admin_title', array( $this, 'admin_title' ), 10, 2 );
 		$this->highlight_menu();
 	}
@@ -247,7 +247,7 @@ class Add_Edit {
 
 	public function add_source_name() {
 		echo '<div class="form-field form-required">';
-		echo '<input type="text" name="content_aggregator_source[name]" value="' . ( $this->source ? esc_attr( $this->source['name'] ) : '' ) . '" />';
+		echo '<input type="text" name="content_aggregator_source[name]" id="content_aggregator_source-name" value="' . ( $this->source ? esc_attr( $this->source['name'] ) : '' ) . '" />';
 		// translators: __SOURCE_NAME__: Placeholder for the source name used in templates.
 		echo '<p class="description">' . esc_html( sprintf( __( 'Specify the source name to be used in title templates as %s.', 'content-aggregator' ), self::TITLE_TAGS[1] ) ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This dynamic approach allows for more personalized content creation.', 'content-aggregator' ) . '</p>';
@@ -256,14 +256,14 @@ class Add_Edit {
 
 	public function add_source_url() {
 		echo '<div class="form-field form-required">';
-		echo '<input type="url" name="content_aggregator_source[url]" value="' . ( $this->source ? esc_attr( $this->source['url'] ) : '' ) . '" />';
+		echo '<input type="url" name="content_aggregator_source[url]" id="content_aggregator_source-url" value="' . ( $this->source ? esc_attr( $this->source['url'] ) : '' ) . '" />';
 		echo '<p class="description">' . esc_html__( 'This is the main source URL.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
 	}
 
 	public function add_source_scrap_url() {
 		echo '<div class="form-field form-required">';
-		echo '<input type="url" name="content_aggregator_source[scrap_url]" value="' . ( $this->source ? esc_attr( $this->source['scrap_url'] ) : '' ) . '" />';
+		echo '<input type="url" name="content_aggregator_source[scrap_url]" id="content_aggregator_source-scrap_url" value="' . ( $this->source ? esc_attr( $this->source['scrap_url'] ) : '' ) . '" />';
 		echo '<p class="description">' . esc_html__( 'This is the URL from which the content will be scraped.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This URL is the direct source of the content and differs from main site URL.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
@@ -272,7 +272,7 @@ class Add_Edit {
 	public function add_source_type() {
 		$current_type = $this->source ? $this->source['type'] : '';
 		echo '<div class="form-field form-required">';
-		echo '<select name="content_aggregator_source[type]">';
+		echo '<select name="content_aggregator_source[type]" id="content_aggregator_source-type">';
 		echo '<option value="0" ' . selected( $current_type, '0', false ) . '>RSS</option>';
 		echo '<option value="1" ' . selected( $current_type, '1', false ) . '>' . esc_html__( 'WordPress', 'content-aggregator' ) . '</option>';
 		echo '<option value="2" ' . selected( $current_type, '2', false ) . '>Atom RSS</option>';
@@ -284,7 +284,7 @@ class Add_Edit {
 
 	public function add_source_unique_title() {
 		echo '<div class="form-field">';
-		echo '<input type="checkbox" name="content_aggregator_source[unique_title]" value="1" ' . ( $this->source && $this->source['unique_title'] ? 'checked' : '' ) . ' />';
+		echo '<input type="checkbox" name="content_aggregator_source[unique_title]" id="content_aggregator_source-unique_title" value="1" ' . ( $this->source && $this->source['unique_title'] ? 'checked' : '' ) . ' />';
 		echo '<p class="description">' . esc_html__( 'Enable to ensure all fetched posts have unique titles.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This feature helps prevent duplicate content issues and improves SEO.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
@@ -292,7 +292,7 @@ class Add_Edit {
 
 	public function add_source_user_agent() {
 		echo '<div class="form-field form-required">';
-		echo '<textarea name="content_aggregator_source[user_agent]" rows="3" cols="50">' . esc_html( $this->source && ! empty( $this->source['user_agent'] ) ? $this->source['user_agent'] : self::DEFAULT_USER_AGENT ) . '</textarea>';
+		echo '<textarea name="content_aggregator_source[user_agent]" id="content_aggregator_source-user_agent" rows="3" cols="50">' . esc_html( $this->source && ! empty( $this->source['user_agent'] ) ? $this->source['user_agent'] : self::DEFAULT_USER_AGENT ) . '</textarea>';
 		// translators: %s: Placeholder for an user-agent.
 		echo '<p class="description">' . esc_html__( 'Enter a custom user agent for requests. Leave blank to use default.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'A valid user agent ensures compatibility and successful data retrieval.', 'content-aggregator' ) . '</p>';
@@ -309,7 +309,7 @@ class Add_Edit {
 		);
 		$selected_categories = $this->source && ! empty( $this->source['categories'] ) ? explode( ', ', $this->source['categories'] ) : array();
 		echo '<div class="form-field form-required">';
-		echo '<select id="categories" name="content_aggregator_source[categories][]" multiple="multiple">';
+		echo '<select name="content_aggregator_source[categories][]" id="content_aggregator_source-categories" multiple="multiple">';
 		foreach ( $categories as $category ) {
 			echo '<option value="' . esc_attr( $category->term_id ) . '" ' . ( in_array( $category->term_id, $selected_categories ) ? 'selected' : '' ) . '>' . esc_html( $category->name ) . '</option>';
 		}
@@ -328,7 +328,7 @@ class Add_Edit {
 		);
 		$current_status = $this->source ? esc_attr( $this->source['post_status'] ) : 'publish';
 		echo '<div class="form-field form-required">';
-		echo '<select name="content_aggregator_source[post_status]">';
+		echo '<select name="content_aggregator_source[post_status]" id="content_aggregator_source-post_status">';
 		foreach ( $post_statuses as $status ) {
 			echo '<option value="' . esc_attr( $status->name ) . '" ' . selected( $current_status, $status->name, false ) . '>' . esc_html( $status->label ) . '</option>';
 		}
@@ -340,7 +340,7 @@ class Add_Edit {
 
 	public function add_source_post_title_template() {
 		echo '<div class="form-field form-required">';
-		echo '<input type="text" id="post_title_template" name="content_aggregator_source[post_title_template]" value="' . esc_attr( $this->source && ! empty( $this->source['post_title_template'] ) ? $this->source['post_title_template'] : self::TITLE_TAGS[0] ) . '" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS ) ) ) . '" />';
+		echo '<input type="text" name="content_aggregator_source[post_title_template]" id="content_aggregator_source-post_title_template" value="' . esc_attr( $this->source && ! empty( $this->source['post_title_template'] ) ? $this->source['post_title_template'] : self::TITLE_TAGS[0] ) . '" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS ) ) ) . '" />';
 		echo '<p class="description">';
 		echo esc_html(
 			sprintf(
@@ -364,7 +364,7 @@ class Add_Edit {
 
 	public function add_source_post_date_template() {
 		echo '<div class="form-field form-required">';
-		echo '<select name="content_aggregator_source[post_date_template]">';
+		echo '<select name="content_aggregator_source[post_date_template]" id="content_aggregator_source-post_date_template">';
 		foreach ( self::DATE_TAGS as $date_tag ) {
 			echo '<option value="' . esc_attr( $date_tag ) . '" ' . selected( ( $this->source && ! empty( $this->source['post_date_template'] ) ? $this->source['post_date_template'] : '' ), $date_tag, false ) . '>' . esc_html( $date_tag ) . '</option>';
 		}
@@ -385,7 +385,7 @@ class Add_Edit {
 			self::CONTENT_TAGS[1] => 'The URL of the original content.',
 		);
 		echo '<div class="form-field form-required">';
-		echo '<textarea name="content_aggregator_source[content_template]" rows="4" cols="50" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS, self::CONTENT_TAGS ) ) ) . '">' . esc_html( $this->source && ! empty( $this->source['content_template'] ) ? $this->source['content_template'] : self::CONTENT_TAGS[0] ) . '</textarea>';
+		echo '<textarea name="content_aggregator_source[content_template]" id="content_aggregator_source-content_template" rows="4" cols="50" data-tags="' . esc_attr( wp_json_encode( array_merge( self::TITLE_TAGS, self::DATE_TAGS, self::CONTENT_TAGS ) ) ) . '">' . esc_html( $this->source && ! empty( $this->source['content_template'] ) ? $this->source['content_template'] : self::CONTENT_TAGS[0] ) . '</textarea>';
 		echo '<p class="description">' . esc_html__( 'Define the content structure with placeholders for a rich, dynamic presentation.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Utilize tags for dates, titles, and URLs to weave together engaging posts.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Available tags:', 'content-aggregator' ) . '</p>';
@@ -403,7 +403,7 @@ class Add_Edit {
 	public function add_source_featured_image() {
 		$image_id = $this->source ? esc_attr( $this->source['featured_image'] ) : '';
 		echo '<div class="form-field form-required content-aggregator-image-selector">';
-		echo '<button type="button" class="button select-image">' . esc_html__( 'Select Image', 'content-aggregator' ) . '</button>';
+		echo '<button type="button" class="button select-image" id="content_aggregator_source-featured_image">' . esc_html__( 'Select Image', 'content-aggregator' ) . '</button>';
 		echo '<input type="hidden" name="content_aggregator_source[featured_image]" value="' . esc_attr( $image_id ) . '" />';
 		echo '<div id="image-preview" style="margin-top: 10px; max-width: 250px;">';
 		if ( $image_id ) {
@@ -417,14 +417,14 @@ class Add_Edit {
 
 	public function add_source_redirect() {
 		echo '<div class="form-field">';
-		echo '<input type="checkbox" name="content_aggregator_source[redirect]" value="1" ' . ( $this->source && $this->source['redirect'] ? 'checked' : '' ) . ' />';
+		echo '<input type="checkbox" name="content_aggregator_source[redirect]" id="content_aggregator_source-redirect" value="1" ' . ( $this->source && $this->source['redirect'] ? 'checked' : '' ) . ' />';
 		echo '<p class="description">' . esc_html__( 'Toggle this to redirect visitors to the original item\'s url instead of having a single page.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
 	}
 
 	public function add_source_enabled() {
 		echo '<div class="form-field">';
-		echo '<input type="checkbox" name="content_aggregator_source[enabled]" value="1" ' . ( $this->source && $this->source['enabled'] ? 'checked' : '' ) . ' />';
+		echo '<input type="checkbox" name="content_aggregator_source[enabled]" id="content_aggregator_source-enabled" value="1" ' . ( $this->source && $this->source['enabled'] ? 'checked' : '' ) . ' />';
 		echo '<p class="description">' . esc_html__( 'Toggle this to enable or disable the source.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'When enabled, the source will be actively queried for new item.', 'content-aggregator' ) . '</p>';
 		echo '</div>';

@@ -9,7 +9,7 @@ jQuery(document).ready(function ($) {
 	function extractLast(term) {
 		return split(term).pop();
 	}
-	$('#categories').select2({
+	$('#content_aggregator_source-categories').select2({
 		width: '95%',
 		multiple: true,
 		placeholder: defaultI18n.__('Search categories', 'content-aggregator'),

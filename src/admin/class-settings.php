@@ -25,10 +25,10 @@ class Settings {
 
 	public function admin_init() {
 		add_settings_section( 'content_aggregator_section', false, array( $this, 'add_settings_section' ), 'content_aggregator_page' );
-		add_settings_field( 'content_aggregator_update_interval', __( 'Update interval', 'content-aggregator' ), array( $this, 'add_settings_field_update_interval' ), 'content_aggregator_page', 'content_aggregator_section' );
-		add_settings_field( 'content_aggregator_max_update', __( 'Max update', 'content-aggregator' ), array( $this, 'add_settings_field_max_update' ), 'content_aggregator_page', 'content_aggregator_section' );
-		add_settings_field( 'content_aggregator_expiration_date', __( 'Expiration date', 'content-aggregator' ), array( $this, 'add_settings_field_expiration_date' ), 'content_aggregator_page', 'content_aggregator_section' );
-		add_settings_field( 'content_aggregator_certificate_path', __( 'Certificate path', 'content-aggregator' ), array( $this, 'add_settings_field_certificate_path' ), 'content_aggregator_page', 'content_aggregator_section' );
+		add_settings_field( 'content_aggregator_update_interval', __( 'Update interval', 'content-aggregator' ), array( $this, 'add_settings_field_update_interval' ), 'content_aggregator_page', 'content_aggregator_section', array( 'label_for' => 'content_aggregator_settings-update_interval' ) );
+		add_settings_field( 'content_aggregator_max_update', __( 'Max update', 'content-aggregator' ), array( $this, 'add_settings_field_max_update' ), 'content_aggregator_page', 'content_aggregator_section', array( 'label_for' => 'content_aggregator_settings-max_update' ) );
+		add_settings_field( 'content_aggregator_expiration_date', __( 'Expiration date', 'content-aggregator' ), array( $this, 'add_settings_field_expiration_date' ), 'content_aggregator_page', 'content_aggregator_section', array( 'label_for' => 'content_aggregator_settings-expiration_date' ) );
+		add_settings_field( 'content_aggregator_certificate_path', __( 'Certificate path', 'content-aggregator' ), array( $this, 'add_settings_field_certificate_path' ), 'content_aggregator_page', 'content_aggregator_section', array( 'label_for' => 'content_aggregator_settings-certificate_path' ) );
 	}
 
 	private static function default_settings() {
@@ -117,7 +117,7 @@ class Settings {
 	public function add_settings_field_update_interval() {
 		$options = $this->get_settings();
 		echo '<div class="form-field form-required">';
-		echo '<select id="update_interval" name="content_aggregator_settings[update_interval]">';
+		echo '<select name="content_aggregator_settings[update_interval]" id="content_aggregator_settings-update_interval">';
 		foreach ( self::INTERVALS as $interval ) {
 			echo '<option value="' . esc_attr( $interval ) . '"' . selected( $options['update_interval'], $interval, false ) . '>' . esc_html( self::i18n__date( $interval ) ) . '</option>';
 		}
@@ -131,7 +131,7 @@ class Settings {
 	public function add_settings_field_max_update() {
 		$options = $this->get_settings();
 		echo '<div class="form-field form-required">';
-		echo '<input type="number" id="max_update" name="content_aggregator_settings[max_update]" value="' . esc_attr( $options['max_update'] ) . '" min="1" max="50">';
+		echo '<input type="number" name="content_aggregator_settings[max_update]" id="content_aggregator_settings-max_update" value="' . esc_attr( $options['max_update'] ) . '" min="1" max="50">';
 		echo '<p class="description">' . esc_html__( 'Set the maximum number of sources to be updated at each update interval.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This helps distribute updates across different intervals, reducing server load and preventing overload of the WP Cron system.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'A smaller value is beneficial for sites with numerous sources.', 'content-aggregator' ) . '</p>';
@@ -141,7 +141,7 @@ class Settings {
 	public function add_settings_field_expiration_date() {
 		$options = $this->get_settings();
 		echo '<div class="form-field form-required">';
-		echo '<select id="expiration_date" name="content_aggregator_settings[expiration_date]">';
+		echo '<select name="content_aggregator_settings[expiration_date]" id="content_aggregator_settings-expiration_date">';
 		foreach ( self::EXPIRATION_DATES as $duration ) {
 			echo '<option value="' . esc_attr( $duration ) . '"' . selected( $options['expiration_date'], $duration, false ) . '>' . esc_html( self::i18n__date( $duration ) ) . '</option>';
 		}
@@ -154,7 +154,7 @@ class Settings {
 	public function add_settings_field_certificate_path() {
 		$options = $this->get_settings();
 		echo '<div class="form-field form-required">';
-		echo '<input type="text" id="certificate_path" name="content_aggregator_settings[certificate_path]" class="regular-text" value="' . esc_attr( $options['certificate_path'] ? $options['certificate_path'] : \WpOrg\Requests\Requests::get_certificate_path() ) . '">';
+		echo '<input type="text" name="content_aggregator_settings[certificate_path]" id="content_aggregator_settings-certificate_path" class="regular-text" value="' . esc_attr( $options['certificate_path'] ? $options['certificate_path'] : \WpOrg\Requests\Requests::get_certificate_path() ) . '">';
 		echo '<p class="description">' . esc_html__( 'Specify the file path to the SSL certificate(s) used for secure HTTPS connections.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'This is essential for verifying the authenticity of remote resources during fetching.', 'content-aggregator' ) . '</p>';
 		$upload_dir = wp_upload_dir();
