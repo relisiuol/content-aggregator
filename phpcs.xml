@@ -14,7 +14,7 @@
 	<arg name="warning-severity" value="0"/>
 
 	<config name="minimum_wp_version" value="6.2"/>
-	<config name="testVersion" value="7.4-"/>
+	<config name="testVersion" value="8.2-"/>
 	<config name="text_domain" value="content-aggregator"/>
 
 	<rule ref="PHPCompatibilityWP">
@@ -22,6 +22,7 @@
 	</rule>
 	<rule ref="WordPress-VIP-Go">
 		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.term_exists_term_exists"/>
+		<exclude name="WordPressVIPMinimum.JS"/>
 	</rule>
 	<rule ref="WordPress-Core"/>
 	<rule ref="WordPress-Extra"/>
@@ -71,6 +72,7 @@
 				<element key="str_rot13" value="null"/>
 			</property>
 		</properties>
+		<exclude name="Generic.Functions.CallTimePassByReference"/>
 	</rule>
 	<rule ref="PEAR.Functions.FunctionDeclaration">
 		<exclude name="PEAR.Functions.FunctionDeclaration.BraceOnSameLine"/>
