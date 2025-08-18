@@ -23,6 +23,7 @@ class Cron {
 		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ) );
 		add_action( 'content_aggregator_update_hook', array( $this, 'execute_cron_job' ) );
 		$this->schedule_cron_event();
+		register_deactivation_hook( CONTENT_AGGREGATOR_DIR . '/content-aggregator.php', array( $this, 'deactivation_hook' ) );
 	}
 
 	public function cron_schedules( $schedules ) {
@@ -42,6 +43,10 @@ class Cron {
 			}
 		}
 		return $schedules;
+	}
+
+	public function deactivation_hook() {
+		wp_clear_scheduled_hook( 'content_aggregator_update_hook' );
 	}
 
 	public function execute_cron_job() {
