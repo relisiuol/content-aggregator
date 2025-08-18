@@ -182,6 +182,42 @@ if ( ! function_exists( 'content_aggregator_post_link' ) ) {
 	}
 }
 
+if ( ! function_exists( 'content_aggregator_minimum_php_requirement' ) ) {
+	function content_aggregator_minimum_php_requirement() {
+		return '8.2';
+	}
+}
+
+if ( ! function_exists( 'content_aggregator_site_meets_php_requirements' ) ) {
+	function content_aggregator_site_meets_php_requirements() {
+		return version_compare( phpversion(), content_aggregator_minimum_php_requirement(), '>=' );
+	}
+}
+
+if ( ! content_aggregator_site_meets_php_requirements() ) {
+	add_action(
+		'admin_notices',
+		function () {
+			?>
+			<div class="notice notice-error">
+				<p>
+					<?php
+						echo wp_kses_post(
+							sprintf(
+								/* translators: %s: Minimum required PHP version */
+								__( 'Content Aggregator requires PHP version %s or later. Please upgrade PHP or disable the plugin.', 'content-aggregator' ),
+								esc_html( convert_to_blocks_minimum_php_requirement() )
+							)
+						);
+					?>
+				</p>
+			</div>
+			<?php
+		}
+	);
+	return;
+}
+
 register_activation_hook( __FILE__, 'content_aggregator_install' );
 register_uninstall_hook( __FILE__, 'content_aggregator_uninstall' );
 
