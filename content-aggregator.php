@@ -10,7 +10,7 @@
  *
  * Plugin Name:       Content Aggregator
  * Description:       Content Aggregator is a plugin to aggregate items from RSS, Rest API & more.
- * Version:           1.0.1
+ * Version:           2.0.0
  * Plugin URI:        https://github.com/relisiuol/content-aggregator
  * Author:            relisiuol
  * Author URI:        https://relisiuol.fr/
@@ -18,7 +18,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:       content-aggregator
  * Domain Path:       /languages/
- * Requires PHP:      7.4
+ * Requires PHP:      8.2
  * Requires at least: 6.2
  *
  * This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,7 @@ if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CONTENT_AGGREGATOR_VERSION', '1.0.1' );
+define( 'CONTENT_AGGREGATOR_VERSION', '2.0.0' );
 define( 'CONTENT_AGGREGATOR_DB_VERSION', '1.0.0' );
 define( 'CONTENT_AGGREGATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_URL', plugin_dir_url( __FILE__ ) );
