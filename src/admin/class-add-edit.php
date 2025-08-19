@@ -211,7 +211,8 @@ class Add_Edit {
 					$input['last_news'] = '';
 					$id = $wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 					if ( $id ) {
-						$this->source['id'] = $id;
+						$this->source['id'] = $wpdb->insert_id;
+						;
 						wp_redirect(
 							add_query_arg(
 								array(
