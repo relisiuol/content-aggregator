@@ -146,7 +146,7 @@ class Admin {
 										)
 									);
 									$response = $response->body;
-								} catch ( Exception $e ) {
+								} catch ( \Exception $e ) {
 									$response = false;
 								}
 								$decoders = array();
@@ -177,7 +177,7 @@ class Admin {
 						try {
 							$response = \WpOrg\Requests\Requests::get( $base_url );
 							$response = $response->body;
-						} catch ( Exception $e ) {
+						} catch ( \Exception $e ) {
 							$response = false;
 						}
 						$rss = $this->find_rss( $response, $base_url );
@@ -185,7 +185,7 @@ class Admin {
 							try {
 								$response = \WpOrg\Requests\Requests::get( $rss );
 								$response = $response->body;
-							} catch ( Exception $e ) {
+							} catch ( \Exception $e ) {
 								$response = false;
 							}
 							$decoders = array(
@@ -237,7 +237,7 @@ class Admin {
 				}
 			}
 			return null;
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return null;
 		}
 	}
