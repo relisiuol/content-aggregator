@@ -45,7 +45,7 @@
 		"@wordpress/stylelint-config": "^23.20.0",
 		"autoprefixer": "^10.4.21",
 		"babel-loader": "^10.0.0",
-		"browserslist": "^4.25.2",
+		"browserslist": "^4.25.3",
 		"clean-webpack-plugin": "^4.0.0",
 		"copy-webpack-plugin": "^13.0.1",
 		"css-loader": "^7.1.2",
@@ -73,7 +73,7 @@
 		"time-analytics-webpack-plugin": "^0.1.20",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.2",
-		"webpack": "^5.101.2",
+		"webpack": "^5.101.3",
 		"webpack-cli": "^6.0.1",
 		"webpack-remove-empty-scripts": "^1.1.1",
 		"webpackbar": "^7.0.0"
