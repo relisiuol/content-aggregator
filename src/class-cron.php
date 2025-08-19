@@ -185,9 +185,16 @@ class Cron {
 										$insert = empty( $insert );
 									}
 									if ( $insert ) {
+										$content = wp_kses_post( $item['content'] );
+										$converter = false;
+										if ( class_exists( \Alley\WP\Block_Converter\Block_Converter::class ) ) {
+											self::ensure_block_converter_ready();
+											$converter = new \Alley\WP\Block_Converter\Block_Converter();
+											$content = $converter->convert( $item['content'] );
+										}
 										$postdata = array(
 											'post_title'    => sanitize_text_field( $item['title'] ),
-											'post_content'  => wp_kses_post( $item['content'] ),
+											'post_content'  => $content,
 											'post_date'     => $item['date'],
 											'post_date_gmt' => get_gmt_from_date( $item['date'] ),
 											'post_author'   => $this->get_default_author_id(),
@@ -204,6 +211,9 @@ class Cron {
 										if ( $post_id ) {
 											add_post_meta( $post_id, 'content_aggregator_source', $source['id'] );
 											add_post_meta( $post_id, 'content_aggregator_url', $item['url'] );
+											if ( $converter ) {
+												$converter->assign_parent_to_attachments( $post_id );
+											}
 											if ( ! empty( $item['image'] ) && filter_var( $item['image'], FILTER_VALIDATE_URL ) ) {
 												if ( ! function_exists( 'media_sideload_image' ) ) {
 													require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -303,23 +313,6 @@ class Cron {
 		return isset( $interval_mapping[ $user_interval ] ) ? $interval_mapping[ $user_interval ] : false;
 	}
 
-	public static function clean_url( $url ) {
-		return rtrim(
-			preg_replace(
-				array(
-					'/utm([_a-z0-9=%]+)\&?/',
-					'/source=([_a-z0-9-%]+)\&?/',
-				),
-				array(
-					'',
-					'',
-				),
-				$url
-			),
-			'&?#'
-		);
-	}
-
 	private function get_default_author_id() {
 		$users = get_users(
 			array(
@@ -338,5 +331,75 @@ class Cron {
 			)
 		);
 		return ! empty( $fallback_user ) ? $fallback_user[0] : false;
+	}
+
+	public function block_converter_filter( $block, $node ) {
+		if ( $block && 'core/html' === $block->blockName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			return null;
+		}
+		return $block;
+	}
+
+	private static function ensure_block_converter_ready() {
+		static $done_ensure_block_converter_ready = false;
+		if ( $done_ensure_block_converter_ready || ! class_exists( \Alley\WP\Block_Converter\Block_Converter::class ) ) {
+			return;
+		}
+		$done_ensure_block_converter_ready = true;
+
+		add_filter( 'wp_block_converter_block', array( __CLASS__, 'block_converter_filter' ), 10, 2 );
+
+		\Alley\WP\Block_Converter\Block_Converter::macro(
+			'div',
+			static function ( \DOMElement $node ) {
+				$current = $node;
+				$depth   = 0;
+				$img     = null;
+				while ( $current && $depth < 2 ) {
+					$elements = array_filter(
+						iterator_to_array( $current->childNodes ), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						static fn ( $child ) => $child instanceof \DOMElement
+					);
+					if ( 1 === count( $elements ) ) {
+						$child = $elements[0];
+						if ( 'img' === strtolower( $child->nodeName ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+							$img = $child;
+							break;
+						}
+						if ( 'div' === strtolower( $child->nodeName ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+							$current = $child;
+							$depth++;
+							continue;
+						}
+					}
+					return \Alley\WP\Block_Converter\Block_Converter::div( $node );
+				}
+				if ( ! $img instanceof \DOMElement ) {
+					return \Alley\WP\Block_Converter\Block_Converter::div( $node );
+				}
+				$new = $img->cloneNode( false );
+				foreach ( array( 'loading', 'width', 'height' ) as $attr ) {
+					$new->removeAttribute( $attr );
+				}
+				return \Alley\WP\Block_Converter\Block_Converter::img( $new );
+			}
+		);
+	}
+
+	public static function clean_url( $url ) {
+		return rtrim(
+			preg_replace(
+				array(
+					'/utm([_a-z0-9=%]+)\&?/',
+					'/source=([_a-z0-9-%]+)\&?/',
+				),
+				array(
+					'',
+					'',
+				),
+				$url
+			),
+			'&?#'
+		);
 	}
 }
