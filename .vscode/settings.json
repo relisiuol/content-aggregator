@@ -1,9 +1,9 @@
 {
 	"eslint.enable": true,
 	"eslint.options": {
-		"extensions": [".js", ".json"]
+		"extensions": [ ".js", ".json" ]
 	},
-	"eslint.validate": ["javascript", "json"],
+	"eslint.validate": [ "javascript", "json" ],
 	"files.eol": "\n",
 	"git.confirmSync": false,
 	"git.enableSmartCommit": true,
@@ -14,7 +14,7 @@
 	"stylelint.packageManager": "pnpm",
 	"stylelint.reportInvalidScopeDisables": true,
 	"stylelint.reportNeedlessDisables": true,
-	"stylelint.validate": ["css", "less", "postcss", "scss"],
+	"stylelint.validate": [ "css", "less", "postcss", "scss" ],
 	"[javascript]": {
 		"editor.codeActionsOnSave": {
 			"source.fixAll.prettier": "explicit",

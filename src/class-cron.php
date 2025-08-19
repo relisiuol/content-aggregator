@@ -22,6 +22,7 @@ class Cron {
 		$this->settings = \Content_Aggregator\Admin\Settings::get_instance()->get_settings();
 		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ) );
 		add_action( 'content_aggregator_update_hook', array( $this, 'execute_cron_job' ) );
+		add_filter( 'wp_block_converter_block', array( $this, 'block_converter_filter' ), 10, 2 );
 		$this->schedule_cron_event();
 		register_deactivation_hook( CONTENT_AGGREGATOR_DIR . '/content-aggregator.php', array( $this, 'deactivation_hook' ) );
 	}
@@ -188,9 +189,11 @@ class Cron {
 										$content = wp_kses_post( $item['content'] );
 										$converter = false;
 										if ( class_exists( \Alley\WP\Block_Converter\Block_Converter::class ) ) {
-											self::ensure_block_converter_ready();
-											$converter = new \Alley\WP\Block_Converter\Block_Converter();
-											$content = $converter->convert( $item['content'] );
+											$converter = new \Alley\WP\Block_Converter\Block_Converter( $item['content'], true );
+											$content = $converter->convert();
+											if ( empty( $content ) ) {
+												$content = wp_kses_post( $item['content'] );
+											}
 										}
 										$postdata = array(
 											'post_title'    => sanitize_text_field( $item['title'] ),
@@ -334,72 +337,48 @@ class Cron {
 	}
 
 	public function block_converter_filter( $block, $node ) {
-		if ( $block && 'core/html' === $block->blockName ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		if ( $block && 'html' === $block->block_name ) {
 			return null;
 		}
-		return $block;
-	}
-
-	private static function ensure_block_converter_ready() {
-		static $done_ensure_block_converter_ready = false;
-		if ( $done_ensure_block_converter_ready || ! class_exists( \Alley\WP\Block_Converter\Block_Converter::class ) ) {
-			return;
-		}
-		$done_ensure_block_converter_ready = true;
-
-		add_filter( 'wp_block_converter_block', array( __CLASS__, 'block_converter_filter' ), 10, 2 );
-
-		\Alley\WP\Block_Converter\Block_Converter::macro(
-			'div',
-			static function ( \DOMElement $node ) {
-				$current = $node;
-				$depth   = 0;
-				$img     = null;
-				while ( $current && $depth < 2 ) {
-					$elements = array_filter(
-						iterator_to_array( $current->childNodes ), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-						static fn ( $child ) => $child instanceof \DOMElement
-					);
-					if ( 1 === count( $elements ) ) {
-						$child = $elements[0];
-						if ( 'img' === strtolower( $child->nodeName ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-							$img = $child;
-							break;
-						}
-						if ( 'div' === strtolower( $child->nodeName ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-							$current = $child;
-							$depth++;
-							continue;
-						}
-					}
-					return \Alley\WP\Block_Converter\Block_Converter::div( $node );
-				}
-				if ( ! $img instanceof \DOMElement ) {
-					return \Alley\WP\Block_Converter\Block_Converter::div( $node );
-				}
-				$new = $img->cloneNode( false );
-				foreach ( array( 'loading', 'width', 'height' ) as $attr ) {
-					$new->removeAttribute( $attr );
-				}
-				return \Alley\WP\Block_Converter\Block_Converter::img( $new );
+		if ( $block && 'image' === $block->block_name ) {
+			$src = '';
+			$alt = '';
+			$is_img_node = ( $node instanceof \DOMElement ) && strtolower( $node->tagName ) === 'img'; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( $is_img_node ) {
+				$src = (string) $node->getAttribute( 'src' );
+				$alt = (string) $node->getAttribute( 'alt' );
 			}
-		);
-	}
-
-	public static function clean_url( $url ) {
-		return rtrim(
-			preg_replace(
-				array(
-					'/utm([_a-z0-9=%]+)\&?/',
-					'/source=([_a-z0-9-%]+)\&?/',
-				),
-				array(
-					'',
-					'',
-				),
-				$url
-			),
-			'&?#'
-		);
+			$attrs = is_array( $block->attributes ?? null ) ? $block->attributes : array();
+			if ( ! $src ) {
+				$src = (string) ( $attrs['url'] ?? $attrs['src'] ?? '' );
+			}
+			if ( '' === $alt ) {
+				$alt = (string) ( $attrs['alt'] ?? '' );
+			}
+			if ( ! $src && is_string( $block->content ) && '' !== $block->content ) {
+				if ( preg_match( '/<img[^>]+src=["\']([^"\']+)["\']/i', $block->content, $m ) ) {
+					$src = $m[1];
+				}
+				if ( '' === $alt && preg_match( '/<img[^>]+alt=["\']([^"\']*)["\']/i', $block->content, $m ) ) {
+					$alt = $m[1];
+				}
+			}
+			$src = esc_url_raw( $src );
+			$alt = sanitize_text_field( html_entity_decode( (string) $alt, ENT_QUOTES | ENT_HTML5 ) );
+			if ( ! $src ) {
+				return null;
+			}
+			$inner = sprintf(
+				'<figure class="wp-block-image"><img src="%s" alt="%s"></figure>',
+				esc_url( $src ),
+				esc_attr( $alt )
+			);
+			$block->attributes = array(
+				'url' => $src,
+				'alt' => $alt,
+			);
+			$block->content = $inner;
+		}
+		return $block;
 	}
 }
