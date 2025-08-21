@@ -28,6 +28,15 @@ Not yet available.
 
 == Changelog ==
 
-= [1.0.1] 2025-21-02 =
+= 2.0.0 - 2025-08-21 =
+
+* Add labels to settings fields
+* Add success message when adding source
+* Clear scheduled hook when deactivate plugin
+* Convert HTML to WP blocks if possible
+* Redirect to source edit page when adding source
+* Bump & enforce minimum PHP version
+
+= 1.0.1 - 2025-02-21 =
 
 * Initial release
