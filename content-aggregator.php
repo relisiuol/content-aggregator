@@ -5,7 +5,7 @@
  * @package   content-aggregator
  * @link      https://github.com/relisiuol/content-aggregator
  * @author    relisiuol <contact@relisiuol.fr>
- * @copyright 2023 - 2024 relisiuol
+ * @copyright 2025 relisiuol
  * @license   GPL v3
  *
  * Plugin Name:       Content Aggregator
@@ -43,6 +43,8 @@ define( 'CONTENT_AGGREGATOR_DB_VERSION', '1.0.0' );
 define( 'CONTENT_AGGREGATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_URL', plugin_dir_url( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_NAMESPACE_PREFIX', 'Content_Aggregator' );
+
+require CONTENT_AGGREGATOR_DIR . 'includes/vendor/wordpress-autoload.php';
 
 if ( defined( 'WP_INSTALLING' ) && WP_INSTALLING ) {
 	return;
@@ -140,7 +142,7 @@ if ( ! function_exists( 'content_aggregator_spl_autoload_register' ) ) {
 			} else {
 				$class_name = 'class-' . $class_name;
 			}
-			require CONTENT_AGGREGATOR_DIR . 'src/' . $class_name . '.php';
+			require CONTENT_AGGREGATOR_DIR . 'includes/' . $class_name . '.php';
 		}
 	}
 }

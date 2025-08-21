@@ -1,9 +1,15 @@
 {
 	"$schema": "https://getcomposer.org/schema.json",
 	"name": "relisiuol/content-aggregator",
-	"description": "Content Aggregator",
+	"description": "Content Aggregator will import content from a JSON or XML file.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "relisiuol",
+			"homepage": "https://github.com/relisiuol"
+		}
+	],
 	"require": {
 		"php": ">=8.2",
 		"alleyinteractive/wp-block-converter": "^1.6"
@@ -28,14 +34,15 @@
 		"source": "https://github.com/relisiuol/content-aggregator"
 	},
 	"config": {
-		"process-timeout": 0,
-		"platform": {
-			"php": "8.2"
-		},
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"alleyinteractive/composer-wordpress-autoloader": true
-		}
+		},
+		"platform": {
+			"php": "8.2"
+		},
+		"process-timeout": 0,
+		"vendor-dir": "includes/vendor/"
 	},
 	"scripts": {
 		"cb": "phpcbf . --report-summary --report-source",

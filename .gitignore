@@ -1,5 +1,7 @@
 .DS_Store
+/build
 /composer.lock
-/dist
+/includes/vendor
 /node_modules
-/vendor
+/content-aggregator/
+/content-aggregator.zip

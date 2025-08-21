@@ -61,7 +61,7 @@ class Admin {
 		global $pagenow, $plugin_page;
 		if ( 'admin.php' === $pagenow && ( 'content-aggregator' === $plugin_page || in_array( $plugin_page, array_keys( $this->pages() ), true ) ) ) {
 			$page = isset( $plugin_page ) && in_array( $plugin_page, array_keys( $this->pages() ), true ) ? str_replace( 'content-aggregator-', '', sanitize_file_name( $plugin_page ) ) : '';
-			if ( empty( $page ) || ! file_exists( CONTENT_AGGREGATOR_DIR . 'src/admin/class-' . $page . '.php' ) ) {
+			if ( empty( $page ) || ! file_exists( CONTENT_AGGREGATOR_DIR . 'includes/admin/class-' . $page . '.php' ) ) {
 				$page = 'sources';
 			}
 			$page = '\\Content_Aggregator\\Admin\\' . str_replace(

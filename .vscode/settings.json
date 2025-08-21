@@ -8,7 +8,7 @@
 	"git.confirmSync": false,
 	"git.enableSmartCommit": true,
 	"json.schemaDownload.enable": true,
-	"phpSniffer.autoDetect": true,
+	"phpSniffer.executablesFolder": "./includes/vendor/bin/",
 	"phpSniffer.run": "onSave",
 	"stylelint.enable": true,
 	"stylelint.packageManager": "pnpm",
@@ -69,6 +69,6 @@
 		"**/.DS_Store": true,
 		"**/Thumbs.db": true,
 		"composer.lock": true,
-		"pnpm-lock.lock": true
+		"pnpm-lock.yaml": true
 	}
 }

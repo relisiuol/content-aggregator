@@ -14,59 +14,74 @@ msgstr ""
 "X-Domain: content-aggregator\n"
 
 #. translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
-#: src/admin/class-add-edit.php:350
-#: src/admin/class-add-edit.php:359
-#: src/admin/class-add-edit.php:374
+#: content-aggregator/includes/admin/class-add-edit.php:355
+#: content-aggregator/includes/admin/class-add-edit.php:364
+#: content-aggregator/includes/admin/class-add-edit.php:379
+#: includes/admin/class-add-edit.php:355
+#: includes/admin/class-add-edit.php:364
+#: includes/admin/class-add-edit.php:379
 msgid " and "
 msgstr " et "
 
-#: src/admin/class-settings.php:217
+#: content-aggregator/includes/admin/class-settings.php:217
+#: includes/admin/class-settings.php:217
 msgid "1 day"
 msgstr "1 jour"
 
-#: src/admin/class-settings.php:213
+#: content-aggregator/includes/admin/class-settings.php:213
+#: includes/admin/class-settings.php:213
 msgid "1 hour"
 msgstr "1 heure"
 
-#: src/admin/class-settings.php:221
+#: content-aggregator/includes/admin/class-settings.php:221
+#: includes/admin/class-settings.php:221
 msgid "1 month"
 msgstr "1 mois"
 
-#: src/admin/class-settings.php:219
+#: content-aggregator/includes/admin/class-settings.php:219
+#: includes/admin/class-settings.php:219
 msgid "1 week"
 msgstr "1 semaine"
 
-#: src/admin/class-settings.php:215
+#: content-aggregator/includes/admin/class-settings.php:215
+#: includes/admin/class-settings.php:215
 msgid "12 hours"
 msgstr "12 heures"
 
-#: src/admin/class-settings.php:209
+#: content-aggregator/includes/admin/class-settings.php:209
+#: includes/admin/class-settings.php:209
 msgid "15 minutes"
 msgstr "15 minutes"
 
-#: src/admin/class-settings.php:211
+#: content-aggregator/includes/admin/class-settings.php:211
+#: includes/admin/class-settings.php:211
 msgid "30 minutes"
 msgstr "30 minutes"
 
-#: src/admin/class-settings.php:137
+#: content-aggregator/includes/admin/class-settings.php:137
+#: includes/admin/class-settings.php:137
 msgid "A smaller value is beneficial for sites with numerous sources."
 msgstr "Une valeur plus petite est avantageuse pour les sites comportant de nombreuses sources."
 
-#: src/admin/class-add-edit.php:299
+#: content-aggregator/includes/admin/class-add-edit.php:304
+#: includes/admin/class-add-edit.php:304
 msgid "A valid user agent ensures compatibility and successful data retrieval."
 msgstr "Un agent utilisateur valide garantit la compatibilité et la réussite de la récupération des données."
 
-#: src/admin/class-sources.php:36
+#: content-aggregator/includes/admin/class-sources.php:36
+#: includes/admin/class-sources.php:36
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/admin/class-add-edit.php:76
+#: content-aggregator/includes/admin/class-add-edit.php:76
+#: includes/admin/class-add-edit.php:76
 msgid "Add source"
 msgstr "Ajouter une source"
 
 #. Plugin Name of the plugin
 #: content-aggregator.php
-#: src/class-admin.php:28
+#: content-aggregator/includes/class-admin.php:28
+#: includes/class-admin.php:28
 msgid "Content Aggregator"
 msgstr "Aggrégateur de Contenu"
 
@@ -75,123 +90,154 @@ msgstr "Aggrégateur de Contenu"
 msgid "Content Aggregator is a plugin to aggregate items from RSS, Rest API & more."
 msgstr "Aggrégateur de Contenu est un plugin pour regrouper des éléments provenant de RSS, de l'API Rest et plus encore."
 
-#: src/admin/class-settings.php:199
+#: content-aggregator/includes/admin/class-settings.php:199
+#: includes/admin/class-settings.php:199
 msgid "Are you sure you want to reset all settings? This action cannot be undone."
 msgstr "Êtes-vous sûr de vouloir réinitialiser tous les paramètres ? Cette action ne peut pas être annulée."
 
-#: src/admin/class-add-edit.php:318
+#: content-aggregator/includes/admin/class-add-edit.php:323
+#: includes/admin/class-add-edit.php:323
 msgid "Assign categories automatically to new posts."
 msgstr "Attribuez automatiquement des catégories aux nouvelles publications."
 
-#: src/admin/class-add-edit.php:392
+#: content-aggregator/includes/admin/class-add-edit.php:397
+#: includes/admin/class-add-edit.php:397
 msgid "Available tags:"
 msgstr "Balises disponibles :"
 
-#: src/admin/class-add-edit.php:49
-#: src/admin/class-sources-table.php:62
+#: content-aggregator/includes/admin/class-add-edit.php:49
+#: content-aggregator/includes/admin/class-sources-table.php:62
+#: includes/admin/class-add-edit.php:49
+#: includes/admin/class-sources-table.php:62
 msgid "Categories"
 msgstr "Catégories"
 
-#: src/admin/class-settings.php:104
+#: content-aggregator/includes/admin/class-settings.php:104
+#: includes/admin/class-settings.php:104
 msgid "Certificate file not found."
 msgstr "Fichier de certificat introuvable."
 
-#: src/admin/class-settings.php:31
+#: content-aggregator/includes/admin/class-settings.php:31
+#: includes/admin/class-settings.php:31
 msgid "Certificate path"
 msgstr "Chemin du certificat"
 
-#: src/admin/class-settings.php:149
+#: content-aggregator/includes/admin/class-settings.php:149
+#: includes/admin/class-settings.php:149
 msgid "Choose the duration after which an offline source is automatically deactivated."
 msgstr "Choisissez la durée après laquelle une source hors ligne est automatiquement désactivée."
 
-#: src/admin/class-add-edit.php:281
+#: content-aggregator/includes/admin/class-add-edit.php:286
+#: includes/admin/class-add-edit.php:286
 msgid "Choose the type of the source. Type determines how the content is processed and analyzed."
 msgstr "Choisissez le type de source. Le type détermine la manière dont le contenu est traité et analysé."
 
-#: src/admin/class-settings.php:114
+#: content-aggregator/includes/admin/class-settings.php:114
+#: includes/admin/class-settings.php:114
 msgid "Configure Content Aggregator settings below."
 msgstr "Configurez les paramètres d'Aggrégateur de Contenu ci-dessous."
 
 #. translators: Placeholders for dynamic tags used in title templates.
-#: src/admin/class-add-edit.php:349
+#: content-aggregator/includes/admin/class-add-edit.php:354
+#: includes/admin/class-add-edit.php:354
 #, php-format
 msgid "Create a title template using dynamic tags such as %s."
 msgstr "Créez un modèle de titre à l'aide de balises dynamiques telles que %s."
 
-#: src/admin/class-add-edit.php:54
+#: content-aggregator/includes/admin/class-add-edit.php:54
+#: includes/admin/class-add-edit.php:54
 msgid "Default featured image"
 msgstr "Image sélectionnée par défaut"
 
-#: src/admin/class-add-edit.php:300
-#: src/admin/class-settings.php:164
+#: content-aggregator/includes/admin/class-add-edit.php:305
+#: content-aggregator/includes/admin/class-settings.php:164
+#: includes/admin/class-add-edit.php:305
+#: includes/admin/class-settings.php:164
 msgid "Default value:"
 msgstr "Valeur par défaut :"
 
-#: src/admin/class-add-edit.php:390
+#: content-aggregator/includes/admin/class-add-edit.php:395
+#: includes/admin/class-add-edit.php:395
 msgid "Define the content structure with placeholders for a rich, dynamic presentation."
 msgstr "Définissez la structure du contenu avec des espaces réservés pour une présentation riche et dynamique."
 
-#: src/admin/class-sources-table.php:136
+#: content-aggregator/includes/admin/class-sources-table.php:136
+#: includes/admin/class-sources-table.php:136
 msgid "Delete permanently"
 msgstr "Supprimer définitivement"
 
 #. translators: __DATE__, __NOW__: Placeholders for dynamic tags used in date templates.
-#: src/admin/class-add-edit.php:374
+#: content-aggregator/includes/admin/class-add-edit.php:379
+#: includes/admin/class-add-edit.php:379
 #, php-format
 msgid "Design your date display using %s."
 msgstr "Concevez votre affichage de date en utilisant %s."
 
-#: src/admin/class-sources-table.php:135
+#: content-aggregator/includes/admin/class-sources-table.php:135
+#: includes/admin/class-sources-table.php:135
 msgid "Disable"
 msgstr "Désactiver"
 
-#: src/admin/class-sources-table.php:95
+#: content-aggregator/includes/admin/class-sources-table.php:95
+#: includes/admin/class-sources-table.php:95
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: src/admin/class-add-edit.php:76
+#: content-aggregator/includes/admin/class-add-edit.php:76
+#: includes/admin/class-add-edit.php:76
 msgid "Edit source"
 msgstr "Modifier la source"
 
-#: src/admin/class-sources-table.php:134
+#: content-aggregator/includes/admin/class-sources-table.php:134
+#: includes/admin/class-sources-table.php:134
 msgid "Enable"
 msgstr "Activer"
 
-#: src/admin/class-add-edit.php:289
+#: content-aggregator/includes/admin/class-add-edit.php:294
+#: includes/admin/class-add-edit.php:294
 msgid "Enable to ensure all fetched posts have unique titles."
 msgstr "Activez cette option pour garantir que toutes les publications récupérées ont des titres uniques."
 
-#: src/admin/class-add-edit.php:56
-#: src/admin/class-sources-table.php:95
+#: content-aggregator/includes/admin/class-add-edit.php:56
+#: content-aggregator/includes/admin/class-sources-table.php:95
+#: includes/admin/class-add-edit.php:56
+#: includes/admin/class-sources-table.php:95
 msgid "Enabled"
 msgstr "Activé"
 
-#: src/admin/class-settings.php:163
+#: content-aggregator/includes/admin/class-settings.php:163
+#: includes/admin/class-settings.php:163
 msgid "Ensure the specified path is accurate to avoid connection issues."
 msgstr "Assurez-vous que le chemin spécifié est exact pour éviter les problèmes de connexion."
 
 #. translators: %s: Placeholder for an user-agent.
-#: src/admin/class-add-edit.php:298
+#: content-aggregator/includes/admin/class-add-edit.php:303
+#: includes/admin/class-add-edit.php:303
 msgid "Enter a custom user agent for requests. Leave blank to use default."
 msgstr "Entrez un agent utilisateur personnalisé pour les requêtes. Laissez vide pour utiliser celui par défaut."
 
-#: src/class-cron.php:34
+#: content-aggregator/includes/class-cron.php:34
+#: includes/class-cron.php:34
 msgid "Every 15 minutes"
 msgstr "Toutes les 15 minutes"
 
-#: src/class-cron.php:38
+#: content-aggregator/includes/class-cron.php:38
+#: includes/class-cron.php:38
 msgid "Every 30 minutes"
 msgstr "Toutes les 30 minutes"
 
-#: src/admin/class-settings.php:30
+#: content-aggregator/includes/admin/class-settings.php:30
+#: includes/admin/class-settings.php:30
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: src/admin/class-add-edit.php:181
+#: content-aggregator/includes/admin/class-add-edit.php:181
+#: includes/admin/class-add-edit.php:181
 msgid "Featured image is invalid or missing."
 msgstr "L'image sélectionnée n'est pas valide ou est manquante."
 
-#: src/admin/class-settings.php:127
+#: content-aggregator/includes/admin/class-settings.php:127
+#: includes/admin/class-settings.php:127
 msgid "Higher frequencies may increase server load, especially with a large number of sources."
 msgstr "Des fréquences plus élevées peuvent augmenter la charge du serveur, en particulier avec un grand nombre de sources."
 
@@ -206,104 +252,132 @@ msgid "https://relisiuol.fr/"
 msgstr "https://relisiuol.fr/"
 
 #. translators: Placeholders for dynamic tags used in title templates.
-#: src/admin/class-add-edit.php:358
+#: content-aggregator/includes/admin/class-add-edit.php:363
+#: includes/admin/class-add-edit.php:363
 #, php-format
 msgid "Incorporate date information with %s to keep titles timely and relevant."
 msgstr "Incorporez les informations de date avec %s pour que les titres restent actuels et pertinents."
 
-#: src/admin/class-settings.php:98
+#: content-aggregator/includes/admin/class-settings.php:98
+#: includes/admin/class-settings.php:98
 msgid "Invalid certificate path or file. SSL certificate problem encountered."
 msgstr "Chemin ou fichier de certificat invalide. Problème de certificat SSL rencontré."
 
-#: src/admin/class-settings.php:83
+#: content-aggregator/includes/admin/class-settings.php:83
+#: includes/admin/class-settings.php:83
 msgid "Invalid expiration date selected."
 msgstr "Date d'expiration sélectionnée non valide."
 
-#: src/admin/class-settings.php:77
+#: content-aggregator/includes/admin/class-settings.php:77
+#: includes/admin/class-settings.php:77
 msgid "Invalid max update value. It should be a positive number, not exceeding 50."
 msgstr "Valeur de mise à jour max non valide. Il doit s'agir d'un nombre positif ne dépassant pas 50."
 
-#: src/admin/class-settings.php:70
+#: content-aggregator/includes/admin/class-settings.php:70
+#: includes/admin/class-settings.php:70
 msgid "Invalid update interval selected."
 msgstr "Intervalle de mise à jour sélectionné non valide."
 
-#: src/admin/class-sources-table.php:61
-#: src/admin/class-sources-table.php:70
+#: content-aggregator/includes/admin/class-sources-table.php:61
+#: content-aggregator/includes/admin/class-sources-table.php:70
+#: includes/admin/class-sources-table.php:61
+#: includes/admin/class-sources-table.php:70
 msgid "Last check"
 msgstr "Dernière vérification"
 
-#: src/admin/class-settings.php:29
+#: content-aggregator/includes/admin/class-settings.php:29
+#: includes/admin/class-settings.php:29
 msgid "Max update"
 msgstr "Mise à jour max"
 
-#: src/admin/class-add-edit.php:43
-#: src/admin/class-sources-table.php:60
-#: src/admin/class-sources-table.php:69
+#: content-aggregator/includes/admin/class-add-edit.php:43
+#: content-aggregator/includes/admin/class-sources-table.php:60
+#: content-aggregator/includes/admin/class-sources-table.php:69
+#: includes/admin/class-add-edit.php:43
+#: includes/admin/class-sources-table.php:60
+#: includes/admin/class-sources-table.php:69
 msgid "Name"
 msgstr "Nom"
 
-#: src/admin/class-add-edit.php:117
+#: content-aggregator/includes/admin/class-add-edit.php:117
+#: includes/admin/class-add-edit.php:117
 msgid "Name is required."
 msgstr "Le nom est requis."
 
-#: src/admin/class-settings.php:223
+#: content-aggregator/includes/admin/class-settings.php:223
+#: includes/admin/class-settings.php:223
 msgid "Never"
 msgstr "Jamais"
 
-#: src/admin/class-settings.php:184
+#: content-aggregator/includes/admin/class-settings.php:184
+#: includes/admin/class-settings.php:184
 msgid "Next refresh:"
 msgstr "Prochaine actualisation :"
 
-#: src/admin/class-sources-table.php:193
+#: content-aggregator/includes/admin/class-sources-table.php:193
+#: includes/admin/class-sources-table.php:193
 msgid "No source found."
 msgstr "Aucune source trouvée."
 
-#: src/admin/class-add-edit.php:282
+#: content-aggregator/includes/admin/class-add-edit.php:287
+#: includes/admin/class-add-edit.php:287
 msgid "Once you paste a source URL, it will try to determine the right type."
 msgstr "Une fois que vous aurez collé une URL source, il tentera de déterminer le bon type."
 
-#: src/admin/class-add-edit.php:152
+#: content-aggregator/includes/admin/class-add-edit.php:152
+#: includes/admin/class-add-edit.php:152
 msgid "One or more selected categories are invalid."
 msgstr "Une ou plusieurs catégories sélectionnées ne sont pas valides."
 
-#: src/admin/class-add-edit.php:53
+#: content-aggregator/includes/admin/class-add-edit.php:53
+#: includes/admin/class-add-edit.php:53
 msgid "Post content template"
 msgstr "Modèle de contenu de l'article"
 
-#: src/admin/class-add-edit.php:176
+#: content-aggregator/includes/admin/class-add-edit.php:176
+#: includes/admin/class-add-edit.php:176
 msgid "Post content template is invalid or missing."
 msgstr "Le modèle de contenu de la publication n'est pas valide ou est manquant."
 
-#: src/admin/class-add-edit.php:52
+#: content-aggregator/includes/admin/class-add-edit.php:52
+#: includes/admin/class-add-edit.php:52
 msgid "Post date template"
 msgstr "Modèle de date de l'article"
 
-#: src/admin/class-add-edit.php:171
+#: content-aggregator/includes/admin/class-add-edit.php:171
+#: includes/admin/class-add-edit.php:171
 msgid "Post date template is invalid or missing."
 msgstr "Le modèle de date de la publication n'est pas valide ou est manquant."
 
-#: src/admin/class-add-edit.php:50
-#: src/admin/class-sources-table.php:63
+#: content-aggregator/includes/admin/class-add-edit.php:50
+#: content-aggregator/includes/admin/class-sources-table.php:63
+#: includes/admin/class-add-edit.php:50
+#: includes/admin/class-sources-table.php:63
 msgid "Post status"
 msgstr "Statut de l'article"
 
-#: src/admin/class-add-edit.php:161
+#: content-aggregator/includes/admin/class-add-edit.php:161
+#: includes/admin/class-add-edit.php:161
 msgid "Post status is invalid or missing."
 msgstr "Le statut de la publication est invalide ou manquant."
 
-#: src/admin/class-add-edit.php:51
+#: content-aggregator/includes/admin/class-add-edit.php:51
+#: includes/admin/class-add-edit.php:51
 msgid "Post title template"
 msgstr "Modèle de titre de l'article"
 
-#: src/admin/class-add-edit.php:166
+#: content-aggregator/includes/admin/class-add-edit.php:166
+#: includes/admin/class-add-edit.php:166
 msgid "Post title template is invalid or missing."
 msgstr "Le modèle de titre du message est invalide ou manquant."
 
-#: src/admin/class-add-edit.php:414
+#: content-aggregator/includes/admin/class-add-edit.php:419
+#: includes/admin/class-add-edit.php:419
 msgid "Provide a default featured image."
 msgstr "Fournissez une image à la une par défaut."
 
-#: src/admin/class-add-edit.php:55
+#: content-aggregator/includes/admin/class-add-edit.php:55
+#: includes/admin/class-add-edit.php:55
 msgid "Redirect"
 msgstr "Rediriger"
 
@@ -312,256 +386,318 @@ msgstr "Rediriger"
 msgid "relisiuol"
 msgstr "relisiuol"
 
-#: src/admin/class-settings.php:195
+#: content-aggregator/includes/admin/class-settings.php:195
+#: includes/admin/class-settings.php:195
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: src/admin/class-add-edit.php:469
-#: src/admin/class-settings.php:192
+#: content-aggregator/includes/admin/class-add-edit.php:474
+#: content-aggregator/includes/admin/class-settings.php:192
+#: includes/admin/class-add-edit.php:474
+#: includes/admin/class-settings.php:192
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/admin/class-sources.php:41
+#: content-aggregator/includes/admin/class-sources.php:41
+#: includes/admin/class-sources.php:41
 msgid "Search"
 msgstr "Rechercher"
 
-#: src/admin/class-settings.php:125
+#: content-aggregator/includes/admin/class-settings.php:125
+#: includes/admin/class-settings.php:125
 msgid "Select how often Content Aggregator should check for updates and fetch new items."
 msgstr "Sélectionnez la fréquence à laquelle Aggrégateur de Contenu doit vérifier les mises à jour et récupérer de nouveaux éléments."
 
-#: src/admin/class-add-edit.php:407
+#: content-aggregator/includes/admin/class-add-edit.php:412
+#: includes/admin/class-add-edit.php:412
 msgid "Select Image"
 msgstr "Sélectionnez une image"
 
-#: src/admin/class-add-edit.php:337
+#: content-aggregator/includes/admin/class-add-edit.php:342
+#: includes/admin/class-add-edit.php:342
 msgid "Select the default post status for new posts fetched from the source."
 msgstr "Sélectionnez le statut de publication par défaut pour les nouvelles publications extraites de la source."
 
-#: src/admin/class-settings.php:135
+#: content-aggregator/includes/admin/class-settings.php:135
+#: includes/admin/class-settings.php:135
 msgid "Set the maximum number of sources to be updated at each update interval."
 msgstr "Définissez le nombre maximum de sources à mettre à jour à chaque intervalle de mise à jour."
 
-#: src/class-admin.php:101
-#: src/class-admin.php:110
+#: content-aggregator/includes/class-admin.php:101
+#: content-aggregator/includes/class-admin.php:110
+#: includes/class-admin.php:101
+#: includes/class-admin.php:110
 msgid "Settings"
 msgstr "Paramètres"
 
-#: src/admin/class-settings.php:108
+#: content-aggregator/includes/admin/class-settings.php:108
+#: includes/admin/class-settings.php:108
 msgid "Settings saved successfully."
 msgstr "Paramètres enregistrés avec succès."
 
-#: src/admin/class-settings.php:174
+#: content-aggregator/includes/admin/class-settings.php:174
+#: includes/admin/class-settings.php:174
 msgid "Settings successfully reset."
 msgstr "Paramètres réinitialisés avec succès."
 
-#: src/admin/class-add-edit.php:205
+#: content-aggregator/includes/admin/class-add-edit.php:205
+#: includes/admin/class-add-edit.php:205
 msgid "Source saved successfully."
 msgstr "Source enregistrée avec succès."
 
-#: src/admin/class-add-edit.php:132
+#: content-aggregator/includes/admin/class-add-edit.php:132
+#: includes/admin/class-add-edit.php:132
 msgid "Source type is missing or invalid."
 msgstr "Le type de source est manquant ou invalide."
 
-#: src/admin/class-add-edit.php:45
+#: content-aggregator/includes/admin/class-add-edit.php:45
+#: includes/admin/class-add-edit.php:45
 msgid "Source URL"
 msgstr "URL source"
 
-#: src/admin/class-add-edit.php:209
+#: content-aggregator/includes/admin/class-add-edit.php:209
+#: includes/admin/class-add-edit.php:209
 msgid "Source URL is already used."
 msgstr "L'URL source est déjà utilisée."
 
-#: src/admin/class-add-edit.php:127
+#: content-aggregator/includes/admin/class-add-edit.php:127
+#: includes/admin/class-add-edit.php:127
 msgid "Source URL is missing or invalid."
 msgstr "L'URL source est manquante ou invalide."
 
-#: src/admin/class-sources-table.php:184
+#: content-aggregator/includes/admin/class-sources-table.php:184
+#: includes/admin/class-sources-table.php:184
 msgid "Source(s) deleted successfully."
 msgstr "Source(s) supprimée(s) avec succès."
 
-#: src/admin/class-sources-table.php:181
+#: content-aggregator/includes/admin/class-sources-table.php:181
+#: includes/admin/class-sources-table.php:181
 msgid "Source(s) disabled successfully."
 msgstr "Source(s) désactivée(s) avec succès."
 
-#: src/admin/class-sources-table.php:178
+#: content-aggregator/includes/admin/class-sources-table.php:178
+#: includes/admin/class-sources-table.php:178
 msgid "Source(s) enabled successfully."
 msgstr "Source(s) activée(s) avec succès."
 
-#: src/class-admin.php:33
-#: src/class-admin.php:95
+#: content-aggregator/includes/class-admin.php:33
+#: content-aggregator/includes/class-admin.php:95
+#: includes/class-admin.php:33
+#: includes/class-admin.php:95
 msgid "Sources"
 msgstr "Sources"
 
-#: src/admin/class-settings.php:158
+#: content-aggregator/includes/admin/class-settings.php:158
+#: includes/admin/class-settings.php:158
 msgid "Specify the file path to the SSL certificate(s) used for secure HTTPS connections."
 msgstr "Spécifiez le chemin d'accès au(x) certificat(s) SSL utilisé(s) pour les connexions HTTPS sécurisées."
 
 #. translators: __SOURCE_NAME__: Placeholder for the source name used in templates.
-#: src/admin/class-add-edit.php:253
+#: content-aggregator/includes/admin/class-add-edit.php:258
+#: includes/admin/class-add-edit.php:258
 #, php-format
 msgid "Specify the source name to be used in title templates as %s."
 msgstr "Spécifiez le nom de la source à utiliser dans les modèles de titre avec %s."
 
-#: src/admin/class-sources-table.php:128
+#: content-aggregator/includes/admin/class-sources-table.php:128
+#: includes/admin/class-sources-table.php:128
 msgid "Status not found"
 msgstr "Statut introuvable"
 
-#: src/admin/class-sources-table.php:70
+#: content-aggregator/includes/admin/class-sources-table.php:70
+#: includes/admin/class-sources-table.php:70
 msgid "Table ordered by last check date"
 msgstr "Tableau classé par date de dernière vérification"
 
-#: src/admin/class-sources-table.php:69
+#: content-aggregator/includes/admin/class-sources-table.php:69
+#: includes/admin/class-sources-table.php:69
 msgid "Table ordered by name"
 msgstr "Tableau classé par nom"
 
-#: src/admin/class-add-edit.php:396
+#: content-aggregator/includes/admin/class-add-edit.php:401
+#: includes/admin/class-add-edit.php:401
 msgid "The current date when retrieving items."
 msgstr "La date actuelle de récupération des éléments."
 
-#: src/admin/class-add-edit.php:398
+#: content-aggregator/includes/admin/class-add-edit.php:403
+#: includes/admin/class-add-edit.php:403
 msgid "The main source's content, if available."
 msgstr "Le contenu de la source principale, si disponible."
 
-#: src/admin/class-add-edit.php:394
+#: content-aggregator/includes/admin/class-add-edit.php:399
+#: includes/admin/class-add-edit.php:399
 msgid "The original item's title."
 msgstr "Le titre de l'élément d'origine."
 
-#: src/admin/class-add-edit.php:397
+#: content-aggregator/includes/admin/class-add-edit.php:402
+#: includes/admin/class-add-edit.php:402
 msgid "The publication date."
 msgstr "La date de parution."
 
-#: src/admin/class-add-edit.php:395
+#: content-aggregator/includes/admin/class-add-edit.php:400
+#: includes/admin/class-add-edit.php:400
 msgid "The source's name providing the content."
 msgstr "Le nom de la source fournissant le contenu."
 
-#: src/admin/class-add-edit.php:338
+#: content-aggregator/includes/admin/class-add-edit.php:343
+#: includes/admin/class-add-edit.php:343
 msgid "This determines how posts appear on your website and who can see them, based on WordPress visibility settings."
 msgstr "Cela détermine comment les publications apparaissent sur votre site Web et qui peut les voir, en fonction des paramètres de visibilité de WordPress."
 
-#: src/admin/class-add-edit.php:254
+#: content-aggregator/includes/admin/class-add-edit.php:259
+#: includes/admin/class-add-edit.php:259
 msgid "This dynamic approach allows for more personalized content creation."
 msgstr "Cette approche dynamique permet une création de contenu plus personnalisée."
 
-#: src/admin/class-add-edit.php:290
+#: content-aggregator/includes/admin/class-add-edit.php:295
+#: includes/admin/class-add-edit.php:295
 msgid "This feature helps prevent duplicate content issues and improves SEO."
 msgstr "Cette fonctionnalité permet d'éviter les problèmes de contenu en double et d'améliorer le référencement."
 
-#: src/admin/class-settings.php:136
+#: content-aggregator/includes/admin/class-settings.php:136
+#: includes/admin/class-settings.php:136
 msgid "This helps distribute updates across different intervals, reducing server load and preventing overload of the WP Cron system."
 msgstr "Cela permet de distribuer les mises à jour sur différents intervalles, réduisant ainsi la charge du serveur et empêchant la surcharge du système WP Cron."
 
-#: src/admin/class-settings.php:150
+#: content-aggregator/includes/admin/class-settings.php:150
+#: includes/admin/class-settings.php:150
 msgid "This helps manage source efficiency by removing sources that are consistently offline for an extended period."
 msgstr "Cela permet de gérer l'efficacité des sources en supprimant les sources qui sont systématiquement hors ligne pendant une période prolongée."
 
-#: src/admin/class-add-edit.php:415
+#: content-aggregator/includes/admin/class-add-edit.php:420
+#: includes/admin/class-add-edit.php:420
 msgid "This image enhances posts, ensuring a visually appealing presentation when no other image is reachable."
 msgstr "Cette image améliore les publications, garantissant une présentation visuellement attrayante lorsqu'aucune autre image n'est accessible."
 
-#: src/admin/class-settings.php:159
+#: content-aggregator/includes/admin/class-settings.php:159
+#: includes/admin/class-settings.php:159
 msgid "This is essential for verifying the authenticity of remote resources during fetching."
 msgstr "Ceci est essentiel pour vérifier l’authenticité des ressources distantes lors de la récupération."
 
-#: src/admin/class-add-edit.php:261
+#: content-aggregator/includes/admin/class-add-edit.php:266
+#: includes/admin/class-add-edit.php:266
 msgid "This is the main source URL."
 msgstr "Il s'agit de l'URL principale de la source."
 
-#: src/admin/class-add-edit.php:268
+#: content-aggregator/includes/admin/class-add-edit.php:273
+#: includes/admin/class-add-edit.php:273
 msgid "This is the URL from which the content will be scraped."
 msgstr "Il s'agit de l'URL à partir de laquelle le contenu sera récupéré."
 
-#: src/admin/class-settings.php:126
+#: content-aggregator/includes/admin/class-settings.php:126
+#: includes/admin/class-settings.php:126
 msgid "This setting controls the frequency of background tasks for refreshing sources."
 msgstr "Ce paramètre contrôle la fréquence des tâches en arrière-plan pour actualiser les sources."
 
-#: src/admin/class-add-edit.php:375
+#: content-aggregator/includes/admin/class-add-edit.php:380
+#: includes/admin/class-add-edit.php:380
 msgid "This template ensures dates are consistently formatted across your content."
 msgstr "Ce modèle garantit que les dates sont formatées de manière cohérente dans votre contenu."
 
-#: src/admin/class-add-edit.php:269
+#: content-aggregator/includes/admin/class-add-edit.php:274
+#: includes/admin/class-add-edit.php:274
 msgid "This URL is the direct source of the content and differs from main site URL."
 msgstr "Cette URL est la source directe du contenu et diffère de l’URL principale du site."
 
-#: src/admin/class-add-edit.php:429
+#: content-aggregator/includes/admin/class-add-edit.php:434
+#: includes/admin/class-add-edit.php:434
 msgid "Toggle this to enable or disable the source."
 msgstr "Basculez cette option pour activer ou désactiver la source."
 
-#: src/admin/class-add-edit.php:422
+#: content-aggregator/includes/admin/class-add-edit.php:427
+#: includes/admin/class-add-edit.php:427
 msgid "Toggle this to redirect visitors to the original item's url instead of having a single page."
 msgstr "Activez cette option pour rediriger les visiteurs vers l'URL d'origine au lieu d'avoir une page d'article."
 
-#: src/admin/class-add-edit.php:46
+#: content-aggregator/includes/admin/class-add-edit.php:46
+#: includes/admin/class-add-edit.php:46
 msgid "Type"
 msgstr "Type"
 
-#: src/admin/class-add-edit.php:47
+#: content-aggregator/includes/admin/class-add-edit.php:47
+#: includes/admin/class-add-edit.php:47
 msgid "Unique title"
 msgstr "Titre unique"
 
-#: src/admin/class-settings.php:28
+#: content-aggregator/includes/admin/class-settings.php:28
+#: includes/admin/class-settings.php:28
 msgid "Update interval"
 msgstr "Intervalle de mise à jour"
 
-#: src/admin/class-add-edit.php:44
+#: content-aggregator/includes/admin/class-add-edit.php:44
+#: includes/admin/class-add-edit.php:44
 msgid "URL"
 msgstr "URL"
 
-#: src/admin/class-add-edit.php:122
+#: content-aggregator/includes/admin/class-add-edit.php:122
+#: includes/admin/class-add-edit.php:122
 msgid "URL is missing or invalid."
 msgstr "L'URL est manquante ou invalide."
 
-#: src/admin/class-add-edit.php:399
+#: content-aggregator/includes/admin/class-add-edit.php:404
+#: includes/admin/class-add-edit.php:404
 msgid "URL to the original content."
 msgstr "URL vers le contenu original."
 
-#: src/admin/class-add-edit.php:48
+#: content-aggregator/includes/admin/class-add-edit.php:48
+#: includes/admin/class-add-edit.php:48
 msgid "User-Agent"
 msgstr "Agent utilisateur"
 
-#: src/admin/class-add-edit.php:143
+#: content-aggregator/includes/admin/class-add-edit.php:143
+#: includes/admin/class-add-edit.php:143
 msgid "User-Agent is invalid."
 msgstr "L'agent utilisateur n'est pas valide."
 
-#: src/admin/class-add-edit.php:138
+#: content-aggregator/includes/admin/class-add-edit.php:138
+#: includes/admin/class-add-edit.php:138
 msgid "User-Agent is missing."
 msgstr "L'agent utilisateur est manquant."
 
-#: src/admin/class-add-edit.php:391
+#: content-aggregator/includes/admin/class-add-edit.php:396
+#: includes/admin/class-add-edit.php:396
 msgid "Utilize tags for dates, titles, and URLs to weave together engaging posts."
 msgstr "Utilisez des balises pour les dates, les titres et les URL pour créer des publications attrayantes."
 
-#: src/admin/class-add-edit.php:430
+#: content-aggregator/includes/admin/class-add-edit.php:435
+#: includes/admin/class-add-edit.php:435
 msgid "When enabled, the source will be actively queried for new item."
 msgstr "Lorsqu'elle est activée, la source sera activement interrogée pour un nouvel élément."
 
-#: src/admin/class-add-edit.php:278
+#: content-aggregator/includes/admin/class-add-edit.php:283
+#: includes/admin/class-add-edit.php:283
 msgid "WordPress"
 msgstr "WordPress"
 
-#: src/class-admin.php:217
-#: src/class-admin.php:220
+#: content-aggregator/includes/class-admin.php:217
+#: content-aggregator/includes/class-admin.php:220
+#: includes/class-admin.php:217
+#: includes/class-admin.php:220
 msgid "You are not authorized to perform this action."
 msgstr "Vous n'êtes pas autorisé à effectuer cette action."
 
-#: dist/js/content-aggregator.min.js:15
+#: build/js/content-aggregator.min.js:15
 msgid "Search categories"
 msgstr "Rechercher des catégories"
 
-#: dist/js/content-aggregator.min.js:63
-#: dist/js/content-aggregator.min.js:65
+#: build/js/content-aggregator.min.js:63
+#: build/js/content-aggregator.min.js:65
 msgid "Select"
 msgstr "Sélectionner"
 
-#: dist/js/content-aggregator.min.js:123
-#: dist/js/content-aggregator.min.js:132
+#: build/js/content-aggregator.min.js:126
+#: build/js/content-aggregator.min.js:135
 msgid "Error, no source URL found."
 msgstr "Erreur, aucune URL source trouvée."
 
 #. translators: %s: Minimum required PHP version
-#: content-aggregator.php:208
+#: content-aggregator.php:210
+#: content-aggregator/content-aggregator.php:210
 msgid "Content Aggregator requires PHP version %s or later. Please upgrade PHP or disable the plugin."
 msgstr "Aggrégateur de Contenu nécessite la version PHP %s ou ultérieure. Veuillez mettre à jour PHP ou désactiver le plugin."
 
 #. translators: SSL certificates folder path
-#: src/admin/class-settings.php:162
+#: content-aggregator/includes/admin/class-settings.php:162
+#: includes/admin/class-settings.php:162
 msgid "You can provide a relative path, which will be considered relative to the %s directory."
 msgstr "Vous pouvez fournir un chemin relatif, qui sera considéré comme relatif au répertoire %s."

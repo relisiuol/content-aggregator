@@ -1,4 +1,5 @@
 import defaultConfig from '@wordpress/scripts/config/webpack.config.js';
+import CopyPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
@@ -14,7 +15,7 @@ export default {
 	},
 
 	output: {
-		path: resolve( __dirname, 'dist' ),
+		path: resolve( __dirname, 'build' ),
 		filename: 'js/[name].min.js',
 		publicPath: '../',
 	},
@@ -27,6 +28,18 @@ export default {
 		),
 		new MiniCssExtractPlugin( {
 			filename: 'css/[name].min.css',
+		} ),
+		new CopyPlugin( {
+			patterns: [
+				{
+					from: 'node_modules/select2/dist/css/select2.min.css',
+					to: 'css/select2.min.css',
+				},
+				{
+					from: 'node_modules/select2/dist/js/select2.min.js',
+					to: 'js/select2.min.js',
+				},
+			],
 		} ),
 	],
 };

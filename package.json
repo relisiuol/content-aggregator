@@ -2,7 +2,7 @@
 	"$schema": "https://json.schemastore.org/package",
 	"name": "content-aggregator",
 	"version": "1.0.0",
-	"description": "Content Aggregator plugin",
+	"description": "Content Aggregator will import content from a JSON or XML file.",
 	"author": "relisiuol",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
@@ -25,14 +25,15 @@
 	"type": "module",
 	"main": "assets/js/content-aggregator.js",
 	"dependencies": {
-		"@wordpress/i18n": "^6.1.0",
+		"@wordpress/i18n": "^6.2.0",
 		"jquery": "^3.7.1",
 		"jquery-autocomplete": "^1.2.8",
 		"select2": "^4.0.13"
 	},
 	"devDependencies": {
-		"@wordpress/prettier-config": "^4.28.0",
-		"@wordpress/scripts": "^30.21.0",
+		"@wordpress/prettier-config": "^4.29.0",
+		"@wordpress/scripts": "^30.22.0",
+		"copy-webpack-plugin": "^13.0.1",
 		"eslint-plugin-json": "^4.0.1",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.5",
@@ -51,14 +52,12 @@
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"lint:php": "composer run cb",
 		"lint:svg": "svglint assets/svg/**/*.svg",
-		"localize:start": "wp i18n make-pot --exclude=\"dist\" . languages/content-aggregator.pot",
+		"localize:start": "wp i18n make-pot . languages/content-aggregator.pot",
 		"localize:update": "wp i18n update-po languages/content-aggregator.pot",
 		"localize:mo": "wp i18n make-mo languages/",
 		"localize:json": "wp i18n make-json --no-purge languages/",
 		"localize:php": "wp i18n make-php languages/",
-		"package:prepare": "cp assets/js/content-aggregator.js dist/js/content-aggregator.js && cp assets/scss/content-aggregator.scss dist/css/content-aggregator.scss && rm -rf .git/ && rm -rf .github/ && rm -rf .husky/ && rm -rf .vscode/ && rm -rf assets/ && rm -rf vendor/ && rm -f .editorconfig && rm -f .gitattributes && rm -f .gitignore && rm -f .markdownlint.json && rm -f .markdownlintignore && rm -f .prettierignore && rm -f .svglintrc.js && rm -f composer.lock && rm -f phpcs.xml && rm -f webpack.config.js",
-		"package": "rm -rf node_modules/ && rm -f package.json && rm -f pnpm-lock.yaml && zip -r content-aggregator ./",
-		"plugin-zip": "wp-scripts plugin-zip",
+		"plugin-zip": "composer install --no-dev --prefer-dist --no-progress && wp-scripts plugin-zip",
 		"prepare": "husky && composer install",
 		"start": "wp-scripts start"
 	},
@@ -125,10 +124,10 @@
 			"!.vscode",
 			"!.markdownlint.json",
 			"composer.lock",
-			"/dist/**",
-			"/languages/**",
 			"pnpm-lock.yaml",
-			"/vendor/**"
+			"/build/**",
+			"/includes/vendor/**",
+			"/languages/**"
 		],
 		"plugins": [
 			"import",
@@ -161,7 +160,7 @@
 			"@wordpress/stylelint-config/scss"
 		],
 		"ignoreFiles": [
-			"/dist",
+			"/build",
 			"/node_modules",
 			"/vendor"
 		],

@@ -212,12 +212,13 @@ class Add_Edit {
 					$id = $wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 					if ( $id ) {
 						$this->source['id'] = $wpdb->insert_id;
-						;
 						wp_redirect(
 							add_query_arg(
 								array(
 									'page' => 'content-aggregator-add-edit',
 									'id' => $this->source['id'],
+									'source-added' => 'true',
+									'content_aggregator_source_nonce' => wp_create_nonce( 'content_aggregator_update_source' . ( $this->source ? '_' . $this->source['id'] : '' ) ),
 								),
 								admin_url( 'admin.php' )
 							)
@@ -234,11 +235,11 @@ class Add_Edit {
 			return;
 		}
 		wp_enqueue_media();
-		wp_register_style( 'select2', CONTENT_AGGREGATOR_URL . 'dist/css/select2.min.css', array(), '4.0.13' );
-		wp_register_style( 'content-aggregator', CONTENT_AGGREGATOR_URL . 'dist/css/content-aggregator.min.css', array( 'select2' ), CONTENT_AGGREGATOR_VERSION );
+		wp_register_style( 'select2', CONTENT_AGGREGATOR_URL . 'build/css/select2.min.css', array(), '4.0.13' );
+		wp_register_style( 'content-aggregator', CONTENT_AGGREGATOR_URL . 'build/css/content-aggregator.min.css', array( 'select2' ), CONTENT_AGGREGATOR_VERSION );
 		wp_enqueue_style( 'content-aggregator' );
-		wp_register_script( 'select2', CONTENT_AGGREGATOR_URL . 'dist/js/select2.min.js', array( 'jquery' ), '4.0.13', array( 'in_footer' => true ) );
-		wp_register_script( 'content-aggregator', CONTENT_AGGREGATOR_URL . 'dist/js/content-aggregator.min.js', array( 'jquery-ui-autocomplete', 'select2', 'wp-i18n' ), CONTENT_AGGREGATOR_VERSION, array( 'in_footer' => true ) );
+		wp_register_script( 'select2', CONTENT_AGGREGATOR_URL . 'build/js/select2.min.js', array( 'jquery' ), '4.0.13', array( 'in_footer' => true ) );
+		wp_register_script( 'content-aggregator', CONTENT_AGGREGATOR_URL . 'build/js/content-aggregator.min.js', array( 'jquery-ui-autocomplete', 'select2', 'wp-i18n' ), CONTENT_AGGREGATOR_VERSION, array( 'in_footer' => true ) );
 		wp_localize_script(
 			'content-aggregator',
 			'contentAggregator',
@@ -456,6 +457,13 @@ class Add_Edit {
 				wp_die( 'Security check failed.' );
 			}
 			$this->update_source( $_POST['content_aggregator_source'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		} elseif (
+			isset( $_GET['source-added'] ) &&
+			'true' === $_GET['source-added'] &&
+			isset( $_GET['content_aggregator_source_nonce'] ) &&
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['content_aggregator_source_nonce'] ) ), 'content_aggregator_update_source' . ( $this->source ? '_' . $this->source['id'] : '' ) )
+		) {
+			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'success', __( 'Source saved successfully.', 'content-aggregator' ), 'success' );
 		}
 		$page_args = array(
 			'page' => 'content-aggregator-add-edit',

@@ -129,7 +129,7 @@ class Cron {
 										$item['title'],
 										$source['name'],
 										$item['date'],
-										gmdate( 'Y-m-d H:i:s' ),
+										wp_date( 'Y-m-d H:i:s' ),
 										$item['content'],
 										$item['url'],
 									),
@@ -149,11 +149,11 @@ class Cron {
 										$item['title'],
 										$source['name'],
 										$item['date'],
-										gmdate( 'Y-m-d H:i:s' ),
+										wp_date( 'Y-m-d H:i:s' ),
 									),
 									$source['post_title_template']
 								);
-								$item['date'] = ( \Content_Aggregator\Admin\Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? gmdate( 'Y-m-d H:i:s' ) : $item['date'] );
+								$item['date'] = ( \Content_Aggregator\Admin\Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? wp_date( 'Y-m-d H:i:s' ) : $item['date'] );
 								if (
 									! empty( $item['date'] ) &&
 									! empty( $item['title'] ) &&
