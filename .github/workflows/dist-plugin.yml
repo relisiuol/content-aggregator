@@ -114,6 +114,9 @@ jobs:
                       mv dist/* dist/content-aggregator/ || true
                   fi
 
+            - name: Downgrade PHP 8.1+ keywords # TODO: temp fix to remove when WP.org upgrade php check to 8.2
+              run: find dist -type f -name "*.php" -exec sed -i -r 's/\<readonly[[:space:]]+class\>/class/g' {} \;
+
             - name: Install SVN
               run: sudo apt-get update && sudo apt-get install -y subversion
 
