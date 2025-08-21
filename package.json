@@ -163,7 +163,7 @@
 		"ignoreFiles": [
 			"/build",
 			"/node_modules",
-			"/vendor"
+			"/includes/vendor"
 		],
 		"plugins": [
 			"stylelint-order"
