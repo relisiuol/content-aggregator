@@ -1,5 +1,7 @@
 /.git export-ignore
 /.github export-ignore
+/.husky export-ignore
+/.vscode export-ignore
 /assets export-ignore
 /node_modules export-ignore
 
