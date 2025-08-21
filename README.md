@@ -14,6 +14,15 @@ Content Aggregator will import content from a XML or JSON file.
 
 ## Changelog
 
+### 2.0.0
+
+-   Add labels to settings fields
+-   Add success message when adding source
+-   Clear scheduled hook when deactivate plugin
+-   Convert HTML to WP blocks if possible
+-   Redirect to source edit page when adding source
+-   Bump & enforce minimum PHP version
+
 ### 1.0.1
 
-- Initial release
+-   Initial release
