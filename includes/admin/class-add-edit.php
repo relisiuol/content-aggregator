@@ -397,11 +397,11 @@ class Add_Edit {
 		echo '<p class="description">' . esc_html__( 'Utilize tags for dates, titles, and URLs to weave together engaging posts.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Available tags:', 'content-aggregator' ) . '</p>';
 		echo '<ul>';
-		echo '<li><p class="description">' . esc_html( self::TITLE_TAGS[0] . ' • ' . __( 'The original item\'s title.', 'content-aggregator' ) ) . '</p></li>';
-		echo '<li><p class="description">' . esc_html( self::TITLE_TAGS[1] . ' • ' . __( 'The source\'s name providing the content.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::TITLE_TAGS[0] . ' • ' . __( 'The original item’s title.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::TITLE_TAGS[1] . ' • ' . __( 'The source’s name providing the content.', 'content-aggregator' ) ) . '</p></li>';
 		echo '<li><p class="description">' . esc_html( self::DATE_TAGS[0] . ' • ' . __( 'The current date when retrieving items.', 'content-aggregator' ) ) . '</p></li>';
 		echo '<li><p class="description">' . esc_html( self::DATE_TAGS[1] . ' • ' . __( 'The publication date.', 'content-aggregator' ) ) . '</p></li>';
-		echo '<li><p class="description">' . esc_html( self::CONTENT_TAGS[0] . ' • ' . __( 'The main source\'s content, if available.', 'content-aggregator' ) ) . '</p></li>';
+		echo '<li><p class="description">' . esc_html( self::CONTENT_TAGS[0] . ' • ' . __( 'The main source’s content, if available.', 'content-aggregator' ) ) . '</p></li>';
 		echo '<li><p class="description">' . esc_html( self::CONTENT_TAGS[1] . ' • ' . __( 'URL to the original content.', 'content-aggregator' ) ) . '</p></li>';
 		echo '</ul>';
 		echo '</div>';
@@ -425,7 +425,7 @@ class Add_Edit {
 	public function add_source_redirect() {
 		echo '<div class="form-field">';
 		echo '<input type="checkbox" name="content_aggregator_source[redirect]" id="content_aggregator_source-redirect" value="1" ' . ( $this->source && $this->source['redirect'] ? 'checked' : '' ) . ' />';
-		echo '<p class="description">' . esc_html__( 'Toggle this to redirect visitors to the original item\'s url instead of having a single page.', 'content-aggregator' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Toggle this to redirect visitors to the original item’s url instead of having a single page.', 'content-aggregator' ) . '</p>';
 		echo '</div>';
 	}
 

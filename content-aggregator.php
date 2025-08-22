@@ -9,7 +9,7 @@
  * @license   GPL v3
  *
  * Plugin Name:       Content Aggregator
- * Description:       Content Aggregator is a plugin to aggregate items from RSS, Rest API & more.
+ * Description:       Content Aggregator is a plugin to aggregate items from RSS, REST API & more.
  * Version:           2.0.0
  * Plugin URI:        https://github.com/relisiuol/content-aggregator
  * Author:            relisiuol
