@@ -86,17 +86,13 @@ class Cron {
 			$responses = \WpOrg\Requests\Requests::request_multiple( $requests );
 			foreach ( $responses as $i => $response ) {
 				$source = $sources[ $i ];
+				$items = array();
 				$empty = true;
-				$decoder = false;
-				if ( '0' === $source['type'] ) {
-					$decoder = new \Content_Aggregator\Decoders\RSS();
-				} else if ( '1' === $source['type'] ) {
-					$decoder = new \Content_Aggregator\Decoders\WP();
-				} else if ( '2' === $source['type'] ) {
-					$decoder = new \Content_Aggregator\Decoders\Atom();
-				}
+				$decoder = \Content_Aggregator\Decoders\Factory::make( $source['type'] );
 				if ( $decoder ) {
-					$items = $decoder->decode( $response->body );
+					if ( $response instanceof \WpOrg\Requests\Response ) {
+						$items = $decoder->decode( $response->body );
+					}
 					if ( $items && ! empty( $items ) ) {
 						foreach ( $items as $i => $item ) {
 							if (

@@ -113,13 +113,13 @@ jQuery( ( $ ) => {
 						return false;
 					}
 					const result = await response.json();
-					if ( result.success === 1 ) {
+					if ( result.success === true ) {
 						$( 'select[name="content_aggregator_source[type]"]' )
-							.val( result.type )
+							.val( result.data.type )
 							.attr( 'selected', 'selected' );
 						$(
 							'input[name="content_aggregator_source[scrap_url]"]'
-						).val( result.url );
+						).val( result.data.url );
 					} else {
 						// eslint-disable-next-line no-alert
 						alert(

@@ -62,7 +62,7 @@ if ( ! function_exists( 'content_aggregator_install' ) ) {
 				`url` varchar(100) NOT NULL,
 				`scrap_url` varchar(255) NOT NULL,
 				`unique_title` tinyint(1) NOT NULL,
-				`type` tinyint(1) NOT NULL,
+				`type` VARCHAR(20) NOT NULL,
 				`user_agent` varchar(255) NULL,
 				`categories` text NULL,
 				`post_status` varchar(20) NOT NULL DEFAULT "publish",
@@ -226,10 +226,21 @@ register_uninstall_hook( __FILE__, 'content_aggregator_uninstall' );
 add_action(
 	'plugins_loaded',
 	function () {
-		if ( get_option( 'content_aggregator_version' ) !== CONTENT_AGGREGATOR_DB_VERSION ) {
+		$current_db_version = get_option( 'content_aggregator_version' );
+		if ( ! $current_db_version ) {
 			content_aggregator_install();
+		} elseif ( CONTENT_AGGREGATOR_DB_VERSION !== $current_db_version ) {
+			if ( '1.0.0' === $current_db_version ) {
+				global $wpdb;
+				$table_name = $wpdb->prefix . 'content_aggregator_sources';
+				$wpdb->query(
+					"ALTER TABLE {$table_name} MODIFY COLUMN `type` VARCHAR(20) NOT NULL"
+				);
+			}
+			update_option( 'content_aggregator_version', CONTENT_AGGREGATOR_DB_VERSION );
 		}
 		spl_autoload_register( 'content_aggregator_spl_autoload_register' );
+		\Content_Aggregator\Decoders\Registry::ensure_defaults_installed();
 	}
 );
 

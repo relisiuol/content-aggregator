@@ -278,11 +278,19 @@ class Add_Edit {
 
 	public function add_source_type() {
 		$current_type = $this->source ? $this->source['type'] : '';
+		$decoders = \Content_Aggregator\Decoders\Registry::all();
 		echo '<div class="form-field form-required">';
 		echo '<select name="content_aggregator_source[type]" id="content_aggregator_source-type">';
-		echo '<option value="0" ' . selected( $current_type, '0', false ) . '>RSS</option>';
-		echo '<option value="1" ' . selected( $current_type, '1', false ) . '>' . esc_html__( 'WordPress', 'content-aggregator' ) . '</option>';
-		echo '<option value="2" ' . selected( $current_type, '2', false ) . '>Atom RSS</option>';
+		foreach ( $decoders as $key => $decoder ) {
+			printf(
+				'<option value="%s" %s data-id="%s" data-kind="%s">%s</option>',
+				esc_attr( $key ),
+				selected( $current_type, $key, false ),
+				esc_attr( $config['id'] ),
+				esc_attr( $config['type'] ),
+				esc_html( $decoder['name'] )
+			);
+		}
 		echo '</select>';
 		echo '<p class="description">' . esc_html__( 'Choose the type of the source. Type determines how the content is processed and analyzed.', 'content-aggregator' ) . '</p>';
 		echo '<p class="description">' . esc_html__( 'Once you paste a source URL, it will try to determine the right type.', 'content-aggregator' ) . '</p>';

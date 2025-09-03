@@ -12,6 +12,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class Sources_Table extends \WP_List_Table {
+	private $post_counts = array();
+
 	public function __construct() {
 		global $screen;
 		parent::__construct(
@@ -61,6 +63,7 @@ class Sources_Table extends \WP_List_Table {
 			'last_check'  => __( 'Last check', 'content-aggregator' ),
 			'categories'  => __( 'Categories', 'content-aggregator' ),
 			'post_status' => __( 'Post status', 'content-aggregator' ),
+			'posts'       => __( 'Posts', 'content-aggregator' ),
 		);
 	}
 
@@ -99,7 +102,7 @@ class Sources_Table extends \WP_List_Table {
 		if ( '0000-00-00 00:00:00' === $item['last_check'] ) {
 			return '-';
 		}
-		return date_i18n( get_option( 'date_format' ), strtotime( $item['last_check'] ) );
+		return date_i18n( get_option( 'date_format' ) . ' - ' . get_option( 'time_format' ), strtotime( $item['last_check'] ) );
 	}
 
 	protected function column_categories( $item ) {
@@ -127,6 +130,12 @@ class Sources_Table extends \WP_List_Table {
 		} else {
 			return esc_html__( 'Status not found', 'content-aggregator' );
 		}
+	}
+
+	protected function column_posts( $item ) {
+		$id    = isset( $item['id'] ) ? (int) $item['id'] : 0;
+		$count = isset( $this->post_counts[ $id ] ) ? (int) $this->post_counts[ $id ] : 0;
+		return number_format_i18n( $count );
 	}
 
 	public function get_bulk_actions() {
