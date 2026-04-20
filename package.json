@@ -36,7 +36,7 @@
 		"copy-webpack-plugin": "^13.0.1",
 		"eslint-plugin-json": "^4.0.1",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.5",
+		"lint-staged": "^16.4.0",
 		"markdownlint-cli": "^0.45.0",
 		"mini-css-extract-plugin": "^2.9.4",
 		"stylelint-order": "^7.0.0",
