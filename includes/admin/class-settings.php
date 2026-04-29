@@ -14,7 +14,7 @@ class Settings {
 
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new \Content_Aggregator\Admin\Settings();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}

@@ -35,13 +35,13 @@ class Sources_Table extends \WP_List_Table {
 					admin_url( 'admin.php' )
 				);
 			}
-			$sendback = add_query_arg( 'paged', $this->get_pagenum, $sendback );
+			$sendback = add_query_arg( 'paged', $this->get_pagenum(), $sendback );
 			$ids = array();
 			if ( ! empty( $_GET['id'] ) ) {
 				$ids = array_map( 'intval', $_GET['id'] );
 			}
 			if ( empty( $ids ) ) {
-				wp_redirect( $sendback );
+				wp_safe_redirect( $sendback );
 				exit;
 			}
 			$this->process_bulk_action( $ids, $sendback );
@@ -49,7 +49,7 @@ class Sources_Table extends \WP_List_Table {
 			if ( ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 				wp_die( 'Security check failed.' );
 			}
-			$sendback = add_query_arg( 'paged', $this->get_pagenum, wp_get_referer() );
+			$sendback = add_query_arg( 'paged', $this->get_pagenum(), wp_get_referer() );
 			$sendback = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), $sendback );
 			wp_safe_redirect( $sendback );
 			exit;
@@ -106,13 +106,10 @@ class Sources_Table extends \WP_List_Table {
 	}
 
 	protected function column_categories( $item ) {
-		$item['categories'] && ! empty( $item['categories'] ) ? explode( ', ', $item['categories'] ) : array();
-		if ( ! is_array( $item['categories'] ) && ! empty( $item['categories'] ) ) {
-			$item['categories'] = array( $item['categories'] );
-		}
+		$category_ids = ! empty( $item['categories'] ) ? wp_parse_id_list( (string) $item['categories'] ) : array();
 		$links = array();
-		if ( ! empty( $item['categories'] ) ) {
-			foreach ( $item['categories'] as $category ) {
+		if ( ! empty( $category_ids ) ) {
+			foreach ( $category_ids as $category ) {
 				$cat = get_category( $category );
 				if ( ! is_wp_error( $cat ) ) {
 					$links[] = '<a href="' . esc_url( add_query_arg( 'category_name', $cat->slug, admin_url( 'edit.php' ) ) ) . '">' . esc_html( $cat->name ) . '</a>';

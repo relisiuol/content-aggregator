@@ -2,6 +2,8 @@
 
 namespace Content_Aggregator\Admin;
 
+use Content_Aggregator\Decoders\Registry;
+
 if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
 	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
 	exit;
@@ -26,7 +28,7 @@ class Add_Edit {
 
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new \Content_Aggregator\Admin\Add_Edit();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
@@ -126,23 +128,19 @@ class Add_Edit {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-scrap_url', __( 'Source URL is missing or invalid.', 'content-aggregator' ) );
 		}
-		$input['type'] = isset( $input['type'] ) ? intval( $input['type'] ) : '0';
-		if ( ! in_array( $input['type'], array( '0', '1' ) ) ) {
+		$input['type'] = isset( $input['type'] ) ? sanitize_key( wp_unslash( $input['type'] ) ) : '0';
+		if ( null === Registry::get( $input['type'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-type', __( 'Source type is missing or invalid.', 'content-aggregator' ) );
 		}
 		$input['unique_title'] = isset( $input['unique_title'] ) && $input['unique_title'] ? '1' : '0';
 		$input['user_agent'] = isset( $input['user_agent'] ) ? sanitize_text_field( wp_unslash( $input['user_agent'] ) ) : '';
-		if ( empty( $input['user_agent'] ) || ! $this->source || $this->source['user_agent'] !== $input['user_agent'] ) {
-			if ( empty( $input['user_agent'] ) ) {
-				add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'missing-user_agent', __( 'User-Agent is missing.', 'content-aggregator' ) );
-			} else {
-				$response = wp_remote_get( home_url(), array( 'user-agent' => $input['user_agent'] ) );
-				if ( is_wp_error( $response ) ) {
-					$success = false;
-					add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-user_agent', __( 'User-Agent is invalid.', 'content-aggregator' ) );
-				}
-			}
+		if ( empty( $input['user_agent'] ) ) {
+			$success = false;
+			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'missing-user_agent', __( 'User-Agent is missing.', 'content-aggregator' ) );
+		} elseif ( preg_match( '/[\r\n]/', $input['user_agent'] ) ) {
+			$success = false;
+			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-user_agent', __( 'User-Agent is invalid.', 'content-aggregator' ) );
 		}
 		$input['categories'] = isset( $input['categories'] ) ? array_map( 'intval', $input['categories'] ) : array();
 		if ( ! empty( $input['categories'] ) && $success ) {
@@ -183,19 +181,35 @@ class Add_Edit {
 		$input['redirect'] = isset( $input['redirect'] ) && $input['redirect'] ? true : false;
 		$input['enabled']  = isset( $input['enabled'] ) && $input['enabled'] ? true : false;
 		if ( $success ) {
+			$source_data = array(
+				'name'                => $input['name'],
+				'url'                 => $input['url'],
+				'scrap_url'           => $input['scrap_url'],
+				'unique_title'        => $input['unique_title'],
+				'type'                => $input['type'],
+				'user_agent'          => $input['user_agent'],
+				'categories'          => $input['categories'],
+				'post_status'         => $input['post_status'],
+				'post_title_template' => $input['post_title_template'],
+				'post_date_template'  => $input['post_date_template'],
+				'content_template'    => $input['content_template'],
+				'featured_image'      => $input['featured_image'],
+				'redirect'            => $input['redirect'],
+				'enabled'             => $input['enabled'],
+			);
 			$this->source = wp_parse_args(
-				$input,
+				$source_data,
 				wp_parse_args(
 					( $this->source ? $this->source : array() ),
 					$this->default_source()
 				)
 			);
 			$table_name = $wpdb->prefix . 'content_aggregator_sources';
-			$format = array( '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s' );
+			$format = array( '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d' );
 			if ( ! empty( $this->source['id'] ) ) {
 				$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$table_name,
-					$input,
+					$source_data,
 					array(
 						'id' => $this->source['id'],
 					),
@@ -208,11 +222,13 @@ class Add_Edit {
 				if ( $count > 0 ) {
 					add_settings_error( 'content_aggregator_source', 'invalid-scrap_url', __( 'Source URL is already used.', 'content-aggregator' ) );
 				} else {
-					$input['last_news'] = '';
-					$id = $wpdb->insert( $table_name, $input, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+					$source_data['last_check'] = '0000-00-00 00:00:00';
+					$source_data['last_news'] = '';
+					$insert_format = array_merge( $format, array( '%s', '%s' ) );
+					$id = $wpdb->insert( $table_name, $source_data, $insert_format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 					if ( $id ) {
 						$this->source['id'] = $wpdb->insert_id;
-						wp_redirect(
+						$redirected = wp_safe_redirect( // phpcs:ignore WordPressVIPMinimum.Security.ExitAfterRedirect.NoExit -- A fallback notice is rendered when the safe redirect is rejected.
 							add_query_arg(
 								array(
 									'page' => 'content-aggregator-add-edit',
@@ -223,13 +239,16 @@ class Add_Edit {
 								admin_url( 'admin.php' )
 							)
 						);
-						exit;
+						if ( $redirected ) {
+							exit;
+						}
+						add_settings_error( 'content_aggregator_source_' . $this->source['id'], 'success', __( 'Source saved successfully.', 'content-aggregator' ), 'success' );
 					}
 				}
 			}
 		}
 	}
-	
+
 	public function admin_enqueue_scripts( $hook ) {
 		if ( 'admin_page_content-aggregator-add-edit' !== $hook ) {
 			return;
@@ -278,7 +297,7 @@ class Add_Edit {
 
 	public function add_source_type() {
 		$current_type = $this->source ? $this->source['type'] : '';
-		$decoders = \Content_Aggregator\Decoders\Registry::all();
+		$decoders = Registry::all();
 		echo '<div class="form-field form-required">';
 		echo '<select name="content_aggregator_source[type]" id="content_aggregator_source-type">';
 		foreach ( $decoders as $key => $decoder ) {
@@ -286,8 +305,8 @@ class Add_Edit {
 				'<option value="%s" %s data-id="%s" data-kind="%s">%s</option>',
 				esc_attr( $key ),
 				selected( $current_type, $key, false ),
-				esc_attr( $config['id'] ),
-				esc_attr( $config['type'] ),
+				esc_attr( $decoder['id'] ),
+				esc_attr( $decoder['type'] ),
 				esc_html( $decoder['name'] )
 			);
 		}

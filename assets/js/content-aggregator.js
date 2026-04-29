@@ -1,3 +1,4 @@
+/* global contentAggregator, alert */
 import jQuery from 'jquery';
 import { __ } from '@wordpress/i18n';
 import '../scss/content-aggregator.scss';
@@ -129,7 +130,7 @@ jQuery( ( $ ) => {
 							)
 						);
 					}
-				} catch ( _ ) {
+				} catch {
 					// eslint-disable-next-line no-alert
 					alert(
 						__(

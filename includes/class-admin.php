@@ -2,6 +2,8 @@
 
 namespace Content_Aggregator;
 
+use Content_Aggregator\Decoders\Auto_Detector;
+
 if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
 	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
 	exit;
@@ -13,7 +15,7 @@ class Admin {
 
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new \Content_Aggregator\Admin();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
@@ -64,7 +66,7 @@ class Admin {
 			if ( empty( $page ) || ! file_exists( CONTENT_AGGREGATOR_DIR . 'includes/admin/class-' . $page . '.php' ) ) {
 				$page = 'sources';
 			}
-			$page = '\\Content_Aggregator\\Admin\\' . str_replace(
+			$page = __NAMESPACE__ . '\\Admin\\' . str_replace(
 				'-',
 				'_',
 				ucwords(
@@ -100,9 +102,6 @@ class Admin {
 			'content-aggregator-settings' => array(
 				'menu' => __( 'Settings', 'content-aggregator' ),
 			),
-			'content-aggregator-parsers'  => array(
-				'menu' => __( 'Parsers', 'content-aggregator' ),
-			),
 		);
 	}
 
@@ -125,7 +124,7 @@ class Admin {
 				if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) {
 					$base_url = sanitize_text_field( wp_unslash( $_GET['url'] ) );
 					if ( ! empty( $base_url ) && filter_var( $base_url, FILTER_VALIDATE_URL ) ) {
-						$result = \Content_Aggregator\Decoders\Auto_Detector::detect( $base_url );
+						$result = Auto_Detector::detect( $base_url );
 						if ( $result ) {
 							wp_send_json_success( $result );
 						}

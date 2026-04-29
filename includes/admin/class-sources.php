@@ -13,7 +13,7 @@ class Sources {
 
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new \Content_Aggregator\Admin\Sources();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
@@ -26,7 +26,7 @@ class Sources {
 				'option'  => 'edit_post_per_page',
 			)
 		);
-		$this->sources_table = new \Content_Aggregator\Admin\Sources_Table();
+		$this->sources_table = new Sources_Table();
 	}
 
 	public function page() {

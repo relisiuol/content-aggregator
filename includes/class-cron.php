@@ -2,6 +2,10 @@
 
 namespace Content_Aggregator;
 
+use Content_Aggregator\Admin\Add_Edit;
+use Content_Aggregator\Admin\Settings;
+use Content_Aggregator\Decoders\Factory;
+
 if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
 	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
 	exit;
@@ -13,13 +17,13 @@ class Cron {
 
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new \Content_Aggregator\Cron();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
 
 	private function __construct() {
-		$this->settings = \Content_Aggregator\Admin\Settings::get_instance()->get_settings();
+		$this->settings = Settings::get_instance()->get_settings();
 		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ) );
 		add_action( 'content_aggregator_update_hook', array( $this, 'execute_cron_job' ) );
 		add_filter( 'wp_block_converter_block', array( $this, 'block_converter_filter' ), 10, 2 );
@@ -54,8 +58,7 @@ class Cron {
 		global $wpdb;
 		$original_certif_path = \WpOrg\Requests\Requests::get_certificate_path();
 		if ( ! empty( $this->settings['certificate_path'] ) ) {
-			$upload_dir = wp_upload_dir();
-			\WpOrg\Requests\Requests::set_certificate_path( $upload_dir['basedir'] . '/certificates/' . $this->settings['certificate_path'] );
+			\WpOrg\Requests\Requests::set_certificate_path( $this->settings['certificate_path'] );
 		}
 		$table_name = $wpdb->prefix . 'content_aggregator_sources';
 		$sources = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -72,7 +75,7 @@ class Cron {
 				$requests[] = array(
 					'url' => $source['scrap_url'],
 					'headers' => array(
-						'User-Agent' => ( empty( $source['user_agent'] ) ? \Content_Aggregator\Admin\Add_Edit::DEFAULT_USER_AGENT : $source['user_agent'] ),
+						'User-Agent' => ( empty( $source['user_agent'] ) ? Add_Edit::DEFAULT_USER_AGENT : $source['user_agent'] ),
 						'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 						'Accept-Language' => 'en-us,en;q=0.5',
 						'Accept-Encoding' => 'gzip,deflate',
@@ -88,7 +91,7 @@ class Cron {
 				$source = $sources[ $i ];
 				$items = array();
 				$empty = true;
-				$decoder = \Content_Aggregator\Decoders\Factory::make( $source['type'] );
+				$decoder = Factory::make( $source['type'] );
 				if ( $decoder ) {
 					if ( $response instanceof \WpOrg\Requests\Response ) {
 						$items = $decoder->decode( $response->body );
@@ -110,46 +113,18 @@ class Cron {
 										)
 									)
 								) : '';
-								$item['content'] = preg_replace(
-									array_map(
-										function ( $item ) {
-											return '/' . preg_quote( $item, '/' ) . '/';
-										},
-										array_merge(
-											\Content_Aggregator\Admin\Add_Edit::TITLE_TAGS,
-											\Content_Aggregator\Admin\Add_Edit::DATE_TAGS,
-											\Content_Aggregator\Admin\Add_Edit::CONTENT_TAGS
-										)
-									),
-									array(
-										$item['title'],
-										$source['name'],
-										$item['date'],
-										wp_date( 'Y-m-d H:i:s' ),
-										$item['content'],
-										$item['url'],
-									),
-									$source['content_template']
+								$now = wp_date( 'Y-m-d H:i:s' );
+								$template_tags = array(
+									'__TITLE__'       => $item['title'],
+									'__SOURCE_NAME__' => $source['name'],
+									'__NOW__'         => $now,
+									'__DATE__'        => $item['date'],
+									'__CONTENT__'     => $item['content'],
+									'__URL__'         => $item['url'],
 								);
-								$item['title'] = preg_replace(
-									array_map(
-										function ( $item ) {
-											return '/' . preg_quote( $item, '/' ) . '/';
-										},
-										array_merge(
-											\Content_Aggregator\Admin\Add_Edit::TITLE_TAGS,
-											\Content_Aggregator\Admin\Add_Edit::DATE_TAGS
-										)
-									),
-									array(
-										$item['title'],
-										$source['name'],
-										$item['date'],
-										wp_date( 'Y-m-d H:i:s' ),
-									),
-									$source['post_title_template']
-								);
-								$item['date'] = ( \Content_Aggregator\Admin\Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? wp_date( 'Y-m-d H:i:s' ) : $item['date'] );
+								$item['content'] = strtr( $source['content_template'], $template_tags );
+								$item['title'] = strtr( $source['post_title_template'], $template_tags );
+								$item['date'] = ( Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? $now : $item['date'] );
 								if (
 									! empty( $item['date'] ) &&
 									! empty( $item['title'] ) &&
@@ -252,7 +227,14 @@ class Cron {
 							'id' => $source['id'],
 						)
 					);
-				} elseif ( strtotime( $source['last_check'] ) + $this->map_time_interval( $this->settings['expiration_date'] ) < time() ) {
+				} else {
+					$expiration_interval = $this->map_time_interval( $this->settings['expiration_date'] );
+					if ( false === $expiration_interval ) {
+						continue;
+					}
+					if ( strtotime( $source['last_check'] ) + $expiration_interval >= time() ) {
+						continue;
+					}
 					$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$table_name,
 						array(
