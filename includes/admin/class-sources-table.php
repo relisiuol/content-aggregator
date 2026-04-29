@@ -266,7 +266,7 @@ class Sources_Table extends \WP_List_Table {
 			}
 		}
 		$sendback = remove_query_arg( array( 'action', 'action2', 'id' ), $sendback );
-		wp_redirect( $sendback );
+		wp_safe_redirect( $sendback );
 		exit;
 	}
 }

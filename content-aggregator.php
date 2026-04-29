@@ -132,7 +132,7 @@ if ( ! function_exists( 'content_aggregator_template_redirect' ) ) {
 				$table_name = $wpdb->prefix . 'content_aggregator_sources';
 				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $redirect ) {
-					wp_redirect( $url, 302 );
+					wp_safe_redirect( $url, 302 );
 					exit;
 				}
 			}
