@@ -12,7 +12,8 @@
 	],
 	"require": {
 		"php": ">=8.2",
-		"alleyinteractive/wp-block-converter": "^1.6"
+		"alleyinteractive/wp-block-converter": "^1.6",
+		"brick/math": "^0.13"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.1",
