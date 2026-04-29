@@ -1,7 +1,11 @@
 .DS_Store
 /build
-/composer.lock
 /includes/vendor
 /node_modules
 /content-aggregator/
 /content-aggregator.zip
+/DEPLOYMENT_REPORT.md
+/pnpm-lock.yaml.backup
+/.phpunit.cache
+/.wp-env
+/artifacts

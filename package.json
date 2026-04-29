@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package",
 	"name": "content-aggregator",
-	"version": "1.0.0",
+	"version": "2.1.0",
 	"description": "Content Aggregator will import content from a JSON or XML file.",
 	"author": "relisiuol",
 	"license": "GPL-2.0-or-later",
@@ -19,48 +19,54 @@
 		"url": "https://github.com/relisiuol/content-aggregator/issues"
 	},
 	"engines": {
-		"node": ">=18.0.0 <24.0.0",
-		"pnpm": ">=8.0.0 <11.0.0"
+		"node": ">=20 <21",
+		"pnpm": ">=10 <11"
 	},
 	"type": "module",
 	"main": "assets/js/content-aggregator.js",
 	"dependencies": {
-		"@wordpress/i18n": "^6.3.0",
+		"@wordpress/i18n": "^6.17.0",
 		"jquery": "^3.7.1",
 		"jquery-autocomplete": "^1.2.8",
 		"select2": "^4.0.13"
 	},
 	"devDependencies": {
-		"@wordpress/prettier-config": "^4.30.0",
-		"@wordpress/scripts": "^30.23.0",
+		"@playwright/test": "^1.59.1",
+		"@wordpress/e2e-test-utils-playwright": "^1.44.0",
+		"@wordpress/env": "^10.0.0",
+		"@wordpress/prettier-config": "^4.44.0",
+		"@wordpress/scripts": "^32.0.0",
 		"copy-webpack-plugin": "^13.0.1",
-		"eslint-plugin-json": "^4.0.1",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.6",
-		"markdownlint-cli": "^0.45.0",
-		"mini-css-extract-plugin": "^2.9.4",
-		"stylelint-order": "^7.0.0",
-		"svglint": "^4.1.0"
+		"lint-staged": "^16.4.0",
+		"markdownlint-cli": "^0.48.0",
+		"mini-css-extract-plugin": "^2.10.2",
+		"stylelint-order": "^8.1.1",
+		"svglint": "^4.2.1"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
+		"fix:json": "wp-scripts format .markdownlint.json .vscode/extensions.json .vscode/settings.json .wordpress-org/blueprints/blueprint.json .wp-env.json composer.json package.json languages/*.json",
+		"fix:php": "composer run cb",
 		"format": "wp-scripts format",
 		"lint": "pnpm run /^lint:.*/",
 		"lint:css": "wp-scripts lint-style \"assets/**/*.scss\"",
 		"lint:js": "wp-scripts lint-js",
-		"lint:json": "wp-scripts lint-js --ext .json --fix .",
+		"lint:json": "wp-scripts format .markdownlint.json .vscode/extensions.json .vscode/settings.json .wordpress-org/blueprints/blueprint.json .wp-env.json composer.json package.json languages/*.json --check",
 		"lint:md": "wp-scripts lint-md-docs",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
-		"lint:php": "composer run cb",
+		"lint:php": "composer run cs",
 		"lint:svg": "svglint assets/svg/**/*.svg",
 		"localize:start": "wp i18n make-pot . languages/content-aggregator.pot",
 		"localize:update": "wp i18n update-po languages/content-aggregator.pot",
 		"localize:mo": "wp i18n make-mo languages/",
 		"localize:json": "wp i18n make-json --no-purge languages/",
 		"localize:php": "wp i18n make-php languages/",
-		"plugin-zip": "composer install --no-dev --prefer-dist --no-progress && wp-scripts plugin-zip",
+		"plugin-zip": "composer install --no-dev --prefer-dist --no-progress --no-interaction && wp-scripts plugin-zip && zip -dq content-aggregator.zip content-aggregator/README.md",
 		"prepare": "husky && composer install",
-		"start": "wp-scripts start"
+		"start": "wp-scripts start",
+		"test:playwright": "wp-scripts test-playwright",
+		"wp-env": "wp-env"
 	},
 	"husky": {
 		"hooks": {
@@ -69,89 +75,34 @@
 	},
 	"lint-staged": {
 		"*.json": [
-			"prettier --write -u",
-			"eslint --ext .json --fix ."
+			"wp-scripts format"
 		],
 		"assets/js/**/*.{js,ts,jsx,tsx}": [
-			"prettier --write -u",
-			"eslint --ext .js --fix \"assets/js\""
+			"wp-scripts format",
+			"wp-scripts lint-js --fix"
 		],
 		"assets/scss/**/*.{css,scss}": [
-			"prettier --write -u",
-			"stylelint --fix \"assets/scss/**/*.{css,scss}\""
+			"wp-scripts format",
+			"wp-scripts lint-style --fix"
 		],
 		"assets/svg/**/*.svg": [
 			"svglint assets/svg/**/*.svg"
 		],
 		"package.json": [
-			"npmPkgJsonLint ."
+			"wp-scripts lint-pkg-json"
 		],
 		"*.md": [
-			"prettier --write -u",
+			"wp-scripts format",
 			"markdownlint --fix"
 		],
 		"*.php": [
-			"prettier --write -u",
-			"composer run cs",
-			"composer run cb"
+			"./includes/vendor/bin/phpcbf --report-summary --report-source",
+			"./includes/vendor/bin/phpcs"
 		]
 	},
 	"browserslist": [
 		"extends @wordpress/browserslist-config"
 	],
-	"eslintConfig": {
-		"root": true,
-		"env": {
-			"browser": true,
-			"es6": true,
-			"jquery": true,
-			"node": true
-		},
-		"globals": {
-			"contentAggregator": "readonly",
-			"wp": "readonly"
-		},
-		"parserOptions": {
-			"sourceType": "module"
-		},
-		"extends": [
-			"prettier",
-			"eslint:recommended",
-			"plugin:json/recommended-legacy",
-			"plugin:@wordpress/eslint-plugin/recommended"
-		],
-		"ignorePatterns": [
-			".husky",
-			"!.vscode",
-			"!.markdownlint.json",
-			"composer.lock",
-			"pnpm-lock.yaml",
-			"/build/**",
-			"/includes/vendor/**",
-			"/languages/**"
-		],
-		"plugins": [
-			"import",
-			"json"
-		],
-		"rules": {
-			"@wordpress/i18n-text-domain": [
-				"error",
-				{
-					"allowedTextDomain": "content-aggregator"
-				}
-			],
-			"prettier/prettier": [
-				"error",
-				{
-					"endOfLine": "auto"
-				}
-			]
-		},
-		"settings": {
-			"json/sort-package-json": false
-		}
-	},
 	"npmpackagejsonlint": {
 		"extends": "@wordpress/npm-package-json-lint-config"
 	},
