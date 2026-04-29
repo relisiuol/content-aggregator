@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+	<channel>
+		<title>Content Aggregator E2E RSS</title>
+		<link>http://tests-wordpress/</link>
+		<description>Fixture feed for end-to-end import coverage.</description>
+		<item>
+			<title>E2E RSS fixture item</title>
+			<link>http://tests-wordpress/e2e-rss-fixture-item</link>
+			<pubDate>2026-04-01 10:00:00</pubDate>
+			<content:encoded><![CDATA[<p>RSS fixture body</p>]]></content:encoded>
+		</item>
+	</channel>
+</rss>
