@@ -7,7 +7,7 @@ if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( '
 	exit;
 }
 
-class JSON extends \Content_Aggregator\Decoders\Base {
+class JSON extends Base {
 	public function decode( $json ) {
 		$out = array();
 		$decoded = json_decode( $json, true );

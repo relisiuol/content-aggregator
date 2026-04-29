@@ -83,23 +83,31 @@ class Registry {
 				'name'       => 'Atom RSS',
 				'type'       => 'xml',
 				'loop_path'  => array(
+					'/atom:feed/atom:entry',
+					'//atom:entry',
 					'/feed/entry',
 					'//entry',
-					'entry',
 				),
 				'tags'       => array(
 					'date'    => array(
+						'atom:updated',
+						'atom:published',
 						'updated',
 						'published',
 					),
 					'title'   => array(
+						'atom:title',
 						'title',
 					),
 					'content' => array(
+						'atom:content',
+						'atom:summary',
 						'content',
 						'summary',
 					),
 					'url'     => array(
+						'atom:link[@rel="alternate"]/@href',
+						'atom:link/@href',
 						'link[@rel="alternate"]/@href',
 						'link/@href',
 						'link',

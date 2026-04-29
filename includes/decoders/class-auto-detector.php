@@ -20,7 +20,7 @@ class Auto_Detector {
 	);
 
 	public static function detect( string $base_url ): ?array {
-		$configs = \Content_Aggregator\Decoders\Registry::all();
+		$configs = Registry::all();
 		foreach ( $configs as $key => $config ) {
 			$endpoints = (array) ( $config['endpoints'] ?? array() );
 			foreach ( $endpoints as $endpoint ) {
@@ -29,7 +29,10 @@ class Auto_Detector {
 				if ( false === $body ) {
 					continue;
 				}
-				$decoder = \Content_Aggregator\Decoders\Factory::make( $key );
+				$decoder = Factory::make( $key );
+				if ( ! $decoder ) {
+					continue;
+				}
 				$data = $decoder->decode( $body );
 				if ( ! empty( $data ) ) {
 					return array(
@@ -48,7 +51,10 @@ class Auto_Detector {
 				$feed = self::http_get_body( $rss_like );
 				if ( false !== $feed ) {
 					foreach ( array( '0', '2' ) as $key ) {
-						$decoder = \Content_Aggregator\Decoders\Factory::make( $key );
+						$decoder = Factory::make( $key );
+						if ( ! $decoder ) {
+							continue;
+						}
 						$data    = $decoder->decode( $feed );
 						if ( ! empty( $data ) ) {
 							return array(
@@ -70,7 +76,7 @@ class Auto_Detector {
 			if ( $resp && isset( $resp->body ) ) {
 				return $resp->body;
 			}
-			 return false;
+			return false;
 		} catch ( \Throwable $e ) {
 			return false;
 		}
@@ -89,7 +95,7 @@ class Auto_Detector {
 	protected static function find_feed_link( string $html, string $base ): ?string {
 		$prev = libxml_use_internal_errors( true );
 		$doc = new \DOMDocument();
-		$doc->loadHTML( mb_convert_encoding( $html, 'HTML-ENTITIES', 'UTF-8' ) );
+		$doc->loadHTML( '<?xml encoding="UTF-8">' . $html );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $prev );
 		$links = $doc->getElementsByTagName( 'link' );

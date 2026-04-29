@@ -7,7 +7,7 @@ if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( '
 	exit;
 }
 
-class XML extends \Content_Aggregator\Decoders\Base {
+class XML extends Base {
 	protected $namespaces = array();
 
 	public function __construct( array $tags, array $loop_path = array(), array $namespaces = array() ) {
@@ -97,11 +97,12 @@ class XML extends \Content_Aggregator\Decoders\Base {
 		if ( empty( $namespaces ) ) {
 			$namespaces = array();
 		}
-		foreach ( $namespaces as $prefix => $namespaces ) {
+		foreach ( $namespaces as $prefix => $namespace ) {
 			if ( empty( $prefix ) ) {
 				$prefix = 'ns';
 			}
 			if ( ! isset( $this->namespaces[ $prefix ] ) ) {
+				$this->namespaces[ $prefix ] = $namespace;
 				$node->registerXPathNamespace( $prefix, $namespace );
 			}
 		}
