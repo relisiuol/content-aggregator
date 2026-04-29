@@ -4,8 +4,7 @@ namespace Content_Aggregator\Admin;
 
 use Content_Aggregator\Decoders\Registry;
 
-if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
-	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 

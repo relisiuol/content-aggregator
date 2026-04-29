@@ -38,7 +38,7 @@ use Content_Aggregator\Admin;
 use Content_Aggregator\Cron;
 use Content_Aggregator\Decoders\Registry;
 
-if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
