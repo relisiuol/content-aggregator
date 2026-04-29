@@ -79,7 +79,7 @@ jobs:
 
             - name: Create artifacts
               shell: bash
-              run: pnpm run plugin-zip:release
+              run: pnpm run plugin-zip
 
             - name: Resolve tag
               id: tag
