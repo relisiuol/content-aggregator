@@ -72,8 +72,8 @@ jobs:
               uses: swissspidy/wp-plugin-check-action@v1
               with:
                   build-dir: './dist/content-aggregator/'
-                  exclude-files: |
-                      languages/*.l10n.php
+                  exclude-directories: |
+                      languages
 
     e2e:
         name: Playwright E2E
