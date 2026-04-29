@@ -138,6 +138,8 @@ jobs:
               uses: swissspidy/wp-plugin-check-action@v1
               with:
                   build-dir: './dist/content-aggregator/'
+                  exclude-files: |
+                      languages/*.l10n.php
 
             - name: Create GitHub Release
               uses: softprops/action-gh-release@v2
