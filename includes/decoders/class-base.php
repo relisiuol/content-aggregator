@@ -2,8 +2,7 @@
 
 namespace Content_Aggregator\Decoders;
 
-if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
-	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -16,11 +15,11 @@ abstract class Base {
 	protected $tags;
 
 	/**
-	 * XPath to loop through items.
+	 * XPaths to loop through items.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $loop_path;
+	protected $loop_paths;
 
 	/**
 	 * Constructor.
@@ -28,9 +27,9 @@ abstract class Base {
 	 * @param array  $tags     Tags for data extraction.
 	 * @param string $loopPath XPath for looping through items.
 	 */
-	public function __construct( array $tags, string $loop_path = '' ) {
+	public function __construct( array $tags, array $loop_paths = array() ) {
 		$this->tags = $tags;
-		$this->loop_path = $loop_path;
+		$this->loop_paths = $loop_paths;
 	}
 
 	/**

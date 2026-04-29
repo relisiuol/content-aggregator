@@ -1,9 +1,12 @@
 /.git export-ignore
 /.github export-ignore
 /.husky export-ignore
+/.wordpress-org export-ignore
 /.vscode export-ignore
 /assets export-ignore
 /node_modules export-ignore
+/specs export-ignore
+/tests export-ignore
 
 /*.DS_store export-ignore
 /.DS_store? export-ignore
@@ -12,15 +15,18 @@
 /.gitignore export-ignore
 /.markdownlint.json export-ignore
 /.markdownlintignore export-ignore
+/.nvmrc export-ignore
 /.prettierignore export-ignore
 /.svglintrc.js export-ignore
+/.wp-env.json export-ignore
 /composer.json export-ignore
 /composer.lock export-ignore
 /content-aggregator.zip export-ignore
+/eslint.config.mjs export-ignore
 /package.json export-ignore
+/playwright.config.js export-ignore
 /phpcs.xml export-ignore
 /pnpm-lock.yaml export-ignore
 /pnpm-workspace.yaml export-ignore
-/phpcs.xml export-ignore
 /README.md export-ignore
 /webpack.config.js export-ignore

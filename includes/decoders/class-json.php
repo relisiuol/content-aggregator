@@ -2,24 +2,47 @@
 
 namespace Content_Aggregator\Decoders;
 
-if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
-	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class JSON extends \Content_Aggregator\Decoders\Base {
+class JSON extends Base {
 	public function decode( $json ) {
+		$out = array();
 		$decoded = json_decode( $json, true );
-		$decoded_data = array();
-		if ( ! empty( $decoded ) ) {
-			foreach ( $decoded as $item ) {
-				$item_data = $this->extractItemData( $item );
-				if ( ! empty( $item_data ) ) {
-					$decoded_data[] = $item_data;
+		if ( JSON_ERROR_NONE === json_last_error() ) {
+			$loop_paths = $this->loop_paths;
+			if ( ! is_array( $loop_paths ) ) {
+				$loop_paths = array( $loop_paths );
+			}
+			$items = null;
+			if ( empty( $loop_paths ) ) {
+				$items = $decoded;
+			} else {
+				foreach ( $loop_paths as $lp ) {
+					$tmp = $decoded;
+					if ( '' !== $lp ) {
+						$tmp = $this->getByDotPath( $decoded, (string) $lp );
+					}
+					if ( is_array( $tmp ) ) {
+						$items = $tmp;
+						break;
+					}
+				}
+			}
+			if ( is_array( $items ) ) {
+				foreach ( $items as $item ) {
+					if ( ! is_array( $item ) ) {
+						continue;
+					}
+					$data = $this->extractItemData( $item );
+					if ( $data ) {
+						$out[] = $data;
+					}
 				}
 			}
 		}
-		return $decoded_data;
+		return $out;
 	}
 
 	/**
@@ -31,21 +54,42 @@ class JSON extends \Content_Aggregator\Decoders\Base {
 	 */
 	protected function extractItemData( $item ) {
 		$item_data = array();
-		foreach ( $this->tags as $tag => $path ) {
-			$path_parts = explode( '.', $path );
-			$value = $item;
-			foreach ( $path_parts as $part ) {
-				if ( is_array( $value ) && isset( $value[ $part ] ) ) {
-					$value = $value[ $part ];
-				} else {
-					$value = null;
+		foreach ( $this->tags as $tag => $paths ) {
+			foreach ( (array) $paths as $path ) {
+				$val = $this->getByDotPath( $item, (string) $path );
+				$str = $this->toScalarStringOrNull( $val );
+				if ( null !== $str && '' !== trim( $str ) ) {
+					$item_data[ $tag ] = $str;
 					break;
 				}
 			}
-			if ( null !== $value ) {
-				$item_data[ $tag ] = $value;
-			}
 		}
 		return $item_data;
+	}
+
+	protected function getByDotPath( $data, string $path ) {
+		if ( '' === $path ) {
+			return $data;
+		}
+		$parts = explode( '.', $path );
+		$val = $data;
+		foreach ( $parts as $part ) {
+			if ( is_array( $val ) && array_key_exists( $part, $val ) ) {
+				$val = $val[ $part ];
+			} else {
+				return null;
+			}
+		}
+		return $val;
+	}
+
+	protected function toScalarStringOrNull( $val ) {
+		if ( is_null( $val ) ) {
+			return null;
+		}
+		if ( is_scalar( $val ) ) {
+			return (string) $val;
+		}
+		return wp_json_encode( $val, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 	}
 }

@@ -1,7 +1,8 @@
 .DS_Store
 /build
-/composer.lock
 /includes/vendor
 /node_modules
 /content-aggregator/
 /content-aggregator.zip
+/.phpunit.cache
+/artifacts

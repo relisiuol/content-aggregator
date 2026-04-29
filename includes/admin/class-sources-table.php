@@ -2,8 +2,7 @@
 
 namespace Content_Aggregator\Admin;
 
-if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) || ! defined( 'CONTENT_AGGREGATOR_DIR' ) ) {
-	echo 'Hi there! I&apos;m just a plugin, not much I can do when called directly.';
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -12,6 +11,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class Sources_Table extends \WP_List_Table {
+	private $post_counts = array();
+
 	public function __construct() {
 		global $screen;
 		parent::__construct(
@@ -33,13 +34,13 @@ class Sources_Table extends \WP_List_Table {
 					admin_url( 'admin.php' )
 				);
 			}
-			$sendback = add_query_arg( 'paged', $this->get_pagenum, $sendback );
+			$sendback = add_query_arg( 'paged', $this->get_pagenum(), $sendback );
 			$ids = array();
 			if ( ! empty( $_GET['id'] ) ) {
 				$ids = array_map( 'intval', $_GET['id'] );
 			}
 			if ( empty( $ids ) ) {
-				wp_redirect( $sendback );
+				wp_safe_redirect( $sendback );
 				exit;
 			}
 			$this->process_bulk_action( $ids, $sendback );
@@ -47,7 +48,7 @@ class Sources_Table extends \WP_List_Table {
 			if ( ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 				wp_die( 'Security check failed.' );
 			}
-			$sendback = add_query_arg( 'paged', $this->get_pagenum, wp_get_referer() );
+			$sendback = add_query_arg( 'paged', $this->get_pagenum(), wp_get_referer() );
 			$sendback = remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), $sendback );
 			wp_safe_redirect( $sendback );
 			exit;
@@ -61,6 +62,7 @@ class Sources_Table extends \WP_List_Table {
 			'last_check'  => __( 'Last check', 'content-aggregator' ),
 			'categories'  => __( 'Categories', 'content-aggregator' ),
 			'post_status' => __( 'Post status', 'content-aggregator' ),
+			'posts'       => __( 'Posts', 'content-aggregator' ),
 		);
 	}
 
@@ -99,17 +101,14 @@ class Sources_Table extends \WP_List_Table {
 		if ( '0000-00-00 00:00:00' === $item['last_check'] ) {
 			return '-';
 		}
-		return date_i18n( get_option( 'date_format' ), strtotime( $item['last_check'] ) );
+		return date_i18n( get_option( 'date_format' ) . ' - ' . get_option( 'time_format' ), strtotime( $item['last_check'] ) );
 	}
 
 	protected function column_categories( $item ) {
-		$item['categories'] && ! empty( $item['categories'] ) ? explode( ', ', $item['categories'] ) : array();
-		if ( ! is_array( $item['categories'] ) && ! empty( $item['categories'] ) ) {
-			$item['categories'] = array( $item['categories'] );
-		}
+		$category_ids = ! empty( $item['categories'] ) ? wp_parse_id_list( (string) $item['categories'] ) : array();
 		$links = array();
-		if ( ! empty( $item['categories'] ) ) {
-			foreach ( $item['categories'] as $category ) {
+		if ( ! empty( $category_ids ) ) {
+			foreach ( $category_ids as $category ) {
 				$cat = get_category( $category );
 				if ( ! is_wp_error( $cat ) ) {
 					$links[] = '<a href="' . esc_url( add_query_arg( 'category_name', $cat->slug, admin_url( 'edit.php' ) ) ) . '">' . esc_html( $cat->name ) . '</a>';
@@ -127,6 +126,12 @@ class Sources_Table extends \WP_List_Table {
 		} else {
 			return esc_html__( 'Status not found', 'content-aggregator' );
 		}
+	}
+
+	protected function column_posts( $item ) {
+		$id    = isset( $item['id'] ) ? (int) $item['id'] : 0;
+		$count = isset( $this->post_counts[ $id ] ) ? (int) $this->post_counts[ $id ] : 0;
+		return number_format_i18n( $count );
 	}
 
 	public function get_bulk_actions() {
@@ -261,7 +266,7 @@ class Sources_Table extends \WP_List_Table {
 			}
 		}
 		$sendback = remove_query_arg( array( 'action', 'action2', 'id' ), $sendback );
-		wp_redirect( $sendback );
+		wp_safe_redirect( $sendback );
 		exit;
 	}
 }

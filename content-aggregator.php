@@ -6,16 +6,16 @@
  * @link      https://github.com/relisiuol/content-aggregator
  * @author    relisiuol <contact@relisiuol.fr>
  * @copyright 2025 relisiuol
- * @license   GPL v3
+ * @license   GPL-2.0-or-later
  *
  * Plugin Name:       Content Aggregator
- * Description:       Content Aggregator is a plugin to aggregate items from RSS, Rest API & more.
- * Version:           2.0.0
+ * Description:       Content Aggregator is a plugin to aggregate items from RSS, REST API & more.
+ * Version:           2.1.0
  * Plugin URI:        https://github.com/relisiuol/content-aggregator
  * Author:            relisiuol
  * Author URI:        https://relisiuol.fr/
- * License:           GPL v3
- * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       content-aggregator
  * Domain Path:       /languages/
  * Requires PHP:      8.2
@@ -34,15 +34,18 @@
 
 declare(strict_types=1);
 
-if ( ! function_exists( 'add_action' ) || ! defined( 'ABSPATH' ) ) {
+use Content_Aggregator\Admin;
+use Content_Aggregator\Cron;
+use Content_Aggregator\Decoders\Registry;
+
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CONTENT_AGGREGATOR_VERSION', '2.0.0' );
-define( 'CONTENT_AGGREGATOR_DB_VERSION', '1.0.0' );
+define( 'CONTENT_AGGREGATOR_VERSION', '2.1.0' );
+define( 'CONTENT_AGGREGATOR_DB_VERSION', '2.1.0' );
 define( 'CONTENT_AGGREGATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_URL', plugin_dir_url( __FILE__ ) );
-define( 'CONTENT_AGGREGATOR_NAMESPACE_PREFIX', 'Content_Aggregator' );
 
 require CONTENT_AGGREGATOR_DIR . 'includes/vendor/wordpress-autoload.php';
 
@@ -62,7 +65,7 @@ if ( ! function_exists( 'content_aggregator_install' ) ) {
 				`url` varchar(100) NOT NULL,
 				`scrap_url` varchar(255) NOT NULL,
 				`unique_title` tinyint(1) NOT NULL,
-				`type` tinyint(1) NOT NULL,
+				`type` VARCHAR(20) NOT NULL,
 				`user_agent` varchar(255) NULL,
 				`categories` text NULL,
 				`post_status` varchar(20) NOT NULL DEFAULT "publish",
@@ -114,36 +117,8 @@ if ( ! function_exists( 'content_aggregator_uninstall' ) ) {
 		);
 		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . 'content_aggregator_sources' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		delete_option( 'content_aggregator_db_version' );
+		delete_option( 'content_aggregator_version' );
 		delete_option( 'content_aggregator_settings' );
-	}
-}
-
-if ( ! function_exists( 'content_aggregator_spl_autoload_register' ) ) {
-	function content_aggregator_spl_autoload_register( $class_name ) {
-		if ( preg_match( '/' . CONTENT_AGGREGATOR_NAMESPACE_PREFIX . '/', $class_name ) ) {
-			$class_name = strtolower(
-				str_replace(
-					'_',
-					'-',
-					str_replace(
-						'\\',
-						DIRECTORY_SEPARATOR,
-						str_replace(
-							CONTENT_AGGREGATOR_NAMESPACE_PREFIX . '\\',
-							'',
-							$class_name
-						)
-					)
-				)
-			);
-			$filename_position = strrpos( $class_name, '/' );
-			if ( $filename_position ) {
-				$class_name = substr_replace( $class_name, '/class-', $filename_position, 1 );
-			} else {
-				$class_name = 'class-' . $class_name;
-			}
-			require CONTENT_AGGREGATOR_DIR . 'includes/' . $class_name . '.php';
-		}
 	}
 }
 
@@ -157,7 +132,7 @@ if ( ! function_exists( 'content_aggregator_template_redirect' ) ) {
 				$table_name = $wpdb->prefix . 'content_aggregator_sources';
 				$redirect = $wpdb->get_var( $wpdb->prepare( 'SELECT redirect FROM %i WHERE id = %d', $table_name, $source ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $redirect ) {
-					wp_redirect( $url, 302 );
+					wp_safe_redirect( $url, 302 );
 					exit;
 				}
 			}
@@ -166,10 +141,15 @@ if ( ! function_exists( 'content_aggregator_template_redirect' ) ) {
 }
 
 if ( ! function_exists( 'content_aggregator_post_link' ) ) {
-	function content_aggregator_post_link( $url ) {
+	function content_aggregator_post_link( $url, $post = null ) {
 		if ( ! is_admin() ) {
 			global $wpdb;
-			$post = get_post( url_to_postid( $url ) );
+			if ( ! $post instanceof \WP_Post ) {
+				$post = get_post( url_to_postid( $url ) );
+			}
+			if ( ! $post instanceof \WP_Post ) {
+				return $url;
+			}
 			$real_url = get_post_meta( $post->ID, 'content_aggregator_url', true );
 			$source = get_post_meta( $post->ID, 'content_aggregator_source', true );
 			if ( ! empty( $real_url ) && ! empty( $source ) ) {
@@ -208,7 +188,7 @@ if ( ! content_aggregator_site_meets_php_requirements() ) {
 							sprintf(
 								/* translators: %s: Minimum required PHP version */
 								__( 'Content Aggregator requires PHP version %s or later. Please upgrade PHP or disable the plugin.', 'content-aggregator' ),
-								esc_html( convert_to_blocks_minimum_php_requirement() )
+								esc_html( content_aggregator_minimum_php_requirement() )
 							)
 						);
 					?>
@@ -226,10 +206,20 @@ register_uninstall_hook( __FILE__, 'content_aggregator_uninstall' );
 add_action(
 	'plugins_loaded',
 	function () {
-		if ( get_option( 'content_aggregator_version' ) !== CONTENT_AGGREGATOR_DB_VERSION ) {
+		$current_db_version = get_option( 'content_aggregator_version' );
+		if ( ! $current_db_version ) {
 			content_aggregator_install();
+		} elseif ( CONTENT_AGGREGATOR_DB_VERSION !== $current_db_version ) {
+			if ( '1.0.0' === $current_db_version ) {
+				global $wpdb;
+				$table_name = $wpdb->prefix . 'content_aggregator_sources';
+				$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+					$wpdb->prepare( 'ALTER TABLE %i MODIFY COLUMN `type` VARCHAR(20) NOT NULL', $table_name )
+				);
+			}
+			update_option( 'content_aggregator_version', CONTENT_AGGREGATOR_DB_VERSION );
 		}
-		spl_autoload_register( 'content_aggregator_spl_autoload_register' );
+		Registry::ensure_defaults_installed();
 	}
 );
 
@@ -238,12 +228,12 @@ add_action(
 	function () {
 		add_action( 'template_redirect', 'content_aggregator_template_redirect' );
 
-		add_filter( 'post_link', 'content_aggregator_post_link' );
+		add_filter( 'post_link', 'content_aggregator_post_link', 10, 2 );
 
-		\Content_Aggregator\Cron::get_instance();
+		Cron::get_instance();
 
 		if ( is_admin() ) {
-			\Content_Aggregator\Admin::get_instance();
+			Admin::get_instance();
 		}
 	}
 );
