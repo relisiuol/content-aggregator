@@ -5,4 +5,5 @@
 /content-aggregator/
 /content-aggregator.zip
 /.phpunit.cache
+/.wp-env
 /artifacts
