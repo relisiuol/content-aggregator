@@ -9,6 +9,7 @@ const __dirname = dirname( __filename );
 
 export default {
 	...defaultConfig,
+	devtool: false,
 
 	entry: {
 		'content-aggregator': './assets/js/content-aggregator.js',

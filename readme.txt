@@ -1,11 +1,11 @@
 === Content Aggregator ===
 Contributors: relisiuol
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 8.2
-Stable tag: 2.0.0
-License: GPL v3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Stable tag: 2.1.0
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: aggregator, json, xml
 
 Import posts from json or xml files.
@@ -27,6 +27,14 @@ Not yet available.
 3. A new 'Content Aggregator' menu is available in WordPress
 
 == Changelog ==
+
+= 2.1.0 - 2026-04-15 =
+
+* Declare compatibility with WordPress 6.9
+* Improve auto-detection and parser registry support, including Atom feeds
+* Fix parser validation and XML namespace handling regressions
+* Harden CI linting and release checks
+* Add WordPress.org directory assets and Playground blueprint
 
 = 2.0.0 - 2025-08-21 =
 

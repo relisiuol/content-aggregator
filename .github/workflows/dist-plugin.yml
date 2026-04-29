@@ -2,8 +2,8 @@ name: Dist plugin
 
 on:
     push:
-      tags:
-        - 'v*'
+        tags:
+            - 'v*'
     workflow_dispatch:
         inputs:
             tag:
@@ -41,15 +41,45 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: 'pnpm'
 
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  tools: composer
+                  extensions: mysql
+                  coverage: none
+
             - name: Install dependencies
               run: pnpm install
+
+            - name: Run PHP tests
+              run: composer test
+
+            - name: Lint
+              run: pnpm run lint
+
+            - name: Install Playwright browser
+              run: pnpm exec playwright install --with-deps chromium
+
+            - name: Run Playwright tests
+              run: pnpm run test:playwright
+              env:
+                  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 'true'
+
+            - name: Upload Playwright artifacts
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-artifacts
+                  path: artifacts
+                  if-no-files-found: ignore
 
             - name: Build assets
               run: pnpm run build
 
             - name: Create artifacts
               shell: bash
-              run: pnpm run plugin-zip
+              run: pnpm run plugin-zip:release
 
             - name: Resolve tag
               id: tag
@@ -93,16 +123,6 @@ jobs:
                       echo "__EOF__"
                   } >> "$GITHUB_OUTPUT"
 
-            - name: Create GitHub Release
-              uses: softprops/action-gh-release@v2
-              with:
-                  tag_name: ${{ steps.tag.outputs.tag }}
-                  name: ${{ steps.tag.outputs.tag }}
-                  body: ${{ steps.changelog.outputs.notes }}
-                  draft: false
-                  prerelease: ${{ contains(steps.tag.outputs.tag, '-rc') || contains(steps.tag.outputs.tag, '-beta') }}
-                  files: content-aggregator.zip
-
             - name: Unzip package for WP.org deploy
               run: |
                   rm -rf dist
@@ -114,8 +134,20 @@ jobs:
                       mv dist/* dist/content-aggregator/ || true
                   fi
 
-            - name: Downgrade PHP 8.1+ keywords # TODO: temp fix to remove when WP.org upgrade php check to 8.2
-              run: find dist -type f -name "*.php" -exec sed -i -r 's/\<readonly[[:space:]]+class\>/class/g' {} \;
+            - name: Plugin Check
+              uses: swissspidy/wp-plugin-check-action@v1
+              with:
+                  build-dir: './dist/content-aggregator/'
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ steps.tag.outputs.tag }}
+                  name: ${{ steps.tag.outputs.tag }}
+                  body: ${{ steps.changelog.outputs.notes }}
+                  draft: false
+                  prerelease: ${{ contains(steps.tag.outputs.tag, '-rc') || contains(steps.tag.outputs.tag, '-beta') }}
+                  files: content-aggregator.zip
 
             - name: Install SVN
               run: sudo apt-get update && sudo apt-get install -y subversion
@@ -127,3 +159,7 @@ jobs:
                   BUILD_DIR: dist/content-aggregator
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
+            - name: Stop wp-env
+              if: always()
+              run: pnpm run wp-env stop
