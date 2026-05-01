@@ -8,6 +8,5 @@ export default {
 	webServer: {
 		...defaultConfig.webServer,
 		command: 'pnpm run build && pnpm run wp-env start',
-		timeout: 240_000,
 	},
 };
