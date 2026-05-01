@@ -166,12 +166,18 @@ class Settings {
 
 	public function page() {
 		if ( isset( $_POST['content_aggregator_reset'] ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( esc_html__( 'You are not authorized to perform this action.', 'content-aggregator' ), '', array( 'response' => 403 ) );
+			}
 			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_settings_nonce'] ) ), 'content_aggregator_update_settings' ) ) {
 				wp_die( 'Security check failed.' );
 			}
 			delete_option( 'content_aggregator_settings' );
 			add_settings_error( 'content_aggregator_settings', 'settings_reset', __( 'Settings successfully reset.', 'content-aggregator' ), 'success' );
 		} elseif ( isset( $_POST['content_aggregator_settings'] ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( esc_html__( 'You are not authorized to perform this action.', 'content-aggregator' ), '', array( 'response' => 403 ) );
+			}
 			if ( ! isset( $_POST['content_aggregator_settings_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_settings_nonce'] ) ), 'content_aggregator_update_settings' ) ) {
 				wp_die( 'Security check failed.' );
 			}
