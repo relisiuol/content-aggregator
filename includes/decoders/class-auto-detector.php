@@ -2,6 +2,8 @@
 
 namespace Content_Aggregator\Decoders;
 
+use Content_Aggregator\Remote_Url;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -70,15 +72,7 @@ class Auto_Detector {
 	}
 
 	protected static function http_get_body( string $url ) {
-		try {
-			$resp = \WpOrg\Requests\Requests::get( $url, self::HEADERS );
-			if ( $resp && isset( $resp->body ) ) {
-				return $resp->body;
-			}
-			return false;
-		} catch ( \Throwable $e ) {
-			return false;
-		}
+		return Remote_Url::get_body( $url, self::HEADERS );
 	}
 
 	protected static function join_base_and_endpoint( string $base, string $endpoint ): string {

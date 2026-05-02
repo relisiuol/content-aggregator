@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CONTENT_AGGREGATOR_VERSION', '2.1.0' );
+define( 'CONTENT_AGGREGATOR_VERSION', '2.1.2' );
 define( 'CONTENT_AGGREGATOR_DB_VERSION', '2.1.0' );
 define( 'CONTENT_AGGREGATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_URL', plugin_dir_url( __FILE__ ) );

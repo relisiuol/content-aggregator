@@ -103,13 +103,20 @@ jQuery( ( $ ) => {
 			}
 			timerAutoDetect = setTimeout( async () => {
 				try {
-					const response = await fetch(
-						contentAggregator.ajax_url +
-							'?action=content_aggregator&url=' +
-							encodeURIComponent( url ) +
-							'&nonce=' +
-							encodeURI( contentAggregator.ajax_nonce )
-					);
+					const body = new URLSearchParams( {
+						action: 'content_aggregator',
+						url,
+						nonce: contentAggregator.ajax_nonce,
+					} );
+					const response = await fetch( contentAggregator.ajax_url, {
+						method: 'POST',
+						credentials: 'same-origin',
+						headers: {
+							'Content-Type':
+								'application/x-www-form-urlencoded; charset=UTF-8',
+						},
+						body,
+					} );
 					if ( ! response.ok ) {
 						return false;
 					}

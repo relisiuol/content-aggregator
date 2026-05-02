@@ -2,6 +2,7 @@
 
 namespace Content_Aggregator;
 
+use Content_Aggregator\Remote_Url;
 use Content_Aggregator\Admin\Add_Edit;
 use Content_Aggregator\Admin\Settings;
 use Content_Aggregator\Decoders\Factory;
@@ -55,10 +56,6 @@ class Cron {
 
 	public function execute_cron_job() {
 		global $wpdb;
-		$original_certif_path = \WpOrg\Requests\Requests::get_certificate_path();
-		if ( ! empty( $this->settings['certificate_path'] ) ) {
-			\WpOrg\Requests\Requests::set_certificate_path( $this->settings['certificate_path'] );
-		}
 		$table_name = $wpdb->prefix . 'content_aggregator_sources';
 		$sources = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
@@ -69,149 +66,118 @@ class Cron {
 			ARRAY_A
 		);
 		if ( ! empty( $sources ) ) {
-			$requests = array();
 			foreach ( $sources as $source ) {
-				$requests[] = array(
-					'url' => $source['scrap_url'],
-					'headers' => array(
-						'User-Agent' => ( empty( $source['user_agent'] ) ? Add_Edit::DEFAULT_USER_AGENT : $source['user_agent'] ),
-						'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-						'Accept-Language' => 'en-us,en;q=0.5',
-						'Accept-Encoding' => 'gzip,deflate',
-						'Accept-Charset' => 'utf-8,iso-8859-1;q=0.9,*;q=0.8',
-						'Keep-Alive' => '110',
-						'Connection' => 'keep-alive',
-						'Cache-Control' => 'max-age=0',
-					),
-				);
-			}
-			$responses = \WpOrg\Requests\Requests::request_multiple( $requests );
-			foreach ( $responses as $i => $response ) {
-				$source = $sources[ $i ];
 				$items = array();
 				$empty = true;
 				$decoder = Factory::make( $source['type'] );
 				if ( $decoder ) {
-					if ( $response instanceof \WpOrg\Requests\Response ) {
-						$items = $decoder->decode( $response->body );
+					$body = Remote_Url::get_body(
+						$source['scrap_url'],
+						$this->source_request_headers( $source ),
+						$this->source_request_args()
+					);
+					if ( false !== $body ) {
+						$items = $decoder->decode( $body );
 					}
 					if ( $items && ! empty( $items ) ) {
 						foreach ( $items as $i => $item ) {
 							if (
-								! empty( $item['date'] ) &&
-								! empty( $item['title'] ) &&
-								! empty( $item['url'] )
+								empty( $item['date'] ) ||
+								empty( $item['title'] ) ||
+								empty( $item['url'] )
 							) {
-								$item['url'] = filter_var( $item['url'], FILTER_VALIDATE_URL ) ? remove_query_arg(
-									'utm_source',
-									remove_query_arg(
-										'utm_medium',
-										remove_query_arg(
-											'utm_campaign',
-											$item['url']
-										)
+								continue;
+							}
+
+							$item['url'] = $this->normalize_item_url( (string) $item['url'] );
+							if ( '' === $item['url'] ) {
+								continue;
+							}
+
+							$now = current_time( 'mysql' );
+							$item_date = $this->normalize_post_date( (string) $item['date'] );
+							$template_tags = array(
+								'__TITLE__'       => $item['title'],
+								'__SOURCE_NAME__' => $source['name'],
+								'__NOW__'         => $now,
+								'__DATE__'        => $item_date,
+								'__CONTENT__'     => (string) ( $item['content'] ?? '' ),
+								'__URL__'         => $item['url'],
+							);
+							$item['content'] = strtr( $source['content_template'], $template_tags );
+							$item['title'] = strtr( $source['post_title_template'], $template_tags );
+							$item['date'] = ( Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? $now : $item_date );
+							if (
+								empty( $item['date'] ) ||
+								empty( $item['title'] ) ||
+								empty( $item['url'] )
+							) {
+								continue;
+							}
+
+							$empty = false;
+							if ( $item['url'] === $source['last_news'] ) {
+								break;
+							}
+							if ( 0 === $i ) {
+								$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+									$table_name,
+									array(
+										'last_news' => $item['url'],
+									),
+									array(
+										'id' => $source['id'],
 									)
-								) : '';
-								$now = wp_date( 'Y-m-d H:i:s' );
-								$template_tags = array(
-									'__TITLE__'       => $item['title'],
-									'__SOURCE_NAME__' => $source['name'],
-									'__NOW__'         => $now,
-									'__DATE__'        => $item['date'],
-									'__CONTENT__'     => $item['content'],
-									'__URL__'         => $item['url'],
 								);
-								$item['content'] = strtr( $source['content_template'], $template_tags );
-								$item['title'] = strtr( $source['post_title_template'], $template_tags );
-								$item['date'] = ( Add_Edit::DATE_TAGS[0] === $source['post_date_template'] ? $now : $item['date'] );
-								if (
-									! empty( $item['date'] ) &&
-									! empty( $item['title'] ) &&
-									! empty( $item['url'] )
-								) {
-									$empty = false;
-									if ( $item['url'] === $source['last_news'] ) {
-										break;
-									}
-									if ( 0 === $i ) {
-										$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-											$table_name,
-											array(
-												'last_news' => $item['url'],
-											),
-											array(
-												'id' => $source['id'],
-											)
-										);
-									}
-									$insert = true;
-									if ( '1' === $source['unique_title'] ) {
-										$insert = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-											$wpdb->prepare(
-												'SELECT COUNT(*) FROM %i WHERE post_title = %s',
-												$wpdb->posts,
-												$item['title']
-											)
-										);
-										$insert = empty( $insert );
-									}
-									if ( $insert ) {
-										$content = wp_kses_post( $item['content'] );
-										$converter = false;
-										if ( class_exists( \Alley\WP\Block_Converter\Block_Converter::class ) ) {
-											$converter = new \Alley\WP\Block_Converter\Block_Converter( $item['content'], true );
-											$content = $converter->convert();
-											if ( empty( $content ) ) {
-												$content = wp_kses_post( $item['content'] );
-											}
-										}
-										$postdata = array(
-											'post_title'    => sanitize_text_field( $item['title'] ),
-											'post_content'  => $content,
-											'post_date'     => $item['date'],
-											'post_date_gmt' => get_gmt_from_date( $item['date'] ),
-											'post_author'   => $this->get_default_author_id(),
-										);
-										if ( ! empty( $source['categories'] ) ) {
-											$postdata['post_category'] = explode( ',', $source['categories'] );
-										}
-										if ( strtotime( $item['date'] ) > current_time( 'timestamp' ) ) {
-											$postdata['post_status'] = ( 'publish' === $source['post_status'] ) ? 'future' : $source['post_status'];
-										} else {
-											$postdata['post_status'] = $source['post_status'];
-										}
-										$post_id = wp_insert_post( $postdata );
-										if ( $post_id ) {
-											add_post_meta( $post_id, 'content_aggregator_source', $source['id'] );
-											add_post_meta( $post_id, 'content_aggregator_url', $item['url'] );
-											if ( $converter ) {
-												$converter->assign_parent_to_attachments( $post_id );
-											}
-											if ( ! empty( $item['image'] ) && filter_var( $item['image'], FILTER_VALIDATE_URL ) ) {
-												if ( ! function_exists( 'media_sideload_image' ) ) {
-													require_once ABSPATH . 'wp-admin/includes/media.php';
-													require_once ABSPATH . 'wp-admin/includes/file.php';
-													require_once ABSPATH . 'wp-admin/includes/image.php';
-												}
-												$image = media_sideload_image( $item['image'], $post_id, null, 'src' );
-												if ( ! is_wp_error( $image ) ) {
-													$attach_id = attachment_url_to_postid( $image );
-													if ( $attach_id > 0 ) {
-														if ( ! set_post_thumbnail( $post_id, $attach_id ) ) {
-															set_post_thumbnail( $post_id, $source['featured_image'] );
-														}
-													} else {
-														set_post_thumbnail( $post_id, $source['featured_image'] );
-													}
-												} else {
-													set_post_thumbnail( $post_id, $source['featured_image'] );
-												}
-											} else {
-												set_post_thumbnail( $post_id, $source['featured_image'] );
-											}
-										}
-									}
+							}
+
+							$insert = ! $this->source_item_exists( $item['url'] );
+							if ( $insert && '1' === $source['unique_title'] ) {
+								$insert = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+									$wpdb->prepare(
+										'SELECT COUNT(*) FROM %i WHERE post_title = %s',
+										$wpdb->posts,
+										$item['title']
+									)
+								);
+								$insert = empty( $insert );
+							}
+							if ( ! $insert ) {
+								continue;
+							}
+
+							$content = wp_kses_post( $item['content'] );
+							$converter = false;
+							if ( class_exists( \Alley\WP\Block_Converter\Block_Converter::class ) ) {
+								$converter = new \Alley\WP\Block_Converter\Block_Converter( $item['content'], true );
+								$content = wp_kses_post( $converter->convert() );
+								if ( empty( $content ) ) {
+									$content = wp_kses_post( $item['content'] );
 								}
+							}
+							$postdata = array(
+								'post_title'    => sanitize_text_field( $item['title'] ),
+								'post_content'  => $content,
+								'post_date'     => $item['date'],
+								'post_date_gmt' => get_gmt_from_date( $item['date'] ),
+								'post_author'   => $this->get_default_author_id(),
+							);
+							if ( ! empty( $source['categories'] ) ) {
+								$postdata['post_category'] = explode( ',', $source['categories'] );
+							}
+							if ( strtotime( $item['date'] ) > current_time( 'timestamp' ) ) {
+								$postdata['post_status'] = ( 'publish' === $source['post_status'] ) ? 'future' : $source['post_status'];
+							} else {
+								$postdata['post_status'] = $source['post_status'];
+							}
+							$post_id = wp_insert_post( $postdata );
+							if ( $post_id ) {
+								add_post_meta( $post_id, 'content_aggregator_source', $source['id'] );
+								add_post_meta( $post_id, 'content_aggregator_url', $item['url'] );
+								if ( $converter ) {
+									$converter->assign_parent_to_attachments( $post_id );
+								}
+								$this->set_featured_image( $post_id, (string) ( $item['image'] ?? '' ), (int) $source['featured_image'] );
 							}
 						}
 					}
@@ -231,7 +197,8 @@ class Cron {
 					if ( false === $expiration_interval ) {
 						continue;
 					}
-					if ( strtotime( $source['last_check'] ) + $expiration_interval >= time() ) {
+					$last_check = empty( $source['last_check'] ) ? false : strtotime( (string) $source['last_check'] );
+					if ( false === $last_check || $last_check + $expiration_interval >= time() ) {
 						continue;
 					}
 					$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -246,9 +213,119 @@ class Cron {
 				}
 			}
 		}
+	}
+
+	private function source_request_headers( array $source ): array {
+		return array(
+			'User-Agent' => ( empty( $source['user_agent'] ) ? Add_Edit::DEFAULT_USER_AGENT : $source['user_agent'] ),
+			'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			'Accept-Language' => 'en-us,en;q=0.5',
+			'Accept-Encoding' => 'gzip,deflate',
+			'Accept-Charset' => 'utf-8,iso-8859-1;q=0.9,*;q=0.8',
+			'Cache-Control' => 'max-age=0',
+		);
+	}
+
+	private function source_request_args(): array {
+		$args = array();
 		if ( ! empty( $this->settings['certificate_path'] ) ) {
-			\WpOrg\Requests\Requests::set_certificate_path( $original_certif_path );
+			$args['sslcertificates'] = $this->settings['certificate_path'];
 		}
+
+		return $args;
+	}
+
+	private function normalize_item_url( string $url ): string {
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return '';
+		}
+
+		$url = remove_query_arg(
+			array(
+				'utm_source',
+				'utm_medium',
+				'utm_campaign',
+			),
+			$url
+		);
+
+		return Remote_Url::validate( $url );
+	}
+
+	private function normalize_post_date( string $date ): string {
+		$timestamp = strtotime( $date );
+		if ( false === $timestamp ) {
+			return '';
+		}
+
+		return wp_date( 'Y-m-d H:i:s', $timestamp );
+	}
+
+	private function source_item_exists( string $url ): bool {
+		global $wpdb;
+		if ( '' === $url ) {
+			return false;
+		}
+
+		return (bool) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			$wpdb->prepare(
+				'SELECT post_id FROM %i WHERE meta_key = %s AND meta_value = %s LIMIT 1',
+				$wpdb->postmeta,
+				'content_aggregator_url',
+				$url
+			)
+		);
+	}
+
+	private function set_featured_image( int $post_id, string $image_url, int $fallback_id ): void {
+		$attachment_id = 0;
+		$image_url = Remote_Url::validate( $image_url );
+		if ( '' !== $image_url ) {
+			$attachment_id = $this->get_attachment_id_by_source_url( $image_url );
+			if ( 0 === $attachment_id ) {
+				$attachment_id = $this->sideload_image( $image_url, $post_id );
+			}
+		}
+
+		if ( $attachment_id > 0 && set_post_thumbnail( $post_id, $attachment_id ) ) {
+			return;
+		}
+
+		if ( $fallback_id > 0 ) {
+			set_post_thumbnail( $post_id, $fallback_id );
+		}
+	}
+
+	private function get_attachment_id_by_source_url( string $image_url ): int {
+		global $wpdb;
+		return (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			$wpdb->prepare(
+				'SELECT post_id FROM %i WHERE meta_key = %s AND meta_value = %s LIMIT 1',
+				$wpdb->postmeta,
+				'_content_aggregator_source_image_url',
+				$image_url
+			)
+		);
+	}
+
+	private function sideload_image( string $image_url, int $post_id ): int {
+		if ( ! function_exists( 'media_sideload_image' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/media.php';
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
+
+		$image = media_sideload_image( $image_url, $post_id, null, 'src' );
+		if ( is_wp_error( $image ) ) {
+			return 0;
+		}
+
+		$attachment_id = attachment_url_to_postid( $image );
+		if ( $attachment_id > 0 ) {
+			update_post_meta( $attachment_id, '_content_aggregator_source_image_url', $image_url );
+		}
+
+		return (int) $attachment_id;
 	}
 
 	private function schedule_cron_event() {

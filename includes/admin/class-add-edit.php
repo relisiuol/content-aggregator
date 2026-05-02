@@ -3,6 +3,7 @@
 namespace Content_Aggregator\Admin;
 
 use Content_Aggregator\Decoders\Registry;
+use Content_Aggregator\Remote_Url;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -117,13 +118,13 @@ class Add_Edit {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-name', __( 'Name is required.', 'content-aggregator' ) );
 		}
-		$input['url'] = isset( $input['url'] ) ? sanitize_url( wp_unslash( $input['url'] ), array( 'http', 'https' ) ) : '';
-		if ( empty( $input['url'] ) || ! filter_var( $input['url'], FILTER_VALIDATE_URL ) ) {
+		$input['url'] = isset( $input['url'] ) ? Remote_Url::validate( sanitize_url( wp_unslash( $input['url'] ), array( 'http', 'https' ) ) ) : '';
+		if ( empty( $input['url'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-url', __( 'URL is missing or invalid.', 'content-aggregator' ) );
 		}
-		$input['scrap_url'] = isset( $input['scrap_url'] ) ? sanitize_url( wp_unslash( $input['scrap_url'] ), array( 'http', 'https' ) ) : '';
-		if ( empty( $input['scrap_url'] ) || ! filter_var( $input['scrap_url'], FILTER_VALIDATE_URL ) ) {
+		$input['scrap_url'] = isset( $input['scrap_url'] ) ? Remote_Url::validate( sanitize_url( wp_unslash( $input['scrap_url'] ), array( 'http', 'https' ) ) ) : '';
+		if ( empty( $input['scrap_url'] ) ) {
 			$success = false;
 			add_settings_error( 'content_aggregator_source' . ( $this->source ? '_' . $this->source['id'] : '' ), 'invalid-scrap_url', __( 'Source URL is missing or invalid.', 'content-aggregator' ) );
 		}
