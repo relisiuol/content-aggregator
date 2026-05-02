@@ -2,11 +2,14 @@
 	"$schema": "https://json.schemastore.org/package",
 	"name": "content-aggregator",
 	"version": "2.1.0",
-	"description": "Content Aggregator will import content from a JSON or XML file.",
+	"description": "Create WordPress posts from RSS, Atom, WordPress REST API, JSON, and XML sources.",
 	"author": "relisiuol",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
 		"aggregator",
+		"rss",
+		"atom",
+		"rest-api",
 		"json",
 		"xml"
 	],
