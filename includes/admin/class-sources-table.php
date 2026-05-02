@@ -23,6 +23,9 @@ class Sources_Table extends \WP_List_Table {
 		);
 		$doaction = $this->current_action();
 		if ( $doaction ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( esc_html__( 'You are not authorized to perform this action.', 'content-aggregator' ), '', array( 'response' => 403 ) );
+			}
 			if ( ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 				wp_die( 'Security check failed.' );
 			}
@@ -68,7 +71,7 @@ class Sources_Table extends \WP_List_Table {
 
 	public function get_sortable_columns() {
 		return array(
-			'title'      => array( 'title', true, __( 'Name', 'content-aggregator' ), __( 'Table ordered by name', 'content-aggregator' ), 'asc' ),
+			'title'      => array( 'name', true, __( 'Name', 'content-aggregator' ), __( 'Table ordered by name', 'content-aggregator' ), 'asc' ),
 			'last_check' => array( 'last_check', false, __( 'Last check', 'content-aggregator' ), __( 'Table ordered by last check date', 'content-aggregator' ) ),
 		);
 	}
@@ -87,13 +90,14 @@ class Sources_Table extends \WP_List_Table {
 	}
 
 	protected function column_title( $item ) {
-		return '<strong><a href="' . add_query_arg(
+		$edit_url = add_query_arg(
 			array(
 				'page' => 'content-aggregator-add-edit',
 				'id' => $item['id'],
 			),
 			admin_url( 'admin.php' )
-		) . '">' . esc_html( $item['name'] ) . '</a>' .
+		);
+		return '<strong><a href="' . esc_url( $edit_url ) . '">' . esc_html( $item['name'] ) . '</a>' .
 		'&emsp;—&emsp;<span class="post-state">' . ( $item['enabled'] ? esc_html__( 'Enabled', 'content-aggregator' ) : esc_html__( 'Disabled', 'content-aggregator' ) ) . '</span></strong>';
 	}
 
@@ -150,12 +154,17 @@ class Sources_Table extends \WP_List_Table {
 		$columns = $this->get_columns();
 		$sortable = $this->get_sortable_columns();
 		$hidden = $this->get_hidden_columns();
-		$orderby = ( ! empty( $_GET['orderby'] ) && array_key_exists( sanitize_text_field( wp_unslash( $_GET['orderby'] ) ), $sortable ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'name'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$requested_orderby = isset( $_GET['orderby'] ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$orderby = 'name';
+		if ( array_key_exists( $requested_orderby, $sortable ) ) {
+			$orderby = $sortable[ $requested_orderby ][0];
+		}
+		$order = ( ! empty( $_GET['order'] ) && 'desc' === strtolower( sanitize_key( wp_unslash( $_GET['order'] ) ) ) ) ? 'desc' : 'asc'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$this->items = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				'SELECT * FROM %i WHERE `name` LIKE %s ORDER BY %i ' . ( ! empty( $_GET['order'] ) && 'desc' === $_GET['order'] ? 'desc' : 'asc' ) . ' LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.Security.NonceVerification.Recommended
+				'SELECT * FROM %i WHERE `name` LIKE %s ORDER BY %i ' . $order . ' LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 				$table_name,
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				$orderby,
@@ -201,6 +210,9 @@ class Sources_Table extends \WP_List_Table {
 	public function process_bulk_action( $ids, $sendback ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'content_aggregator_sources';
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not authorized to perform this action.', 'content-aggregator' ), '', array( 'response' => 403 ) );
+		}
 		if ( ! check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 			wp_die( 'Security check failed.' );
 		}

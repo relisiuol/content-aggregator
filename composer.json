@@ -1,7 +1,7 @@
 {
 	"$schema": "https://getcomposer.org/schema.json",
 	"name": "relisiuol/content-aggregator",
-	"description": "Content Aggregator will import content from a JSON or XML file.",
+	"description": "Create WordPress posts from RSS, Atom, WordPress REST API, JSON, and XML sources.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"authors": [

@@ -479,6 +479,9 @@ class Add_Edit {
 
 	public function page() {
 		if ( isset( $_POST['content_aggregator_source'] ) && is_array( $_POST['content_aggregator_source'] ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( esc_html__( 'You are not authorized to perform this action.', 'content-aggregator' ), '', array( 'response' => 403 ) );
+			}
 			if ( ! isset( $_POST['content_aggregator_source_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['content_aggregator_source_nonce'] ) ), 'content_aggregator_update_source' . ( $this->source ? '_' . $this->source['id'] : '' ) ) ) {
 				wp_die( 'Security check failed.' );
 			}

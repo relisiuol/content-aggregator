@@ -9,7 +9,7 @@
  * @license   GPL-2.0-or-later
  *
  * Plugin Name:       Content Aggregator
- * Description:       Content Aggregator is a plugin to aggregate items from RSS, REST API & more.
+ * Description:       Create WordPress posts from RSS, Atom, WordPress REST API, JSON, and XML sources.
  * Version:           2.1.0
  * Plugin URI:        https://github.com/relisiuol/content-aggregator
  * Author:            relisiuol
