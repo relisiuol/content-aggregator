@@ -102,7 +102,7 @@ class Sources_Table extends \WP_List_Table {
 	}
 
 	protected function column_last_check( $item ) {
-		if ( '0000-00-00 00:00:00' === $item['last_check'] ) {
+		if ( empty( $item['last_check'] ) || '0000-00-00 00:00:00' === $item['last_check'] ) {
 			return '-';
 		}
 		return date_i18n( get_option( 'date_format' ) . ' - ' . get_option( 'time_format' ), strtotime( $item['last_check'] ) );
@@ -173,6 +173,7 @@ class Sources_Table extends \WP_List_Table {
 			),
 			ARRAY_A
 		);
+		$this->post_counts = $this->get_post_counts( array_column( $this->items, 'id' ) );
 		$total_items = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				'SELECT COUNT(*) FROM %i WHERE `name` LIKE %s',
@@ -280,5 +281,24 @@ class Sources_Table extends \WP_List_Table {
 		$sendback = remove_query_arg( array( 'action', 'action2', 'id' ), $sendback );
 		wp_safe_redirect( $sendback );
 		exit;
+	}
+
+	private function get_post_counts( array $source_ids ): array {
+		global $wpdb;
+		$source_ids = array_values( array_filter( array_map( 'intval', $source_ids ) ) );
+		if ( empty( $source_ids ) ) {
+			return array();
+		}
+
+		$placeholders = implode( ', ', array_fill( 0, count( $source_ids ), '%d' ) );
+		$query = 'SELECT meta_value AS source_id, COUNT(DISTINCT post_id) AS post_count FROM %i WHERE meta_key = %s AND meta_value IN (' . $placeholders . ') GROUP BY meta_value';
+		$args = array_merge( array( $wpdb->postmeta, 'content_aggregator_source' ), $source_ids );
+		$rows = $wpdb->get_results( $wpdb->prepare( $query, ...$args ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+		$counts = array_fill_keys( $source_ids, 0 );
+		foreach ( $rows as $row ) {
+			$counts[ (int) $row['source_id'] ] = (int) $row['post_count'];
+		}
+
+		return $counts;
 	}
 }

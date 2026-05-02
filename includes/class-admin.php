@@ -117,21 +117,22 @@ class Admin {
 	}
 
 	public function wp_ajax() {
-		if ( isset( $_GET['nonce'] ) ) {
-			$nonce = sanitize_text_field( wp_unslash( $_GET['nonce'] ) );
-			if ( wp_verify_nonce( $nonce, 'content-aggregator-ajax' ) && current_user_can( 'manage_options' ) ) {
-				if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) {
-					$base_url = sanitize_text_field( wp_unslash( $_GET['url'] ) );
-					if ( ! empty( $base_url ) && filter_var( $base_url, FILTER_VALIDATE_URL ) ) {
-						$result = Auto_Detector::detect( $base_url );
-						if ( $result ) {
-							wp_send_json_success( $result );
-						}
-					}
-				}
-				wp_send_json_error( array( 'success' => 0 ) );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'success' => 0 ), 403 );
+		}
+
+		if ( ! check_ajax_referer( 'content-aggregator-ajax', 'nonce', false ) ) {
+			wp_send_json_error( array( 'success' => 0 ), 403 );
+		}
+
+		$base_url = isset( $_POST['url'] ) ? Remote_Url::validate( sanitize_url( wp_unslash( $_POST['url'] ), array( 'http', 'https' ) ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( '' !== $base_url ) {
+			$result = Auto_Detector::detect( $base_url );
+			if ( $result ) {
+				wp_send_json_success( $result );
 			}
 		}
-		wp_die( esc_html__( 'You are not authorized to perform this action.', 'content-aggregator' ), '', array( 'response' => 403 ) );
+
+		wp_send_json_error( array( 'success' => 0 ) );
 	}
 }

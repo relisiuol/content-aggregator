@@ -117,8 +117,14 @@ test.describe( 'Content Aggregator admin', () => {
 		page,
 	} ) => {
 		await page.route(
-			'**/wp-admin/admin-ajax.php?action=content_aggregator**',
-			async ( route ) => {
+			'**/wp-admin/admin-ajax.php',
+			async ( route, request ) => {
+				const data = new URLSearchParams( request.postData() || '' );
+				if ( data.get( 'action' ) !== 'content_aggregator' ) {
+					await route.continue();
+					return;
+				}
+
 				await route.fulfill( {
 					contentType: 'application/json',
 					body: JSON.stringify( {

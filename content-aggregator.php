@@ -10,7 +10,7 @@
  *
  * Plugin Name:       Content Aggregator
  * Description:       Create WordPress posts from RSS, Atom, WordPress REST API, JSON, and XML sources.
- * Version:           2.1.0
+ * Version:           2.1.2
  * Plugin URI:        https://github.com/relisiuol/content-aggregator
  * Author:            relisiuol
  * Author URI:        https://relisiuol.fr/
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CONTENT_AGGREGATOR_VERSION', '2.1.0' );
+define( 'CONTENT_AGGREGATOR_VERSION', '2.1.2' );
 define( 'CONTENT_AGGREGATOR_DB_VERSION', '2.1.0' );
 define( 'CONTENT_AGGREGATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_URL', plugin_dir_url( __FILE__ ) );
