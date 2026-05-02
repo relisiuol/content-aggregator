@@ -95,12 +95,17 @@ class Cron {
 							}
 
 							$now = current_time( 'mysql' );
-							$item_date = $this->normalize_post_date( (string) $item['date'] );
+							$source_date = (string) $item['date'];
+							$item_date = $this->normalize_post_date( $source_date );
+							if ( '' === $item_date ) {
+								continue;
+							}
+
 							$template_tags = array(
 								'__TITLE__'       => $item['title'],
 								'__SOURCE_NAME__' => $source['name'],
 								'__NOW__'         => $now,
-								'__DATE__'        => $item_date,
+								'__DATE__'        => $source_date,
 								'__CONTENT__'     => (string) ( $item['content'] ?? '' ),
 								'__URL__'         => $item['url'],
 							);
