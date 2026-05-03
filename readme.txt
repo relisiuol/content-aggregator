@@ -2,8 +2,8 @@
 Contributors: relisiuol
 Requires at least: 6.2
 Tested up to: 6.9
-Requires PHP: 8.2
-Stable tag: 2.1.2
+Requires PHP: 8.1
+Stable tag: 2.1.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: aggregator, rss, rest-api, json, xml
@@ -52,7 +52,7 @@ Each source can define templates for the imported post title, publication date, 
 
 == Changelog ==
 
-= 2.1.2 - 2026-05-02 =
+= 2.1.3 - 2026-05-02 =
 
 * Declare compatibility with WordPress 6.9
 * Improve auto-detection and parser registry support, including Atom feeds

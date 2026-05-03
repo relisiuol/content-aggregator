@@ -67,8 +67,6 @@
 		"**/.hg": true,
 		"**/CVS": true,
 		"**/.DS_Store": true,
-		"**/Thumbs.db": true,
-		"composer.lock": true,
-		"pnpm-lock.yaml": true
+		"**/Thumbs.db": true
 	}
 }
