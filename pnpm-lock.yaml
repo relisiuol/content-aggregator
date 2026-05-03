@@ -21,6 +21,9 @@ importers:
         specifier: ^4.0.13
         version: 4.0.13
     devDependencies:
+      '@wordpress/e2e-test-utils-playwright':
+        specifier: ^1.45.0
+        version: 1.45.0(@playwright/test@1.59.1)(@types/node@25.6.0)
       '@wordpress/env':
         specifier: ^11.5.0
         version: 11.5.0(@types/node@25.6.0)
