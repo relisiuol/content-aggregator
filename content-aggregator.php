@@ -10,7 +10,7 @@
  *
  * Plugin Name:       Content Aggregator
  * Description:       Create WordPress posts from RSS, Atom, WordPress REST API, JSON, and XML sources.
- * Version:           2.1.2
+ * Version:           2.1.3
  * Plugin URI:        https://github.com/relisiuol/content-aggregator
  * Author:            relisiuol
  * Author URI:        https://relisiuol.fr/
@@ -18,7 +18,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       content-aggregator
  * Domain Path:       /languages/
- * Requires PHP:      8.2
+ * Requires PHP:      8.1
  * Requires at least: 6.2
  *
  * This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CONTENT_AGGREGATOR_VERSION', '2.1.2' );
+define( 'CONTENT_AGGREGATOR_VERSION', '2.1.3' );
 define( 'CONTENT_AGGREGATOR_DB_VERSION', '2.1.0' );
 define( 'CONTENT_AGGREGATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CONTENT_AGGREGATOR_URL', plugin_dir_url( __FILE__ ) );
@@ -166,7 +166,7 @@ if ( ! function_exists( 'content_aggregator_post_link' ) ) {
 
 if ( ! function_exists( 'content_aggregator_minimum_php_requirement' ) ) {
 	function content_aggregator_minimum_php_requirement() {
-		return '8.2';
+		return '8.1';
 	}
 }
 

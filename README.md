@@ -44,7 +44,7 @@ Each source can define templates for the imported post title, publication date, 
 
 ## Changelog
 
-### 2.1.2
+### 2.1.3
 
 - Declare compatibility with WordPress 6.9
 - Improve auto-detection and parser registry support, including Atom feeds
