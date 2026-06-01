@@ -31,7 +31,7 @@
 		"@wordpress/i18n": "^6.18.0",
 		"jquery": "^3.7.1",
 		"jquery-autocomplete": "^1.2.8",
-		"select2": "^4.0.13"
+		"select2": "^4.1.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",
